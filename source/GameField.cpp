@@ -14,9 +14,9 @@ void GameField::loadFieldFromFile(const QString &file_path) {
     // read length and width
     line = in_file.readLine();
     QStringList size = line.split(u',', Qt::SkipEmptyParts);
-    field_length_ = size[0].toInt();
-    field_width_ = size[1].toInt();
-    if(field_length_ <= 0 || field_width_ <= 0)
+    num_rows_ = size[0].toInt();
+    num_cols_ = size[1].toInt();
+    if(num_rows_ <= 0 || num_cols_ <= 0)
         throw std::invalid_argument("Invalid field size");
 
     // read indices of road areas
@@ -28,9 +28,9 @@ void GameField::loadFieldFromFile(const QString &file_path) {
     }
 
     // fill the field
-    areas_ = QList<QList<QGraphicsPixmapItem*>>(field_width_);
-    for(int i = 0; i < field_width_; ++i){
-        for(int j = 0; j < field_length_; ++j){
+    areas_ = QList<QList<QGraphicsPixmapItem*>>(num_cols_);
+    for(int i = 0; i < num_cols_; ++i){
+        for(int j = 0; j < num_rows_; ++j){
             QGraphicsPixmapItem* item = nullptr;
             auto pos = qMakePair(i, j);
             if(road_pos.contains(pos))
@@ -38,8 +38,11 @@ void GameField::loadFieldFromFile(const QString &file_path) {
             else
                 item = new Grass();
             addItem(item);
-            item->setPos(16 * j * area_scale_factor_, 16 * i * area_scale_factor_);
-            item->setScale(area_scale_factor_);
+            // scale to 48 px
+            // height should minus 1
+            qreal area_scale_factor = AREA_SIZE / (item->boundingRect().height() - 1);
+            item->setPos(AREA_SIZE * j, AREA_SIZE * i);
+            item->setScale(area_scale_factor);
             areas_[i].push_back(item);
         }
     }

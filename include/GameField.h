@@ -15,9 +15,10 @@
 
 class GameField: public QGraphicsScene{
 
-    int field_length_ = 0;
-    int field_width_ = 0;
-    qreal area_scale_factor_ = 3.0; // scale factor of area
+    static constexpr const int AREA_SIZE = 48; // px
+
+    int num_rows_ = 0;
+    int num_cols_ = 0;
 
     QList<QList<QGraphicsPixmapItem*>> areas_;
 
