@@ -2,7 +2,9 @@
 
 
 GameField::GameField(QObject* parent): QGraphicsScene(parent) {
-
+    // handle process events
+    timer_.setInterval(static_cast<int>(1000 /* ms */ / fps_));
+    connect(&timer_, &QTimer::timeout, this, &GameField::moveMonsters);
 }
 
 void GameField::loadFieldFromFile(const QString &file_path) {
@@ -56,6 +58,20 @@ void GameField::loadFieldFromFile(const QString &file_path) {
             item->setPos(AREA_SIZE * j, AREA_SIZE * i);
             item->setScale(area_scale_factor);
             areas_[i].push_back(item);
+        }
+    }
+}
+
+void GameField::setFps(qreal fps) {
+    fps_ = fps;
+    timer_.setInterval(static_cast<int>(1000 /* ms */ / fps_));
+}
+
+void GameField::moveMonsters() {
+    for(auto* monster: monsters_){
+        qreal move_dis = monster->getSpeed() * timer_.interval() / 1000;
+        while(move_dis > 0.0){
+            // TODO: HOW TO MOVE
         }
     }
 }
