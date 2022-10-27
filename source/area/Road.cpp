@@ -21,3 +21,7 @@ Road &Road::setDirection(const Direction &from, const Direction &to) {
     }
     throw std::invalid_argument("Invalid key");
 }
+
+Road::Direction Road::getToDirection(const Direction & from) const {
+    return from2to_[from];
+}

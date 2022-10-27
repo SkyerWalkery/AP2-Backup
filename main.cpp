@@ -14,6 +14,7 @@ int main(int argc, char *argv[]) {
     rect.setWidth(rect.width() + margin);
     rect.setHeight(rect.height() + margin);
     view.setFixedSize(rect.size().toSize());
+    field.debugStart();
     view.show();
     return app.exec();
 }

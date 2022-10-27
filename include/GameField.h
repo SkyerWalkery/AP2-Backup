@@ -19,6 +19,9 @@
 
 class GameField: public QGraphicsScene{
 
+    using Direction = QPair<int, int>;
+    using AreaIndex = QPair<int, int>;
+
     static constexpr const int AREA_SIZE = 48; // px
 
     int num_rows_ = 0;
@@ -28,7 +31,10 @@ class GameField: public QGraphicsScene{
     qreal fps_ = 60; // refresh rate
 
     QList<QList<QGraphicsPixmapItem*>> areas_;
-    QList<TestMonster*> monsters_;
+    QList<Monster*> monsters_;
+
+    QList<AreaIndex> start_areas_idx_;
+    QList<AreaIndex> terminal_areas_idx_;
 
 public:
     explicit GameField(QObject* parent = nullptr);
@@ -38,6 +44,15 @@ public:
     void setFps(qreal fps);
 
     void moveMonsters();
+
+    /*
+    * Returns {row_idx, col_idx} of the area which pos is at.
+    * If pos is out of rect of scene, a valid pair will still be returned.
+    * -1 <= row_idx <= num_rows, -1 <= col_idx <= num_cols.
+    */
+    static AreaIndex posToIndex(QPointF pos);
+
+    void debugStart();
 };
 
 #endif //AP_PROJ_GAMEFIELD_H

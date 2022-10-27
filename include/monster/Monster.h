@@ -11,7 +11,7 @@ class Monster: public QGraphicsPixmapItem{
 
 protected:
 
-    Direction direction = qMakePair(0, 0);
+    Direction direction_ = qMakePair(0, 0);
     qreal speed_ = 10.0; // num of px per second to move
 
 public:
@@ -21,6 +21,10 @@ public:
     qreal getSpeed() const;
 
     void setSpeed(qreal speed);
+
+    Direction getDirection() const;
+
+    void setDirection(const Direction& direction);
 };
 
 #endif //AP_PROJ_MONSTER_H

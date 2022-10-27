@@ -14,3 +14,11 @@ void Monster::setSpeed(qreal speed) {
         return;
     speed_ = speed;
 }
+
+Monster::Direction Monster::getDirection() const {
+    return direction_;
+}
+
+void Monster::setDirection(const Monster::Direction &direction) {
+    direction_ = direction;
+}

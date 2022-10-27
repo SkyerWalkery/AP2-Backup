@@ -24,13 +24,14 @@ void GameField::loadFieldFromFile(const QString &file_path) {
     // read indices of road areas
     // begin with a line, with size of roads in it
     // then comes size lines, each of them looks like this:
-    // "row_idx,col_idx,to_direction,to_direction,to_direction,to_direction"
+    // "row_idx,col_idx,to_direction,to_direction,to_direction,to_direction,road_type"
     // The 4 directions are values mapped from {-1, 0}, {0, 1}, {1, 0}, {0, -1}
-    // Each direction looks like "x,y", so it should be split by ',' as well
+    // Each direction_ looks like "x,y", so it should be split by ',' as well
+    // road_type: 1 to start, 2 to terminal, otherwise 0
     // TODO: Invalid input
     line = in_file.readLine();
     int num_roads = line.toInt();
-    QHash<QPair<int, int>, Area*> pos2road;
+    QHash<AreaIndex, Area*> pos2road;
     for(int i = 0; i < num_roads; ++i){
         line = in_file.readLine();
         QStringList info = line.split(u',', Qt::SkipEmptyParts);
@@ -41,8 +42,12 @@ void GameField::loadFieldFromFile(const QString &file_path) {
             QPair<int, int> to = qMakePair(info[2 + k * 2].toInt(), info[3 + k * 2].toInt());
             road->setDirection(from, to);
         }
-        QPair<int, int> pos = qMakePair(info[0].toInt(), info[1].toInt());
+        AreaIndex pos = qMakePair(info[0].toInt(), info[1].toInt());
         pos2road[pos] = road;
+        if(info[10].toInt() == 1)
+            start_areas_idx_.push_back(pos);
+        else if(info[10].toInt() == 2)
+            terminal_areas_idx_.push_back(pos);
     }
 
     // fill the field
@@ -71,8 +76,64 @@ void GameField::moveMonsters() {
     for(auto* monster: monsters_){
         qreal move_dis = monster->getSpeed() * timer_.interval() / 1000;
         while(move_dis > 0.0){
-            // TODO: HOW TO MOVE
+            auto cur_direction = monster->getDirection();
+            auto cur_pos = monster->pos();
+            auto next_pos = cur_pos;
+            next_pos.setX(next_pos.x() + cur_direction.first * move_dis);
+            next_pos.setY(next_pos.y() + cur_direction.second * move_dis);
+
+            auto cur_area_idx = posToIndex(cur_pos);
+            auto next_area_idx = posToIndex(next_pos);
+            if(cur_area_idx == next_area_idx){
+                monster->setPos(next_pos);
+                move_dis = 0.0;
+                break;
+            }
+
+            // go into another area
+            auto cur_area = dynamic_cast<Road*>(areas_[cur_area_idx.first][cur_area_idx.second]);
+            auto cur_area_pos = cur_area->pos();
+            move_dis -= qAbs(cur_area_pos.x() - cur_pos.x());
+            move_dis -= qAbs(cur_area_pos.y() - cur_pos.y());
+            // TODO: Bug here
+            cur_area_pos.setX(cur_area_pos.x() + cur_direction.first * 0.000001);
+            cur_area_pos.setY(cur_area_pos.y() + cur_direction.second * 0.000001);
+            monster->setPos(cur_area_pos);
+            monster->setDirection(cur_area->getToDirection(monster->getDirection()));
         }
     }
+}
+
+typename GameField::AreaIndex GameField::posToIndex(QPointF pos) {
+    qreal x = pos.x();
+    qreal y = pos.y();
+    auto res = qMakePair(0, 0);
+    res.second = x < 0 ? -1 : qFloor(x) / AREA_SIZE;
+    res.first = y < 0 ? -1 : qFloor(y) / AREA_SIZE;
+    return res;
+}
+
+void GameField::debugStart() {
+    for(auto& start_idx: start_areas_idx_){
+        Monster* monster = new TestMonster();
+        addItem(monster);
+        monsters_.push_back(monster);
+        auto start_area = areas_[start_idx.first][start_idx.second];
+        auto start_pos = start_area->pos();
+        monster->setPos(start_pos);
+        qreal scale_factor = AREA_SIZE / (monster->boundingRect().height() - 1);
+        monster->setScale(scale_factor);
+
+        int directions[5] = {-1, 0, 1, 0, -1};
+        for(int i = 0; i < 4; ++i){
+            Direction from = qMakePair(directions[i], directions[i + 1]);
+            // C++17 If statement with initializer
+            if(auto to = dynamic_cast<Road*>(start_area)->getToDirection(from); to != qMakePair(0, 0)) {
+                monster->setDirection(to);
+                break;
+            }
+        }
+    }
+    timer_.start();
 }
 
