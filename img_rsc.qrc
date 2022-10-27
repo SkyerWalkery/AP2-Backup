@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/black_stained_glass.png</file>
+        <file>images/mushroom_stem.png</file>
+    </qresource>
+</RCC>
