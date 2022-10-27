@@ -20,23 +20,35 @@ void GameField::loadFieldFromFile(const QString &file_path) {
         throw std::invalid_argument("Invalid field size");
 
     // read indices of road areas
+    // begin with a line, with size of roads in it
+    // then comes size lines, each of them looks like this:
+    // "row_idx,col_idx,to_direction,to_direction,to_direction,to_direction"
+    // The 4 directions are values mapped from {-1, 0}, {0, 1}, {1, 0}, {0, -1}
+    // Each direction looks like "x,y", so it should be split by ',' as well
+    // TODO: Invalid input
     line = in_file.readLine();
-    QStringList roads = line.split(u',', Qt::SkipEmptyParts);
-    QSet<QPair<int, int>> road_pos;
-    for(int i = 0; i < static_cast<int>(roads.size()) - 1; i += 2){
-        road_pos.insert(qMakePair(roads[i].toInt(), roads[i + 1].toInt()));
+    int num_roads = line.toInt();
+    QHash<QPair<int, int>, Area*> pos2road;
+    for(int i = 0; i < num_roads; ++i){
+        line = in_file.readLine();
+        QStringList info = line.split(u',', Qt::SkipEmptyParts);
+        Road* road = new Road();
+        int directions[5] = {-1, 0, 1, 0, -1};
+        for(int k = 0; k < 4; ++k){
+            QPair<int, int> from = qMakePair(directions[k], directions[k + 1]);
+            QPair<int, int> to = qMakePair(info[2 + k * 2].toInt(), info[3 + k * 2].toInt());
+            road->setDirection(from, to);
+        }
+        QPair<int, int> pos = qMakePair(info[0].toInt(), info[1].toInt());
+        pos2road[pos] = road;
     }
 
     // fill the field
     areas_ = QList<QList<QGraphicsPixmapItem*>>(num_cols_);
     for(int i = 0; i < num_cols_; ++i){
         for(int j = 0; j < num_rows_; ++j){
-            QGraphicsPixmapItem* item = nullptr;
             auto pos = qMakePair(i, j);
-            if(road_pos.contains(pos))
-                item = new Road();
-            else
-                item = new Grass();
+            QGraphicsPixmapItem* item = pos2road.value(pos, new Grass());
             addItem(item);
             // scale to 48 px
             // height should minus 1

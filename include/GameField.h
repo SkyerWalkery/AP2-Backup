@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QStringList>
 #include <QSet>
+#include <QHash>
 #include <QPair>
 #include "Grass.h"
 #include "Road.h"

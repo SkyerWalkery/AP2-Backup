@@ -1,14 +1,29 @@
 #ifndef AP_PROJ_ROAD_H
 #define AP_PROJ_ROAD_H
 
+#include <QHash>
+#include <QPair>
+#include <QList>
 #include "Area.h"
 
 class Road: public Area{
 
-    static const QString TEXTURE;
+    static constexpr const char* TEXTURE = ":/images/road.png";
+
+    using Direction = QPair<int, int>;
+
+    // Map from "from direction" to "to direction"
+    // Suppose a monster come from upside (direction{0, 1}),
+    // and it should go left (direction{-1, 0}),
+    // then from2to_[{0, 1}] = {-1, 0}
+    // By default, from2to_[any] = {0, 0}
+    QHash<Direction, Direction> from2to_;
 
 public:
+
     explicit Road(QGraphicsItem *parent = nullptr);
+
+    Road& setDirection(const Direction & from, const Direction& to);
 };
 
 #endif //AP_PROJ_ROAD_H

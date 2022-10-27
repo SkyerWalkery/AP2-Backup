@@ -5,7 +5,7 @@
 
 class Grass: public Area{
 
-    static const QString TEXTURE;
+    static constexpr const char* TEXTURE = ":/images/grass.png";
 
 public:
     explicit Grass(QGraphicsItem *parent = nullptr);
