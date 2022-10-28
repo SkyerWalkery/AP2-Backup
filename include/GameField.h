@@ -11,6 +11,8 @@
 #include <QHash>
 #include <QPair>
 #include <QTimer>
+#include <QtMath>
+#include <QtGlobal>
 #include "Grass.h"
 #include "Road.h"
 #include "Monster.h"
@@ -22,13 +24,13 @@ class GameField: public QGraphicsScene{
     using Direction = QPair<int, int>;
     using AreaIndex = QPair<int, int>;
 
-    static constexpr const int AREA_SIZE = 48; // px
+    static constexpr const qreal AREA_SIZE = 48; // px
 
     int num_rows_ = 0;
     int num_cols_ = 0;
 
     QTimer timer_;
-    qreal fps_ = 60; // refresh rate
+    qreal fps_ = 59; // refresh rate
 
     QList<QList<QGraphicsPixmapItem*>> areas_;
     QList<Monster*> monsters_;

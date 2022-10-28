@@ -84,22 +84,59 @@ void GameField::moveMonsters() {
 
             auto cur_area_idx = posToIndex(cur_pos);
             auto next_area_idx = posToIndex(next_pos);
+            // After moving, monster is in the origin area.
             if(cur_area_idx == next_area_idx){
                 monster->setPos(next_pos);
                 move_dis = 0.0;
                 break;
             }
 
-            // go into another area
+            /* Go into another area
+             *
+             * In posToIndex(), each area has two edges,
+             * so there are 2 situations.
+             *
+             * If direction is {-1, 0} or {0, -1},
+             * new direction should come from next_area
+             *
+             * Else if direction is {1, 0} or {0, 1},
+             * new direction should come from cur_area
+             *
+             * For more details, refer to code below
+             */
+
             auto cur_area = dynamic_cast<Road*>(areas_[cur_area_idx.first][cur_area_idx.second]);
-            auto cur_area_pos = cur_area->pos();
-            move_dis -= qAbs(cur_area_pos.x() - cur_pos.x());
-            move_dis -= qAbs(cur_area_pos.y() - cur_pos.y());
-            // TODO: Bug here
-            cur_area_pos.setX(cur_area_pos.x() + cur_direction.first * 0.000001);
-            cur_area_pos.setY(cur_area_pos.y() + cur_direction.second * 0.000001);
-            monster->setPos(cur_area_pos);
-            monster->setDirection(cur_area->getToDirection(monster->getDirection()));
+            auto next_area = dynamic_cast<Road*>(areas_[next_area_idx.first][next_area_idx.second]);
+            if(cur_direction == qMakePair(-1, 0)
+                || cur_direction == qMakePair(0, -1)){
+                auto cur_area_pos = cur_area->pos();
+                move_dis -= qAbs(cur_area_pos.x() - cur_pos.x());
+                move_dis -= qAbs(cur_area_pos.y() - cur_pos.y());
+                // Edge condition: monster's pos is exactly the pos of area,
+                // direction has been set before, and cannot be reset.
+                if(cur_area_pos != monster->pos())
+                    monster->setDirection(cur_area->getToDirection(monster->getDirection()));
+                monster->setPos(cur_area_pos);
+
+                // Attention: if new direction is same as th old one
+                // and monster's pos is exactly the one of some area,
+                // we need to continue moving.
+                qreal cont_move_dis = qMin(AREA_SIZE, move_dis);
+                cur_direction = monster->getDirection();
+                cur_pos = monster->pos();
+                next_pos = cur_pos;
+                next_pos.setX(next_pos.x() + cur_direction.first * cont_move_dis);
+                next_pos.setY(next_pos.y() + cur_direction.second * cont_move_dis);
+                move_dis -= cont_move_dis;
+                monster->setPos(next_pos);
+            }
+            else{
+                auto next_area_pos = next_area->pos();
+                move_dis -= qAbs(next_area_pos.x() - cur_pos.x());
+                move_dis -= qAbs(next_area_pos.y() - cur_pos.y());
+                monster->setPos(next_area_pos);
+                monster->setDirection(next_area->getToDirection(monster->getDirection()));
+            }
         }
     }
 }
@@ -108,8 +145,8 @@ typename GameField::AreaIndex GameField::posToIndex(QPointF pos) {
     qreal x = pos.x();
     qreal y = pos.y();
     auto res = qMakePair(0, 0);
-    res.second = x < 0 ? -1 : qFloor(x) / AREA_SIZE;
-    res.first = y < 0 ? -1 : qFloor(y) / AREA_SIZE;
+    res.second = x < 0 ? -1 : qFloor(x) / qRound(AREA_SIZE);
+    res.first = y < 0 ? -1 : qFloor(y) / qRound(AREA_SIZE);
     return res;
 }
 
