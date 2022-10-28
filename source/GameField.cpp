@@ -80,6 +80,8 @@ void GameField::moveMonsters() {
         qreal move_dis = monster->getSpeed() * timer_.interval() / 1000;
         while(move_dis > 0.0){
             auto cur_direction = monster->getDirection();
+            if(cur_direction == qMakePair(0, 0))
+                break;
             auto cur_pos = monster->pos();
             auto next_pos = cur_pos;
             next_pos.setX(next_pos.x() + cur_direction.first * move_dis);
@@ -93,9 +95,6 @@ void GameField::moveMonsters() {
                 move_dis = 0.0;
                 break;
             }
-
-            if(cur_area_idx == qMakePair(5, 0))
-                qDebug() << "hi";
 
             /* Go into another area
              *
@@ -117,7 +116,6 @@ void GameField::moveMonsters() {
              */
 
             auto cur_area = dynamic_cast<Road*>(areas_[cur_area_idx.first][cur_area_idx.second]);
-            auto next_area = dynamic_cast<Road*>(areas_[next_area_idx.first][next_area_idx.second]);
             if(cur_direction == qMakePair(-1, 0)
                 || cur_direction == qMakePair(0, -1)){
                 auto cur_area_pos = cur_area->pos();
@@ -128,6 +126,12 @@ void GameField::moveMonsters() {
                 if(cur_area_pos != monster->pos())
                     monster->setDirection(cur_area->getToDirection(monster->getDirection()));
                 monster->setPos(cur_area_pos);
+
+                // Reach protection obj
+                if(protect_areas_idx_.contains(cur_area_idx)){
+                    monster->setDirection(qMakePair(0, 0));
+                    break;
+                }
 
                 // Attention: if new direction is same as th old one
                 // and monster's pos is exactly the one of some area,
@@ -142,14 +146,21 @@ void GameField::moveMonsters() {
                 monster->setPos(next_pos);
             }
             else{
+                auto next_area = dynamic_cast<Road*>(areas_[next_area_idx.first][next_area_idx.second]);
                 auto next_area_pos = next_area->pos();
                 move_dis -= qAbs(next_area_pos.x() - cur_pos.x());
                 move_dis -= qAbs(next_area_pos.y() - cur_pos.y());
                 monster->setPos(next_area_pos);
                 monster->setDirection(next_area->getToDirection(monster->getDirection()));
+                // Reach protection obj
+                if(protect_areas_idx_.contains(next_area_idx)){
+                    monster->setDirection(qMakePair(0, 0));
+                    break;
+                }
             }
         }
     }
+    checkReachProtectionObjective();
 }
 
 typename GameField::AreaIndex GameField::posToIndex(QPointF pos) {
