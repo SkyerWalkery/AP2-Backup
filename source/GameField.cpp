@@ -1,10 +1,13 @@
 #include "GameField.h"
 
 
-GameField::GameField(QObject* parent): QGraphicsScene(parent) {
+GameField::GameField(QObject* parent):
+    QGraphicsScene(parent)
+{
     // handle process events
     timer_.setInterval(static_cast<int>(1000 /* ms */ / fps_));
     connect(&timer_, &QTimer::timeout, this, &GameField::moveMonsters);
+
 }
 
 void GameField::loadFieldFromFile(const QString &file_path) {
@@ -27,7 +30,7 @@ void GameField::loadFieldFromFile(const QString &file_path) {
     // "row_idx,col_idx,to_direction,to_direction,to_direction,to_direction,road_type"
     // The 4 directions are values mapped from {-1, 0}, {0, 1}, {1, 0}, {0, -1}
     // Each direction_ looks like "x,y", so it should be split by ',' as well
-    // road_type: 1 to start, 2 to terminal, otherwise 0
+    // road_type: 1 to start, 2 to Protection Objective, otherwise 0
     // TODO: Invalid input
     line = in_file.readLine();
     int num_roads = line.toInt();
@@ -47,7 +50,7 @@ void GameField::loadFieldFromFile(const QString &file_path) {
         if(info[10].toInt() == 1)
             start_areas_idx_.push_back(pos);
         else if(info[10].toInt() == 2)
-            terminal_areas_idx_.push_back(pos);
+            protect_areas_idx_.push_back(pos);
     }
 
     // fill the field
@@ -91,6 +94,9 @@ void GameField::moveMonsters() {
                 break;
             }
 
+            if(cur_area_idx == qMakePair(5, 0))
+                qDebug() << "hi";
+
             /* Go into another area
              *
              * In posToIndex(), each area has two edges,
@@ -103,6 +109,11 @@ void GameField::moveMonsters() {
              * new direction should come from cur_area
              *
              * For more details, refer to code below
+             */
+
+            /* Note:
+             * Under normal conditions, next_area would not out of range,
+             * so just ignore the condition
              */
 
             auto cur_area = dynamic_cast<Road*>(areas_[cur_area_idx.first][cur_area_idx.second]);
@@ -174,3 +185,38 @@ void GameField::debugStart() {
     timer_.start();
 }
 
+void GameField::checkReachProtectionObjective() {
+    auto it = monsters_.begin();
+    while(it != monsters_.end()){
+        Monster* monster = *it;
+        // Still heading for protection objective
+        if(monster->getDirection() != qMakePair(0, 0)) {
+            ++it;
+            continue;
+        }
+        auto cur_pos = monster->pos();
+        auto cur_area_idx = posToIndex(cur_pos);
+        if(!protect_areas_idx_.contains(cur_area_idx)){
+            throw std::runtime_error(
+                    "Game Error: monster direction is {0, 0} "
+                    "but hasn't reach protection objective"
+                    );
+        }
+        life_points_--;
+        removeItem(monster);
+        it = monsters_.erase(it);
+    }
+    checkGameEnd();
+}
+
+void GameField::checkGameEnd() {
+    if(life_points_ > 0)
+        return;
+
+    auto* background = new QGraphicsRectItem;
+    background->setPen(Qt::NoPen);
+    background->setBrush(QBrush(QColor(255, 0, 0, 128)));
+    background->setRect(this->sceneRect());
+    addItem(background);
+    timer_.stop();
+}

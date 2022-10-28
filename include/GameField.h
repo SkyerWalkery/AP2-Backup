@@ -13,6 +13,7 @@
 #include <QTimer>
 #include <QtMath>
 #include <QtGlobal>
+#include <QPropertyAnimation>
 #include "Grass.h"
 #include "Road.h"
 #include "Monster.h"
@@ -36,7 +37,9 @@ class GameField: public QGraphicsScene{
     QList<Monster*> monsters_;
 
     QList<AreaIndex> start_areas_idx_;
-    QList<AreaIndex> terminal_areas_idx_;
+    QList<AreaIndex> protect_areas_idx_;
+
+    int life_points_ = 1; // TODO: Init from file
 
 public:
     explicit GameField(QObject* parent = nullptr);
@@ -45,7 +48,9 @@ public:
 
     void setFps(qreal fps);
 
-    void moveMonsters();
+    void debugStart();
+
+private:
 
     /*
     * Returns {row_idx, col_idx} of the area which pos is at.
@@ -54,7 +59,18 @@ public:
     */
     static AreaIndex posToIndex(QPointF pos);
 
-    void debugStart();
+    /*
+     * Check if any monster has reached the Protection Objective.
+     * If so, remove it from the field and minus life_points_ by 1.
+     * If
+     */
+    void checkReachProtectionObjective();
+
+    void checkGameEnd();
+
+private slots:
+    void moveMonsters();
+
 };
 
 #endif //AP_PROJ_GAMEFIELD_H
