@@ -10,6 +10,10 @@ Road::Road(QGraphicsItem *parent) : Area(parent) {
         from2to_[qMakePair(directions[i], directions[i + 1])] = qMakePair(0, 0);
 }
 
+int Road::type() const {
+    return UserType + 2;
+}
+
 Road &Road::setDirection(const Direction &from, const Direction &to) {
     int directions[5] = {-1, 0, 1, 0, -1};
     for(int i = 0; i < 4; ++i) {

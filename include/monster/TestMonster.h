@@ -9,6 +9,9 @@ class TestMonster: public Monster{
 
 public:
 
+    // Used in qgraphicsitem_cast
+    int type() const override;
+
     explicit TestMonster(QGraphicsItem *parent = nullptr);
 };
 

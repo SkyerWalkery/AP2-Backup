@@ -23,6 +23,9 @@ public:
 
     explicit Road(QGraphicsItem *parent = nullptr);
 
+    // Used in qgraphicsitem_cast
+    int type() const override;
+
     Road& setDirection(const Direction & from, const Direction& to);
 
     Direction getToDirection(const Direction & from) const;

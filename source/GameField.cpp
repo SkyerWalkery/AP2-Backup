@@ -75,6 +75,14 @@ void GameField::setFps(qreal fps) {
     timer_.setInterval(static_cast<int>(1000 /* ms */ / fps_));
 }
 
+
+void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
+    QGraphicsScene::mouseReleaseEvent(mouseEvent);
+
+}
+
+
+
 void GameField::moveMonsters() {
     for(auto* monster: monsters_){
         qreal total_move_dis = monster->getSpeed() * timer_.interval() / 1000;

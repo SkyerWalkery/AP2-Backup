@@ -53,6 +53,8 @@ public:
 
 private:
 
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+
     /*
     * Returns {row_idx, col_idx} of the area which pos is at.
     * If pos is out of rect of scene, a valid pair will still be returned.
