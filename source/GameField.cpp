@@ -78,7 +78,7 @@ void GameField::setFps(qreal fps) {
 void GameField::moveMonsters() {
     for(auto* monster: monsters_){
         qreal move_dis = monster->getSpeed() * timer_.interval() / 1000;
-        while(move_dis > 0.0){
+        while(move_dis > REAL_COMPENSATION){
             auto cur_direction = monster->getDirection();
             if(cur_direction == qMakePair(0, 0))
                 break;
@@ -89,10 +89,19 @@ void GameField::moveMonsters() {
 
             auto cur_area_idx = posToIndex(cur_pos);
             auto next_area_idx = posToIndex(next_pos);
+
+            qDebug() << cur_area_idx;
+            if(cur_area_idx == qMakePair(5, 1))
+                qDebug() << "hi";
             // After moving, monster is in the origin area.
             if(cur_area_idx == next_area_idx){
                 monster->setPos(next_pos);
                 move_dis = 0.0;
+                auto cur_area = dynamic_cast<Road*>(areas_[cur_area_idx.first][cur_area_idx.second]);
+                // If pos is same as any area,
+                // direction may need to be changed
+                if(pointFloatEqual(monster->pos(), cur_area->pos()))
+                    monster->setDirection(cur_area->getToDirection(monster->getDirection()));
                 break;
             }
 
@@ -123,7 +132,7 @@ void GameField::moveMonsters() {
                 move_dis -= qAbs(cur_area_pos.y() - cur_pos.y());
                 // Edge condition: monster's pos is exactly the pos of area,
                 // direction has been set before, and cannot be reset.
-                if(cur_area_pos != monster->pos())
+                if(!pointFloatEqual(monster->pos(), cur_area->pos()))
                     monster->setDirection(cur_area->getToDirection(monster->getDirection()));
                 monster->setPos(cur_area_pos);
 
@@ -167,10 +176,21 @@ typename GameField::AreaIndex GameField::posToIndex(QPointF pos) {
     qreal x = pos.x();
     qreal y = pos.y();
     auto res = qMakePair(0, 0);
-    res.second = x < 0 ? -1 : qFloor(x) / qRound(AREA_SIZE);
-    res.first = y < 0 ? -1 : qFloor(y) / qRound(AREA_SIZE);
+    res.second = x < 0 ? -1 : qFloor(x + REAL_COMPENSATION) / qRound(AREA_SIZE);
+    res.first = y < 0 ? -1 : qFloor(y + REAL_COMPENSATION) / qRound(AREA_SIZE);
     return res;
 }
+
+
+bool GameField::qRealEqual(qreal r1, qreal r2) {
+    return qAbs(r1 - r2) <= REAL_COMPENSATION;
+}
+
+
+bool GameField::pointFloatEqual(const QPointF& p1, const QPointF& p2){
+    return qRealEqual(p1.x(), p2.x()) && qRealEqual(p1.y(), p2.y());
+}
+
 
 void GameField::debugStart() {
     for(auto& start_idx: start_areas_idx_){

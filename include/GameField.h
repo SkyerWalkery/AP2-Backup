@@ -26,12 +26,13 @@ class GameField: public QGraphicsScene{
     using AreaIndex = QPair<int, int>;
 
     static constexpr const qreal AREA_SIZE = 48; // px
+    static constexpr const qreal REAL_COMPENSATION = 0.0000001;
 
     int num_rows_ = 0;
     int num_cols_ = 0;
 
     QTimer timer_;
-    qreal fps_ = 59; // refresh rate
+    qreal fps_ = 3; // refresh rate
 
     QList<QList<QGraphicsPixmapItem*>> areas_;
     QList<Monster*> monsters_;
@@ -58,6 +59,19 @@ private:
     * -1 <= row_idx <= num_rows, -1 <= col_idx <= num_cols.
     */
     static AreaIndex posToIndex(QPointF pos);
+
+    /*
+     * Return if r1 equals to r2
+     * Taking double precision into account
+     */
+    static bool qRealEqual(qreal r1, qreal r2);
+
+    /*
+     * Return if pos1 equals to pos2
+     * Taking double precision into account
+     * Note: qRealEqual(qreal, qreal) is called in this method
+     */
+    static bool pointFloatEqual(const QPointF& p1, const QPointF& p2);
 
     /*
      * Check if any monster has reached the Protection Objective.
