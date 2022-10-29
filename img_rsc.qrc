@@ -3,5 +3,9 @@
         <file>images/grass.png</file>
         <file>images/road.png</file>
         <file>images/test_monster.png</file>
+        <file>images/cake.png</file>
+        <file>images/test_tower1.png</file>
+        <file>images/test_tower2.png</file>
+        <file>images/test_tower3.png</file>
     </qresource>
 </RCC>
