@@ -32,7 +32,7 @@ class GameField: public QGraphicsScene{
     int num_cols_ = 0;
 
     QTimer timer_;
-    qreal fps_ = 3; // refresh rate
+    qreal fps_ = 59; // refresh rate
 
     QList<QList<QGraphicsPixmapItem*>> areas_;
     QList<Monster*> monsters_;

@@ -2,5 +2,5 @@
 
 TestMonster::TestMonster(QGraphicsItem *parent) : Monster(parent) {
     setPixmap(QPixmap(TEXTURE));
-    speed_ = 240;
+    speed_ = 25;
 }

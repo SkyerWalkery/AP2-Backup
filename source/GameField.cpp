@@ -77,8 +77,14 @@ void GameField::setFps(qreal fps) {
 
 void GameField::moveMonsters() {
     for(auto* monster: monsters_){
-        qreal move_dis = monster->getSpeed() * timer_.interval() / 1000;
-        while(move_dis > REAL_COMPENSATION){
+        qreal total_move_dis = monster->getSpeed() * timer_.interval() / 1000;
+        while(total_move_dis > REAL_COMPENSATION){
+            // Limit move_dis in one loop
+            // so that it is not more than one area.
+            // For security, the limit is half the size of area
+            qreal move_dis = qMin(AREA_SIZE / 2, total_move_dis);
+            total_move_dis -= move_dis;
+
             auto cur_direction = monster->getDirection();
             if(cur_direction == qMakePair(0, 0))
                 break;
@@ -90,9 +96,6 @@ void GameField::moveMonsters() {
             auto cur_area_idx = posToIndex(cur_pos);
             auto next_area_idx = posToIndex(next_pos);
 
-            qDebug() << cur_area_idx;
-            if(cur_area_idx == qMakePair(5, 1))
-                qDebug() << "hi";
             // After moving, monster is in the origin area.
             if(cur_area_idx == next_area_idx){
                 monster->setPos(next_pos);
@@ -145,7 +148,7 @@ void GameField::moveMonsters() {
                 // Attention: if new direction is same as th old one
                 // and monster's pos is exactly the one of some area,
                 // we need to continue moving.
-                qreal cont_move_dis = qMin(AREA_SIZE, move_dis);
+                qreal cont_move_dis = qMin(AREA_SIZE / 2, move_dis);
                 cur_direction = monster->getDirection();
                 cur_pos = monster->pos();
                 next_pos = cur_pos;
@@ -167,6 +170,9 @@ void GameField::moveMonsters() {
                     break;
                 }
             }
+            // if move_dis is greater than 0, it needs to be back to total distance
+            if(move_dis > REAL_COMPENSATION)
+                total_move_dis += move_dis;
         }
     }
     checkReachProtectionObjective();
