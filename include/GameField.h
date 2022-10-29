@@ -13,6 +13,7 @@
 #include <QTimer>
 #include <QtMath>
 #include <QtGlobal>
+#include <QPainter>
 #include <QPropertyAnimation>
 #include "Grass.h"
 #include "Road.h"

@@ -9,9 +9,30 @@ GameField::GameField(QObject* parent):
     connect(&timer_, &QTimer::timeout, this, &GameField::moveMonsters);
 
     // Construct build buttons and set as invisible
-    auto* tower_opt1 = new QGraphicsPixmapItem(QPixmap(":/images/test_tower1.png"));
-    auto* tower_opt2 = new QGraphicsPixmapItem(QPixmap(":/images/test_tower2.png"));
-    auto* tower_opt3 = new QGraphicsPixmapItem(QPixmap(":/images/test_tower3.png"));
+    // Need to add a background before
+    // TODO: code below can be cleaner
+    auto tower1_pixmap = QPixmap(":/images/test_tower1.png");
+    auto tower2_pixmap = QPixmap(":/images/test_tower2.png");
+    auto tower3_pixmap = QPixmap(":/images/test_tower3.png");
+    auto mask1 = tower1_pixmap.createMaskFromColor(Qt::transparent, Qt::MaskOutColor);
+    auto mask2 = tower1_pixmap.createMaskFromColor(Qt::transparent, Qt::MaskOutColor);
+    auto mask3 = tower1_pixmap.createMaskFromColor(Qt::transparent, Qt::MaskOutColor);
+    auto p1 = QPainter(&tower1_pixmap);
+    p1.setPen(QColor(255, 255, 255));
+    p1.drawPixmap(tower1_pixmap.rect(), mask1, mask1.rect());
+    p1.end();
+    auto p2 = QPainter(&tower2_pixmap);
+    p2.setPen(QColor(255, 255, 255));
+    p2.drawPixmap(tower2_pixmap.rect(), mask2, mask3.rect());
+    p2.end();
+    auto p3 = QPainter(&tower3_pixmap);
+    p3.setPen(QColor(255, 255, 255));
+    p3.drawPixmap(tower3_pixmap.rect(), mask2, mask3.rect());
+    p3.end();
+
+    auto* tower_opt1 = new QGraphicsPixmapItem(tower1_pixmap);
+    auto* tower_opt2 = new QGraphicsPixmapItem(tower2_pixmap);
+    auto* tower_opt3 = new QGraphicsPixmapItem(tower3_pixmap);
     build_options_.append({tower_opt1, tower_opt2, tower_opt3});
     for(int i = 0; i < 3; ++i){
         auto* opt = build_options_[i];
@@ -22,7 +43,7 @@ GameField::GameField(QObject* parent):
         opt->setAcceptTouchEvents(true);
         opt->setFlag(QGraphicsItem::ItemIsSelectable);
         opt->setScale(scale_factor);
-        opt->setOffset(-AREA_OPTION_SIZE * 0.75 + AREA_OPTION_SIZE * i, AREA_OPTION_SIZE);
+        opt->setOffset(-AREA_OPTION_SIZE * 0.7 + AREA_OPTION_SIZE * i, AREA_OPTION_SIZE);
         opt->setVisible(false);
         opt->setZValue(1); // Always show on top of scene
     }
