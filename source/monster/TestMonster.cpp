@@ -6,5 +6,5 @@ TestMonster::TestMonster(QGraphicsItem *parent) : Monster(parent) {
 }
 
 int TestMonster::type() const {
-    return UserType + 3;
+    return Type;
 }

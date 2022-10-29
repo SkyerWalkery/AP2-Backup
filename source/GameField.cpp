@@ -8,6 +8,24 @@ GameField::GameField(QObject* parent):
     timer_.setInterval(static_cast<int>(1000 /* ms */ / fps_));
     connect(&timer_, &QTimer::timeout, this, &GameField::moveMonsters);
 
+    // Construct build buttons and set as invisible
+    auto* tower_opt1 = new QGraphicsPixmapItem(QPixmap(":/images/test_tower1.png"));
+    auto* tower_opt2 = new QGraphicsPixmapItem(QPixmap(":/images/test_tower2.png"));
+    auto* tower_opt3 = new QGraphicsPixmapItem(QPixmap(":/images/test_tower3.png"));
+    build_options_.append({tower_opt1, tower_opt2, tower_opt3});
+    for(int i = 0; i < 3; ++i){
+        auto* opt = build_options_[i];
+        addItem(opt);
+        // scale to 24 px
+        // height should minus 1
+        qreal scale_factor = AREA_OPTION_SIZE / (opt->boundingRect().height() - 1);
+        opt->setAcceptTouchEvents(true);
+        opt->setFlag(QGraphicsItem::ItemIsSelectable);
+        opt->setScale(scale_factor);
+        opt->setOffset(-AREA_OPTION_SIZE * 0.75 + AREA_OPTION_SIZE * i, AREA_OPTION_SIZE);
+        opt->setVisible(false);
+        opt->setZValue(1); // Always show on top of scene
+    }
 }
 
 void GameField::loadFieldFromFile(const QString &file_path) {
@@ -78,7 +96,43 @@ void GameField::setFps(qreal fps) {
 
 void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
+    if(build_options_[0]->isVisible()) {
+        hideBuildOptions();
+        return;
+    }
+    auto pos = mouseEvent->scenePos();
+    auto area_idx = posToIndex(pos);
+    auto* grass = qgraphicsitem_cast<Grass*>(areas_[area_idx.first][area_idx.second]);
+    if(!grass) // The area is road: do nothing.
+        return;
+    if(grass->isOccupied()){
+        // TODO: Edit the tower
+    }
+    else{
+        // TODO: need to be implemented
+        // Grass is empty
+        // First, show towers can be built
+        // Then, (if player click) build a tower
+        displayBuildOptions(area_idx);
+    }
+}
 
+
+void GameField::hideBuildOptions() {
+    for(auto* opt: build_options_){
+        opt->setVisible(false);
+    }
+}
+
+
+void GameField::displayBuildOptions(AreaIndex area_idx) {
+    auto* area = areas_[area_idx.first][area_idx.second];
+    auto pos = area->pos();
+    // TODO: Code below is for test
+    for(auto* opt: build_options_){
+        opt->setPos(pos);
+        opt->setVisible(true);
+    }
 }
 
 

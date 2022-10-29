@@ -11,7 +11,7 @@ Road::Road(QGraphicsItem *parent) : Area(parent) {
 }
 
 int Road::type() const {
-    return UserType + 2;
+    return Type;
 }
 
 Road &Road::setDirection(const Direction &from, const Direction &to) {

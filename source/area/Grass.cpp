@@ -6,7 +6,7 @@ Grass::Grass(QGraphicsItem *parent) : Area(parent) {
 }
 
 int Grass::type() const {
-    return UserType + 1;
+    return Type;
 }
 
 bool Grass::isOccupied() const {

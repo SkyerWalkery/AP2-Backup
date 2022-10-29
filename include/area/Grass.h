@@ -14,6 +14,7 @@ public:
     explicit Grass(QGraphicsItem *parent = nullptr);
 
     // Used in qgraphicsitem_cast
+    enum { Type = UserType + 1 };
     int type() const override;
 
     bool isOccupied() const;

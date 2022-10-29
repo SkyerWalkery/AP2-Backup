@@ -26,6 +26,7 @@ class GameField: public QGraphicsScene{
     using AreaIndex = QPair<int, int>;
 
     static constexpr const qreal AREA_SIZE = 48; // px
+    static constexpr const qreal AREA_OPTION_SIZE = 24; // px
     static constexpr const qreal REAL_COMPENSATION = 0.0000001;
 
     int num_rows_ = 0;
@@ -42,6 +43,9 @@ class GameField: public QGraphicsScene{
 
     int life_points_ = 1; // TODO: Init from file
 
+    // Below are components related to towers
+    QList<QGraphicsPixmapItem*> build_options_;
+
 public:
     explicit GameField(QObject* parent = nullptr);
 
@@ -54,6 +58,10 @@ public:
 private:
 
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+
+    void hideBuildOptions();
+
+    void displayBuildOptions(AreaIndex area_idx);
 
     /*
     * Returns {row_idx, col_idx} of the area which pos is at.
