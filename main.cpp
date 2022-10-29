@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
     // view.setRenderHint(QPainter::Antialiasing);
     view.setScene(&field);
     QRectF rect = field.sceneRect();
-    qreal margin = 32;
+    qreal margin = 64;
     rect.setWidth(rect.width() + margin);
     rect.setHeight(rect.height() + margin);
     view.setFixedSize(rect.size().toSize());

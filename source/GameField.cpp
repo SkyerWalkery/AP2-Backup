@@ -10,43 +10,30 @@ GameField::GameField(QObject* parent):
 
     // Construct build buttons and set as invisible
     // Need to add a background before
-    // TODO: code below can be cleaner
-    auto tower1_pixmap = QPixmap(":/images/test_tower1.png");
-    auto tower2_pixmap = QPixmap(":/images/test_tower2.png");
-    auto tower3_pixmap = QPixmap(":/images/test_tower3.png");
-    auto mask1 = tower1_pixmap.createMaskFromColor(Qt::transparent, Qt::MaskOutColor);
-    auto mask2 = tower1_pixmap.createMaskFromColor(Qt::transparent, Qt::MaskOutColor);
-    auto mask3 = tower1_pixmap.createMaskFromColor(Qt::transparent, Qt::MaskOutColor);
-    auto p1 = QPainter(&tower1_pixmap);
-    p1.setPen(QColor(255, 255, 255));
-    p1.drawPixmap(tower1_pixmap.rect(), mask1, mask1.rect());
-    p1.end();
-    auto p2 = QPainter(&tower2_pixmap);
-    p2.setPen(QColor(255, 255, 255));
-    p2.drawPixmap(tower2_pixmap.rect(), mask2, mask3.rect());
-    p2.end();
-    auto p3 = QPainter(&tower3_pixmap);
-    p3.setPen(QColor(255, 255, 255));
-    p3.drawPixmap(tower3_pixmap.rect(), mask2, mask3.rect());
-    p3.end();
-
-    auto* tower_opt1 = new QGraphicsPixmapItem(tower1_pixmap);
-    auto* tower_opt2 = new QGraphicsPixmapItem(tower2_pixmap);
-    auto* tower_opt3 = new QGraphicsPixmapItem(tower3_pixmap);
-    build_options_.append({tower_opt1, tower_opt2, tower_opt3});
+    auto* build_options_layout = new QGraphicsLinearLayout;
     for(int i = 0; i < 3; ++i){
-        auto* opt = build_options_[i];
-        addItem(opt);
-        // scale to 24 px
-        // height should minus 1
-        qreal scale_factor = AREA_OPTION_SIZE / (opt->boundingRect().height() - 1);
-        opt->setAcceptTouchEvents(true);
-        opt->setFlag(QGraphicsItem::ItemIsSelectable);
-        opt->setScale(scale_factor);
-        opt->setOffset(-AREA_OPTION_SIZE * 0.7 + AREA_OPTION_SIZE * i, AREA_OPTION_SIZE);
-        opt->setVisible(false);
-        opt->setZValue(1); // Always show on top of scene
+        // Get icon and add a background
+        QString file_name = QString(":/images/test_tower%1.png").arg(i + 1);
+        auto button_pixmap = QPixmap(file_name);
+        auto mask = button_pixmap.createMaskFromColor(Qt::transparent, Qt::MaskOutColor);
+        auto painter = QPainter(&button_pixmap);
+        painter.setPen(QColor(255, 255, 255, 128));
+        painter.drawPixmap(button_pixmap.rect(), mask, mask.rect());
+        painter.end();
+
+        auto* button = new QPushButton();
+        button->setIcon(button_pixmap);
+        button->setIconSize(QSize(128, 32));
+        // TODO: Scale the icon
+        auto* proxy = new QGraphicsProxyWidget;
+        proxy->setWidget(button);
+        build_options_layout->addItem(proxy);
     }
+    this->build_options_->setLayout(build_options_layout);
+    // Scale to a fixed size
+    addItem(build_options_);
+    build_options_->setVisible(false);
+    build_options_->setZValue(1);
 }
 
 void GameField::loadFieldFromFile(const QString &file_path) {
@@ -91,6 +78,7 @@ void GameField::loadFieldFromFile(const QString &file_path) {
         else if(info[10].toInt() == 2)
             protect_areas_idx_.push_back(pos);
     }
+    in_file.close();
 
     // fill the field
     areas_ = QList<QList<QGraphicsPixmapItem*>>(num_cols_);
@@ -117,8 +105,8 @@ void GameField::setFps(qreal fps) {
 
 void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
-    if(build_options_[0]->isVisible()) {
-        hideBuildOptions();
+    if(build_options_->isVisible()) {
+        build_options_->setVisible(false);
         return;
     }
     auto pos = mouseEvent->scenePos();
@@ -139,21 +127,11 @@ void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
 }
 
 
-void GameField::hideBuildOptions() {
-    for(auto* opt: build_options_){
-        opt->setVisible(false);
-    }
-}
-
-
 void GameField::displayBuildOptions(AreaIndex area_idx) {
     auto* area = areas_[area_idx.first][area_idx.second];
     auto pos = area->pos();
-    // TODO: Code below is for test
-    for(auto* opt: build_options_){
-        opt->setPos(pos);
-        opt->setVisible(true);
-    }
+    build_options_->setPos(pos.x() - build_options_->size().width() / 2, pos.y() + AREA_SIZE);
+    build_options_->setVisible(true);
 }
 
 
