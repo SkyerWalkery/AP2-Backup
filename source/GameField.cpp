@@ -21,10 +21,11 @@ GameField::GameField(QObject* parent):
         painter.drawPixmap(button_pixmap.rect(), mask, mask.rect());
         painter.end();
 
+        button_pixmap = button_pixmap.scaled(32, 32);
         auto* button = new QPushButton();
         button->setIcon(button_pixmap);
-        button->setIconSize(QSize(128, 32));
-        // TODO: Scale the icon
+        button->setIconSize(QSize(32, 32));
+        // TODO: Scale the icon and define some const val
         auto* proxy = new QGraphicsProxyWidget;
         proxy->setWidget(button);
         build_options_layout->addItem(proxy);
