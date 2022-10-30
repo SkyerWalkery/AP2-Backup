@@ -13,6 +13,7 @@ protected:
 
     Direction direction_ = qMakePair(0, 0);
     qreal speed_ = 10.0; // num of px per second to move
+    int health_ = 0;
 
 public:
 
@@ -25,6 +26,16 @@ public:
     Direction getDirection() const;
 
     void setDirection(const Direction& direction);
+
+    int getHealth() const;
+
+    void setHealth(int health);
+
+    /*
+     * Called by character when it trys to attack.
+     * The default implementation only reduce the health
+     */
+    virtual void attacked(int damage);
 };
 
 #endif //AP_PROJ_MONSTER_H

@@ -63,7 +63,11 @@ public:
     bool inAttackRange(const QPointF& pos) const;
 
     // Virtual methods that default ones are given
-
+    /*
+     * Try to attack a monster
+     * Note: monster->attacked() would be called
+     */
+    virtual void attack(Monster* monster);
 
 };
 

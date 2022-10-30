@@ -53,3 +53,8 @@ bool Character::inAttackRange(const QPointF& pos) const {
     return distance <= getAttackRange() * area_size_;
 }
 
+void Character::attack(Monster* monster) {
+    // TODO: Take recharge time into account
+    monster->attacked(getDamage());
+}
+

@@ -22,3 +22,15 @@ Monster::Direction Monster::getDirection() const {
 void Monster::setDirection(const Monster::Direction &direction) {
     direction_ = direction;
 }
+
+int Monster::getHealth() const {
+    return health_;
+}
+
+void Monster::setHealth(int health) {
+    health_ = health;
+}
+
+void Monster::attacked(int damage) {
+    setHealth(getHealth() - damage);
+}
