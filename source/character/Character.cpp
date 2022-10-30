@@ -42,3 +42,14 @@ int Character::getHealth() const {
 void Character::setHealth(int health) {
     health_ = health;
 }
+
+void Character::setAreaSize(qreal size) {
+    area_size_ = size;
+}
+
+bool Character::inAttackRange(const QPointF& pos) const {
+    auto this_pos = scenePos();
+    qreal distance = qSqrt(qPow(this_pos.x() - pos.x(), 2) + qPow(this_pos.y() - pos.y(), 2));
+    return distance <= getAttackRange() * area_size_;
+}
+
