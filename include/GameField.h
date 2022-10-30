@@ -50,7 +50,7 @@ class GameField: public QGraphicsScene{
 
     int life_points_ = 1; // TODO: Init from file
 
-    // Below are components related to tower.
+    // Below are components related to character.
     // build_options_ holds a layout, which holds 3 options
     QGraphicsWidget* build_options_ = new QGraphicsWidget;
 

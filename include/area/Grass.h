@@ -7,7 +7,7 @@ class Grass: public Area{
 
     static constexpr const char* TEXTURE = ":/images/grass.png";
 
-    // If this area has a tower or other objects
+    // If this area has a character or other objects
     bool occupied_ = false;
 
 public:

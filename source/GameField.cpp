@@ -117,13 +117,13 @@ void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     if(!grass) // The area is road: do nothing.
         return;
     if(grass->isOccupied()){
-        // TODO: Edit the tower
+        // TODO: Edit the character
     }
     else{
         // TODO: need to be implemented
         // Grass is empty
         // First, show towers can be built
-        // Then, (if player click) build a tower
+        // Then, (if player click) build a character
         displayBuildOptions(area_idx);
     }
 }

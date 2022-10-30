@@ -16,17 +16,17 @@ set(CMAKE_AUTORCC ON)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/area)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/monster)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/tower)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/character)
 
 aux_source_directory(. MAIN_SRC)
 aux_source_directory(./source COMPONENTS_SRC)
 aux_source_directory(./source/area AREA_SRC)
 aux_source_directory(./source/monster MONSTER_SRC)
-aux_source_directory(./source/tower TOWER_SRC)
+aux_source_directory(source/character CHARACTER_SRC)
 
 add_executable(${PROJECT_NAME}
         ${MAIN_SRC} ${COMPONENTS_SRC}
-        ${AREA_SRC} ${MONSTER_SRC} ${TOWER_SRC}
+        ${AREA_SRC} ${MONSTER_SRC} ${CHARACTER_SRC}
         img_rsc.qrc
         )
 
