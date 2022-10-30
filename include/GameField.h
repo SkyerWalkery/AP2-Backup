@@ -47,6 +47,7 @@ class GameField: public QGraphicsScene{
 
     QList<QList<QGraphicsPixmapItem*>> areas_;
     QList<Monster*> monsters_;
+    QList<Character*> characters_;
 
     QList<AreaIndex> start_areas_idx_;
     QList<AreaIndex> protect_areas_idx_;
@@ -119,9 +120,19 @@ private:
     static QString typeToTexture(CharacterType type);
 
 private slots:
+
+    /*
+     * Called by timer.
+     * Move monsters in each frame
+     */
     void moveMonsters();
 
-
+    /*
+     * Slot for placeCharacter button
+     * Note: need a lambda to pass parameter `type`
+     * @param type: type of character (call typeToCharacter() to make a new character)
+     */
+    void placeCharacter(CharacterType type);
 
 };
 
