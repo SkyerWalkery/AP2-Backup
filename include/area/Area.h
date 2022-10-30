@@ -3,7 +3,6 @@
 
 #include <QGraphicsPixmapItem>
 #include <QGraphicsItem>
-#include <iostream>
 #include <QGraphicsSceneMouseEvent>
 
 
