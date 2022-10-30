@@ -25,6 +25,9 @@
 #include "Road.h"
 #include "Monster.h"
 #include "TestMonster.h"
+#include "Character.h"
+#include "Elf.h"
+#include "CharacterType.h"
 
 
 class GameField: public QGraphicsScene{
@@ -33,7 +36,7 @@ class GameField: public QGraphicsScene{
     using AreaIndex = QPair<int, int>;
 
     static constexpr const qreal AREA_SIZE = 48; // px
-    static constexpr const qreal TOWER_OPTION_SIZE = 32; // px
+    static constexpr const qreal CHARACTER_OPTION_SIZE = 32; // px
     static constexpr const qreal REAL_COMPENSATION = 0.0000001;
 
     int num_rows_ = 0;
@@ -51,13 +54,18 @@ class GameField: public QGraphicsScene{
     int life_points_ = 1; // TODO: Init from file
 
     // Below are components related to character.
-    // build_options_ holds a layout, which holds 3 options
-    QGraphicsWidget* build_options_ = new QGraphicsWidget;
+    // place_options_ holds a layout, which may holds more than one options
+    QGraphicsWidget* place_options_ = new QGraphicsWidget;
+    // character_types_ contains character types that can be placed in this field
+    // TODO: Init from file
+    QList<CharacterType> character_types_;
 
 public:
     explicit GameField(QObject* parent = nullptr);
 
     void loadFieldFromFile(const QString& file_path);
+
+    void loadCharacterOptionFromFile(const QString& file_path);
 
     void setFps(qreal fps);
 
@@ -98,8 +106,22 @@ private:
 
     void checkGameEnd();
 
+    /*
+     * Map from type to pointer to a new Character
+     * If type is invalid, an exception will be thrown
+     */
+    static Character* typeToCharacter(CharacterType type);
+
+    /*
+     * Map from type to path of texture
+     * If type is invalid, an exception will be thrown
+     */
+    static QString typeToTexture(CharacterType type);
+
 private slots:
     void moveMonsters();
+
+
 
 };
 

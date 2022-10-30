@@ -1,5 +1,6 @@
 #include "Character.h"
 
+qreal Character::area_size_ = 0;
 
 Character::Character(QGraphicsItem *parent) : QGraphicsPixmapItem(parent) {
 

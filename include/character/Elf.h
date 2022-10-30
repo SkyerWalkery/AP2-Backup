@@ -6,9 +6,9 @@
 
 class Elf: public Character{
 
-    static constexpr const char* TEXTURE = ":/images/elf.png";
-
 public:
+
+    static constexpr const char* TEXTURE = ":/images/elf.png";
 
     static constexpr const int SunCost = 0; // Cost to put this character
 

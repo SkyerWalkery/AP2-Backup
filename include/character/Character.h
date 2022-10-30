@@ -26,7 +26,7 @@ protected:
 
     int health_ = 0; // Only for characters that can be put on roads
 
-    static qreal area_size_ = 0; // Must be set before construct
+    static qreal area_size_; // Must be set before construct
 
 public:
 

@@ -8,34 +8,6 @@ GameField::GameField(QObject* parent):
     timer_.setInterval(static_cast<int>(1000 /* ms */ / fps_));
     connect(&timer_, &QTimer::timeout, this, &GameField::moveMonsters);
 
-    // Construct build buttons and set as invisible
-    // Need to add a background before
-    auto* build_options_layout = new QGraphicsLinearLayout;
-    for(int i = 0; i < 3; ++i){
-        // Get icon and add a background
-        QString file_name = QString(":/images/test_tower%1.png").arg(i + 1);
-        auto button_pixmap = QPixmap(file_name);
-        /*
-         * Add a background (not needed when a default background is given by QPushButton)
-        auto mask = button_pixmap.createMaskFromColor(Qt::transparent, Qt::MaskOutColor);
-        auto painter = QPainter(&button_pixmap);
-        painter.setPen(QColor(255, 255, 255, 128));
-        painter.drawPixmap(button_pixmap.rect(), mask, mask.rect());
-        painter.end();
-         */
-        button_pixmap = button_pixmap.scaled(TOWER_OPTION_SIZE, TOWER_OPTION_SIZE);
-        auto* button = new QPushButton();
-        button->setIcon(button_pixmap);
-        button->setIconSize(QSize(TOWER_OPTION_SIZE, TOWER_OPTION_SIZE));
-        auto* proxy = new QGraphicsProxyWidget;
-        proxy->setWidget(button);
-        build_options_layout->addItem(proxy);
-    }
-    this->build_options_->setLayout(build_options_layout);
-    // Scale to a fixed size
-    addItem(build_options_);
-    build_options_->setVisible(false);
-    build_options_->setZValue(1);
 }
 
 void GameField::loadFieldFromFile(const QString &file_path) {
@@ -99,6 +71,44 @@ void GameField::loadFieldFromFile(const QString &file_path) {
     }
 }
 
+void GameField::loadCharacterOptionFromFile(const QString& file_path) {
+    // For time, characters info are hard coded
+    // TODO: Init from file
+
+    // Construct place buttons and set as invisible
+    // Need to add a background before
+    auto* build_options_layout = new QGraphicsLinearLayout;
+    for(int i = 0; i < 3; ++i){
+        // Get icon and add a background
+        QString file_name = QString(":/images/test_tower%1.png").arg(i + 1);
+        auto button_pixmap = QPixmap(file_name);
+        /*
+         * Add a background (not needed when a default background is given by QPushButton)
+        auto mask = button_pixmap.createMaskFromColor(Qt::transparent, Qt::MaskOutColor);
+        auto painter = QPainter(&button_pixmap);
+        painter.setPen(QColor(255, 255, 255, 128));
+        painter.drawPixmap(button_pixmap.rect(), mask, mask.rect());
+        painter.end();
+         */
+        button_pixmap = button_pixmap.scaled(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE);
+        auto* button = new QPushButton();
+        button->setIcon(button_pixmap);
+        button->setIconSize(QSize(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE));
+        auto* proxy = new QGraphicsProxyWidget;
+        proxy->setWidget(button);
+        build_options_layout->addItem(proxy);
+    }
+    this->place_options_->setLayout(build_options_layout);
+    // Scale to a fixed size
+    addItem(place_options_);
+    place_options_->setVisible(false);
+    place_options_->setZValue(1);
+
+    // Initialize some info of characters,
+    // including area size
+    Character::setAreaSize(AREA_SIZE);
+}
+
 void GameField::setFps(qreal fps) {
     fps_ = fps;
     timer_.setInterval(static_cast<int>(1000 /* ms */ / fps_));
@@ -107,8 +117,8 @@ void GameField::setFps(qreal fps) {
 
 void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
-    if(build_options_->isVisible()) {
-        build_options_->setVisible(false);
+    if(place_options_->isVisible()) {
+        place_options_->setVisible(false);
         return;
     }
     auto pos = mouseEvent->scenePos();
@@ -134,8 +144,8 @@ void GameField::displayBuildOptions(AreaIndex area_idx) {
     auto pos = area->pos();
     // Set the buttons below the area vertically
     // and in the middle of the area horizontally
-    build_options_->setPos(pos.x() - build_options_->size().width() / 2 + AREA_SIZE / 2, pos.y() + AREA_SIZE);
-    build_options_->setVisible(true);
+    place_options_->setPos(pos.x() - place_options_->size().width() / 2 + AREA_SIZE / 2, pos.y() + AREA_SIZE);
+    place_options_->setVisible(true);
 }
 
 
@@ -165,7 +175,7 @@ void GameField::moveMonsters() {
             if(cur_area_idx == next_area_idx){
                 monster->setPos(next_pos);
                 move_dis = 0.0;
-                auto cur_area = dynamic_cast<Road*>(areas_[cur_area_idx.first][cur_area_idx.second]);
+                auto cur_area = qgraphicsitem_cast<Road*>(areas_[cur_area_idx.first][cur_area_idx.second]);
                 // If pos is same as any area,
                 // direction may need to be changed
                 if(pointFloatEqual(monster->pos(), cur_area->pos()))
@@ -192,7 +202,7 @@ void GameField::moveMonsters() {
              * so just ignore the condition
              */
 
-            auto cur_area = dynamic_cast<Road*>(areas_[cur_area_idx.first][cur_area_idx.second]);
+            auto cur_area = qgraphicsitem_cast<Road*>(areas_[cur_area_idx.first][cur_area_idx.second]);
             if(cur_direction == qMakePair(-1, 0)
                 || cur_direction == qMakePair(0, -1)){
                 auto cur_area_pos = cur_area->pos();
@@ -223,7 +233,7 @@ void GameField::moveMonsters() {
                 monster->setPos(next_pos);
             }
             else{
-                auto next_area = dynamic_cast<Road*>(areas_[next_area_idx.first][next_area_idx.second]);
+                auto next_area = qgraphicsitem_cast<Road*>(areas_[next_area_idx.first][next_area_idx.second]);
                 auto next_area_pos = next_area->pos();
                 move_dis -= qAbs(next_area_pos.x() - cur_pos.x());
                 move_dis -= qAbs(next_area_pos.y() - cur_pos.y());
@@ -278,7 +288,7 @@ void GameField::debugStart() {
         for(int i = 0; i < 4; ++i){
             Direction from = qMakePair(directions[i], directions[i + 1]);
             // C++17 If statement with initializer
-            if(auto to = dynamic_cast<Road*>(start_area)->getToDirection(from); to != qMakePair(0, 0)) {
+            if(auto to = qgraphicsitem_cast<Road*>(start_area)->getToDirection(from); to != qMakePair(0, 0)) {
                 monster->setDirection(to);
                 break;
             }
@@ -321,4 +331,22 @@ void GameField::checkGameEnd() {
     background->setRect(this->sceneRect());
     addItem(background);
     timer_.stop();
+}
+
+Character *GameField::typeToCharacter(CharacterType type) {
+    switch(type){
+        case CharacterType::ELF:
+            return new Elf;
+        default:
+            throw std::invalid_argument("Invalid character type");
+    }
+}
+
+QString *GameField::typeToCharacter(CharacterType type) {
+    switch(type){
+        case CharacterType::ELF:
+            return new Elf;
+        default:
+            throw std::invalid_argument("Invalid character type");
+    }
 }

@@ -6,6 +6,7 @@ int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     GameField field;
     field.loadFieldFromFile("FieldData/field.txt");
+    field.loadCharacterOptionFromFile("");
     QGraphicsView view;
     // view.setRenderHint(QPainter::Antialiasing);
     view.setScene(&field);
