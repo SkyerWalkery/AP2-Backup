@@ -15,17 +15,18 @@ GameField::GameField(QObject* parent):
         // Get icon and add a background
         QString file_name = QString(":/images/test_tower%1.png").arg(i + 1);
         auto button_pixmap = QPixmap(file_name);
+        /*
+         * Add a background (not needed when a default background is given by QPushButton)
         auto mask = button_pixmap.createMaskFromColor(Qt::transparent, Qt::MaskOutColor);
         auto painter = QPainter(&button_pixmap);
         painter.setPen(QColor(255, 255, 255, 128));
         painter.drawPixmap(button_pixmap.rect(), mask, mask.rect());
         painter.end();
-
-        button_pixmap = button_pixmap.scaled(32, 32);
+         */
+        button_pixmap = button_pixmap.scaled(TOWER_OPTION_SIZE, TOWER_OPTION_SIZE);
         auto* button = new QPushButton();
         button->setIcon(button_pixmap);
-        button->setIconSize(QSize(32, 32));
-        // TODO: Scale the icon and define some const val
+        button->setIconSize(QSize(TOWER_OPTION_SIZE, TOWER_OPTION_SIZE));
         auto* proxy = new QGraphicsProxyWidget;
         proxy->setWidget(button);
         build_options_layout->addItem(proxy);
@@ -131,7 +132,9 @@ void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
 void GameField::displayBuildOptions(AreaIndex area_idx) {
     auto* area = areas_[area_idx.first][area_idx.second];
     auto pos = area->pos();
-    build_options_->setPos(pos.x() - build_options_->size().width() / 2, pos.y() + AREA_SIZE);
+    // Set the buttons below the area vertically
+    // and in the middle of the area horizontally
+    build_options_->setPos(pos.x() - build_options_->size().width() / 2 + AREA_SIZE / 2, pos.y() + AREA_SIZE);
     build_options_->setVisible(true);
 }
 

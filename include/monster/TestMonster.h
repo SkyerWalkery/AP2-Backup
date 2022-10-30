@@ -10,7 +10,7 @@ class TestMonster: public Monster{
 public:
 
     // Used in qgraphicsitem_cast
-    enum { Type = UserType + 100 };
+    enum { Type = UserType + 101 };
     int type() const override;
 
     explicit TestMonster(QGraphicsItem *parent = nullptr);

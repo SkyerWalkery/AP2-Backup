@@ -20,6 +20,7 @@
 #include <QGraphicsProxyWidget>
 #include <QGraphicsWidget>
 #include <QTransform>
+#include <QSizePolicy>
 #include "Grass.h"
 #include "Road.h"
 #include "Monster.h"
@@ -32,6 +33,7 @@ class GameField: public QGraphicsScene{
     using AreaIndex = QPair<int, int>;
 
     static constexpr const qreal AREA_SIZE = 48; // px
+    static constexpr const qreal TOWER_OPTION_SIZE = 32; // px
     static constexpr const qreal REAL_COMPENSATION = 0.0000001;
 
     int num_rows_ = 0;
