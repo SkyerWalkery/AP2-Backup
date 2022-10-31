@@ -8,11 +8,3 @@ Grass::Grass(QGraphicsItem *parent) : Area(parent) {
 int Grass::type() const {
     return Type;
 }
-
-bool Grass::isOccupied() const {
-    return occupied_;
-}
-
-void Grass::setOccupied(bool occupied) {
-    occupied_ = occupied;
-}

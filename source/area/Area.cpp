@@ -15,3 +15,11 @@ void Area::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     // qDebug() << "Release: " << pos().x() << " " << pos().y();
     QGraphicsPixmapItem::mouseReleaseEvent(event);
 }
+
+bool Area::isOccupied() const {
+    return occupied_;
+}
+
+void Area::setOccupied(bool occupied) {
+    occupied_ = occupied;
+}

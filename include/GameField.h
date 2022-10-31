@@ -37,6 +37,7 @@ class GameField: public QGraphicsScene{
 
     static constexpr const qreal AREA_SIZE = 48; // px
     static constexpr const qreal CHARACTER_OPTION_SIZE = 32; // px
+    static constexpr const qreal CHARACTER_SIZE = 36; // px
     static constexpr const qreal REAL_COMPENSATION = 0.0000001;
 
     int num_rows_ = 0;
@@ -45,7 +46,7 @@ class GameField: public QGraphicsScene{
     QTimer timer_;
     qreal fps_ = 59; // refresh rate
 
-    QList<QList<QGraphicsPixmapItem*>> areas_;
+    QList<QList<Area*>> areas_;
     QList<Monster*> monsters_;
     QList<Character*> characters_;
 
@@ -76,7 +77,7 @@ private:
 
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
 
-    void displayBuildOptions(AreaIndex area_idx);
+    void displayPlaceOptions(AreaIndex area_idx);
 
     /*
     * Returns {row_idx, col_idx} of the area which pos is at.

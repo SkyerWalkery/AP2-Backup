@@ -55,11 +55,11 @@ void GameField::loadFieldFromFile(const QString &file_path) {
     in_file.close();
 
     // fill the field
-    areas_ = QList<QList<QGraphicsPixmapItem*>>(num_cols_);
+    areas_ = QList<QList<Area*>>(num_cols_);
     for(int i = 0; i < num_cols_; ++i){
         for(int j = 0; j < num_rows_; ++j){
             auto pos = qMakePair(i, j);
-            QGraphicsPixmapItem* item = pos2road.value(pos, new Grass());
+            Area* item = pos2road.value(pos, new Grass());
             addItem(item);
             // scale to 48 px
             // height should minus 1
@@ -140,12 +140,12 @@ void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
         // Grass is empty
         // First, show towers can be built
         // Then, (if player click) build a character
-        displayBuildOptions(area_idx);
+        displayPlaceOptions(area_idx);
     }
 }
 
 
-void GameField::displayBuildOptions(AreaIndex area_idx) {
+void GameField::displayPlaceOptions(AreaIndex area_idx) {
     auto* area = areas_[area_idx.first][area_idx.second];
     auto pos = area->pos();
     // Set the buttons below the area vertically
@@ -360,11 +360,16 @@ void GameField::moveMonsters() {
 
 void GameField::placeCharacter(CharacterType type) {
     auto* character = typeToCharacter(type);
-    addItem(character);
-    // scale to 48 px
-    // height should minus 1
-    qreal scale_factor = AREA_SIZE / (character->boundingRect().height() - 1);
-    character->setPos(place_options_->scenePos());
-    character->setScale(scale_factor);
+    // Options ui pos has offset (refer to displayPlaceOptions()),
+    // which we need to make for
+    auto pos = place_options_->scenePos();
+    pos.setX(pos.x() + place_options_->size().width() / 2 - AREA_SIZE / 2);
+    pos.setY(pos.y() - AREA_SIZE);
+    auto area_idx = posToIndex(pos);
+    auto* area = areas_[area_idx.first][area_idx.second];
+    // Set area as parent of the character
+    // So we don't need to handle coordinates
+    character->setParentItem(area);
+    area->setOccupied(true);
     characters_.push_back(character);
 }
