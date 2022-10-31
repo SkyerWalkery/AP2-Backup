@@ -21,6 +21,10 @@ public:
     bool isOccupied() const;
 
     void setOccupied(bool occupied);
+
+    // Used in qgraphicsitem_cast
+    enum { Type = UserType + 1 };
+    int type() const override;
 };
 
 #endif //AP_PROJ_AREA_H

@@ -147,10 +147,17 @@ void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
 
 void GameField::displayPlaceOptions(AreaIndex area_idx) {
     auto* area = areas_[area_idx.first][area_idx.second];
-    auto pos = area->pos();
     // Set the buttons below the area vertically
-    // and in the middle of the area horizontally
-    place_options_->setPos(pos.x() - place_options_->size().width() / 2 + AREA_SIZE / 2, pos.y() + AREA_SIZE);
+    // and at the center of the area horizontally
+
+    // Reset old parent's z value, so that it wouldn't cover the options
+    auto* old_parent = qgraphicsitem_cast<Grass*>(place_options_->parentItem());
+    if(old_parent)
+        old_parent->setZValue(0);
+    place_options_->setParentItem(area);
+    //Set old parent's z value, so that its child, place_options_ cannot be covered
+    area->setZValue(1);
+    place_options_->setPos(area->boundingRect().center() - place_options_->rect().center());
     place_options_->setVisible(true);
 }
 

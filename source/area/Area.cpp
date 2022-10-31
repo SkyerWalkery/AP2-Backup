@@ -23,3 +23,7 @@ bool Area::isOccupied() const {
 void Area::setOccupied(bool occupied) {
     occupied_ = occupied;
 }
+
+int Area::type() const {
+    return Type;
+}

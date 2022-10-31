@@ -24,7 +24,7 @@ public:
     explicit Road(QGraphicsItem *parent = nullptr);
 
     // Used in qgraphicsitem_cast
-    enum { Type = UserType + 2 };
+    enum { Type = UserType + 3 };
     int type() const override;
 
     Road& setDirection(const Direction & from, const Direction& to);
