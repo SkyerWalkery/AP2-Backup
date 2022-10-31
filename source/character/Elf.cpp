@@ -10,3 +10,7 @@ Elf::Elf(QGraphicsItem *parent) :Character(parent){
 int Elf::type() const {
     return Type;
 }
+
+bool Elf::testAreaCond(int cond) {
+    return cond & AreaCond;
+}

@@ -10,6 +10,8 @@ public:
 
     static constexpr const char* TEXTURE = ":/images/elf.png";
 
+    static constexpr const int AreaCond = Character::ON_GRASS;
+
     static constexpr const int SunCost = 0; // Cost to put this character
 
     explicit Elf(QGraphicsItem *parent = nullptr);
@@ -18,6 +20,7 @@ public:
     enum { Type = UserType + 201 };
     int type() const override;
 
+    bool testAreaCond(int cond) override;
 
 };
 

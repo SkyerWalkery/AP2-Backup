@@ -253,6 +253,15 @@ QString GameField::typeToTexture(CharacterType type) {
     }
 }
 
+bool GameField::testAreaCond(CharacterType type, int cond) {
+    switch(type){
+        case CharacterType::ELF:
+            return Elf::AreaCond & cond;
+        default:
+            throw std::invalid_argument("Invalid character type");
+    }
+}
+
 
 void GameField::moveMonsters() {
     for(auto* monster: monsters_){

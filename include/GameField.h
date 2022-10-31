@@ -120,6 +120,11 @@ private:
      */
     static QString typeToTexture(CharacterType type);
 
+    /*
+     * Returns true if character `type` can be placed on area with `cond`
+     */
+    static bool testAreaCond(CharacterType type, int cond);
+
 private slots:
 
     /*

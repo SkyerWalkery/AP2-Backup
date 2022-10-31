@@ -18,6 +18,9 @@ class Character: public QGraphicsPixmapItem{
 
 protected:
 
+    static constexpr const int ON_GRASS = 0b01;
+    static constexpr const int ON_ROAD = 0b11;
+
     int damage_ = 0; // Damage to monster per attack
 
     int recharge_time_ = 0; // Time (ms) to recharge before an attack
@@ -29,6 +32,15 @@ protected:
     static qreal area_size_; // Must be set before construct
 
 public:
+
+    /* static attribute of a character, needing to be redefined when in subclass
+     * if AreaCond & ON_GRASS:
+     * then: this character can be placed on grass
+     * if AreaCond & ON_ROAD:
+     * then: this character can be placed on road
+     * A character may be placed on grass and roads both
+     */
+    static constexpr const int AreaCond = 0b00;
 
     static constexpr const int SunCost = 0; // Cost to put this character
 
@@ -50,6 +62,11 @@ public:
     int getHealth() const;
 
     void setHealth(int health);
+
+    /*
+     * Returns true if character can be placed on area with `cond`
+     */
+    virtual bool testAreaCond(int cond) = 0;
 
     static void setAreaSize(qreal size);
 
