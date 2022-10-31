@@ -10,6 +10,7 @@
 #include <QSet>
 #include <QHash>
 #include <QPair>
+#include <QPoint>
 #include <QTimer>
 #include <QtMath>
 #include <QtGlobal>
@@ -33,7 +34,7 @@
 class GameField: public QGraphicsScene{
 
     using Direction = QPair<int, int>;
-    using AreaIndex = QPair<int, int>;
+    using AreaIndex = QPoint;
 
     static constexpr const qreal AREA_SIZE = 48; // px
     static constexpr const qreal CHARACTER_OPTION_SIZE = 16; // px
@@ -77,7 +78,7 @@ private:
 
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
 
-    void displayPlaceOptions(AreaIndex area_idx);
+    void displayPlaceOptions(const AreaIndex& area_idx);
 
     /*
     * Returns {row_idx, col_idx} of the area which pos is at.

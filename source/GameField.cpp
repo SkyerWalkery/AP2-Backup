@@ -45,7 +45,7 @@ void GameField::loadFieldFromFile(const QString &file_path) {
             QPair<int, int> to = qMakePair(info[2 + k * 2].toInt(), info[3 + k * 2].toInt());
             road->setDirection(from, to);
         }
-        AreaIndex pos = qMakePair(info[0].toInt(), info[1].toInt());
+        AreaIndex pos = QPoint(info[0].toInt(), info[1].toInt());
         pos2road[pos] = road;
         if(info[10].toInt() == 1)
             start_areas_idx_.push_back(pos);
@@ -58,7 +58,7 @@ void GameField::loadFieldFromFile(const QString &file_path) {
     areas_ = QList<QList<Area*>>(num_cols_);
     for(int i = 0; i < num_cols_; ++i){
         for(int j = 0; j < num_rows_; ++j){
-            auto pos = qMakePair(i, j);
+            auto pos = QPoint(i, j);
             Area* item = pos2road.value(pos, new Grass());
             addItem(item);
             // scale to 48 px
@@ -129,7 +129,7 @@ void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     }
     auto pos = mouseEvent->scenePos();
     auto area_idx = posToIndex(pos);
-    auto* grass = qgraphicsitem_cast<Grass*>(areas_[area_idx.first][area_idx.second]);
+    auto* grass = qgraphicsitem_cast<Grass*>(areas_[area_idx.x()][area_idx.y()]);
     if(!grass) // The area is road: do nothing.
         return;
     if(grass->isOccupied()){
@@ -145,8 +145,8 @@ void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
 }
 
 
-void GameField::displayPlaceOptions(AreaIndex area_idx) {
-    auto* area = areas_[area_idx.first][area_idx.second];
+void GameField::displayPlaceOptions(const AreaIndex& area_idx) {
+    auto* area = areas_[area_idx.x()][area_idx.y()];
     // Set the buttons below the area vertically
     // and at the center of the area horizontally
 
@@ -165,9 +165,9 @@ void GameField::displayPlaceOptions(AreaIndex area_idx) {
 typename GameField::AreaIndex GameField::posToIndex(QPointF pos) {
     qreal x = pos.x();
     qreal y = pos.y();
-    auto res = qMakePair(0, 0);
-    res.second = x < 0 ? -1 : qFloor(x + REAL_COMPENSATION) / qRound(AREA_SIZE);
-    res.first = y < 0 ? -1 : qFloor(y + REAL_COMPENSATION) / qRound(AREA_SIZE);
+    auto res = QPoint();
+    res.ry() = x < 0 ? -1 : qFloor(x + REAL_COMPENSATION) / qRound(AREA_SIZE);
+    res.rx() = y < 0 ? -1 : qFloor(y + REAL_COMPENSATION) / qRound(AREA_SIZE);
     return res;
 }
 
@@ -187,7 +187,7 @@ void GameField::debugStart() {
         Monster* monster = new TestMonster();
         addItem(monster);
         monsters_.push_back(monster);
-        auto start_area = areas_[start_idx.first][start_idx.second];
+        auto start_area = areas_[start_idx.x()][start_idx.y()];
         auto start_pos = start_area->pos();
         monster->setPos(start_pos);
         qreal scale_factor = AREA_SIZE / (monster->boundingRect().height() - 1);
@@ -295,7 +295,7 @@ void GameField::moveMonsters() {
             if(cur_area_idx == next_area_idx){
                 monster->setPos(next_pos);
                 move_dis = 0.0;
-                auto cur_area = qgraphicsitem_cast<Road*>(areas_[cur_area_idx.first][cur_area_idx.second]);
+                auto cur_area = qgraphicsitem_cast<Road*>(areas_[cur_area_idx.x()][cur_area_idx.y()]);
                 // If pos is same as any area,
                 // direction may need to be changed
                 if(pointFloatEqual(monster->pos(), cur_area->pos()))
@@ -322,7 +322,7 @@ void GameField::moveMonsters() {
              * so just ignore the condition
              */
 
-            auto cur_area = qgraphicsitem_cast<Road*>(areas_[cur_area_idx.first][cur_area_idx.second]);
+            auto cur_area = qgraphicsitem_cast<Road*>(areas_[cur_area_idx.x()][cur_area_idx.y()]);
             if(cur_direction == qMakePair(-1, 0)
                || cur_direction == qMakePair(0, -1)){
                 auto cur_area_pos = cur_area->pos();
@@ -353,7 +353,7 @@ void GameField::moveMonsters() {
                 monster->setPos(next_pos);
             }
             else{
-                auto next_area = qgraphicsitem_cast<Road*>(areas_[next_area_idx.first][next_area_idx.second]);
+                auto next_area = qgraphicsitem_cast<Road*>(areas_[next_area_idx.x()][next_area_idx.y()]);
                 auto next_area_pos = next_area->pos();
                 move_dis -= qAbs(next_area_pos.x() - cur_pos.x());
                 move_dis -= qAbs(next_area_pos.y() - cur_pos.y());
@@ -382,7 +382,7 @@ void GameField::placeCharacter(CharacterType type) {
     pos.setX(pos.x() + place_options_->size().width() / 2 - AREA_SIZE / 2);
     pos.setY(pos.y() - AREA_SIZE);
     auto area_idx = posToIndex(pos);
-    auto* area = areas_[area_idx.first][area_idx.second];
+    auto* area = areas_[area_idx.x()][area_idx.y()];
     // Set area as parent of the character
     // So we don't need to handle coordinates
     character->setParentItem(area);
