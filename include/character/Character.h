@@ -12,7 +12,7 @@
  * When inherit this, you need to pay attention to these:
  * 1. SunCost needs to be defined, even if cost of your character is 0 too.
  * 2. You may need to override attack() when needed
- * 3. area_size_ must be set properly before used
+ * 3. MonsterSize must be set properly before used
  */
 class Character: public QGraphicsPixmapItem{
 
@@ -29,7 +29,7 @@ protected:
 
     int health_ = 0; // Only for characters that can be put on roads
 
-    static qreal area_size_; // Must be set before construct
+    static qreal CharacterSize; // Must be set before construct
 
 public:
 
@@ -68,7 +68,7 @@ public:
      */
     virtual bool testAreaCond(int cond) = 0;
 
-    static void setAreaSize(qreal size);
+    static void setCharacterSize(qreal size);
 
     // Helper methods
 

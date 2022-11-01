@@ -1,6 +1,6 @@
 #include "Monster.h"
 
-qreal Monster::area_size_ = 0;
+qreal Monster::MonsterSize = 0;
 
 Monster::Monster(QGraphicsItem *parent): QGraphicsPixmapItem(parent){
 
@@ -36,6 +36,6 @@ void Monster::attacked(int damage) {
     setHealth(getHealth() - damage);
 }
 
-void Monster::setAreaSize(qreal size) {
-    area_size_ = size;
+void Monster::setMonsterSize(qreal size) {
+    MonsterSize = size;
 }

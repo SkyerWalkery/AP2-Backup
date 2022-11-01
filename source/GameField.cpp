@@ -8,6 +8,11 @@ GameField::GameField(QObject* parent):
     timer_.setInterval(static_cast<int>(1000 /* ms */ / fps_));
     connect(&timer_, &QTimer::timeout, this, &GameField::moveMonsters);
 
+    // Initialize some info of Character, Area and Monster
+    // including area size
+    Character::setCharacterSize(CHARACTER_SIZE);
+    Area::setAreaSize(AREA_SIZE);
+    Monster::setMonsterSize(MONSTER_SIZE);
 }
 
 void GameField::loadFieldFromFile(const QString &file_path) {
@@ -35,7 +40,6 @@ void GameField::loadFieldFromFile(const QString &file_path) {
     line = in_file.readLine();
     int num_roads = line.toInt();
     QHash<AreaIndex, Area*> pos2road;
-    Area::setAreaSize(AREA_SIZE);
     for(int i = 0; i < num_roads; ++i){
         line = in_file.readLine();
         QStringList info = line.split(u',', Qt::SkipEmptyParts);
@@ -104,10 +108,6 @@ void GameField::loadCharacterOptionFromFile(const QString& file_path) {
     addItem(place_options_);
     place_options_->setVisible(false);
     place_options_->setZValue(1);
-
-    // Initialize some info of characters,
-    // including area size
-    Character::setAreaSize(AREA_SIZE);
 }
 
 void GameField::setFps(qreal fps) {
@@ -153,6 +153,7 @@ void GameField::displayPlaceOptions(const AreaIndex& area_idx) {
     //Set old parent's z value, so that its child, place_options_ cannot be covered
     area->setZValue(1);
     place_options_->setPos(area->boundingRect().center() - place_options_->rect().center());
+    place_options_->setY(area->boundingRect().height());
     place_options_->setVisible(true);
 }
 

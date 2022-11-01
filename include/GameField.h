@@ -37,8 +37,9 @@ class GameField: public QGraphicsScene{
     using AreaIndex = QPoint;
 
     static constexpr const qreal AREA_SIZE = 48; // px
-    static constexpr const qreal CHARACTER_OPTION_SIZE = 16; // px
+    static constexpr const qreal CHARACTER_OPTION_SIZE = 32; // px
     static constexpr const qreal CHARACTER_SIZE = 36; // px
+    static constexpr const qreal MONSTER_SIZE = 48; // px
     static constexpr const qreal REAL_COMPENSATION = 0.0000001;
 
     int num_rows_ = 0;

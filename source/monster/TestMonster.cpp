@@ -1,7 +1,7 @@
 #include "TestMonster.h"
 
 TestMonster::TestMonster(QGraphicsItem *parent) : Monster(parent) {
-    int sz = static_cast<int>(area_size_);
+    int sz = static_cast<int>(MonsterSize);
     if(sz <= 0)
         throw std::invalid_argument("Area Size not initialized");
     setPixmap(QPixmap(TEXTURE).scaled(sz, sz));

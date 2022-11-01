@@ -1,6 +1,6 @@
 #include "Character.h"
 
-qreal Character::area_size_ = 0;
+qreal Character::CharacterSize = 0;
 
 Character::Character(QGraphicsItem *parent) : QGraphicsPixmapItem(parent) {
 
@@ -44,14 +44,14 @@ void Character::setHealth(int health) {
     health_ = health;
 }
 
-void Character::setAreaSize(qreal size) {
-    area_size_ = size;
+void Character::setCharacterSize(qreal size) {
+    CharacterSize = size;
 }
 
 bool Character::inAttackRange(const QPointF& pos) const {
     auto this_pos = scenePos();
     qreal distance = qSqrt(qPow(this_pos.x() - pos.x(), 2) + qPow(this_pos.y() - pos.y(), 2));
-    return distance <= getAttackRange() * area_size_;
+    return distance <= getAttackRange() * CharacterSize;
 }
 
 void Character::attack(Monster* monster) {

@@ -15,7 +15,7 @@ protected:
     qreal speed_ = 10.0; // num of px per second to move
     int health_ = 0;
 
-    static qreal area_size_; // Must be set before construct
+    static qreal MonsterSize; // Must be set before construct
 
 public:
 
@@ -39,7 +39,7 @@ public:
      */
     virtual void attacked(int damage);
 
-    static void setAreaSize(qreal size);
+    static void setMonsterSize(qreal size);
 };
 
 #endif //AP_PROJ_MONSTER_H
