@@ -1,6 +1,7 @@
 #include "GameField.h"
 
 
+// TODO: init from file should be called by constructor
 GameField::GameField(QObject* parent):
     QGraphicsScene(parent)
 {
@@ -78,8 +79,12 @@ void GameField::loadCharacterOptionFromFile(const QString& file_path) {
     character_types_.push_back(CharacterType::ELF);
     character_types_.push_back(CharacterType::ELF);
 
+
+}
+
+void GameField::initOptionUi() {
+
     // Construct place buttons and set as invisible
-    // Need to add a background before
     auto* build_options_layout = new QGraphicsLinearLayout;
     for(auto type: character_types_){
         // Get icon
@@ -93,6 +98,30 @@ void GameField::loadCharacterOptionFromFile(const QString& file_path) {
         painter.drawPixmap(button_pixmap.rect(), mask, mask.rect());
         painter.end();
          */
+        auto* button = new QPushButton();
+        button->setIcon(button_pixmap);
+        button->setIconSize(QSize(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE));
+        connect(button, &QPushButton::released,
+                [type = type, this](){
+                    this->placeCharacter(type);
+                });
+        auto* proxy = new QGraphicsProxyWidget;
+        proxy->setWidget(button);
+        build_options_layout->addItem(proxy);
+    }
+    this->place_options_->setLayout(build_options_layout);
+    addItem(place_options_);
+    place_options_->setVisible(false);
+    place_options_->setZValue(1);
+
+    // Construct upgrade buttons and set as invisible
+    auto* upgrade_options_layout = new QGraphicsLinearLayout;
+    // TODO: To be implemented
+    for(auto type: character_types_){
+        // Get icon
+        QString file_name = typeToTexture(type);
+        auto button_pixmap = QPixmap(file_name).scaled(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE);
+
         auto* button = new QPushButton();
         button->setIcon(button_pixmap);
         button->setIconSize(QSize(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE));

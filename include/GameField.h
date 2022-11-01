@@ -58,8 +58,11 @@ class GameField: public QGraphicsScene{
     int life_points_ = 1; // TODO: Init from file
 
     // Below are components related to character.
-    // place_options_ holds a layout, which may holds more than one options
+    // place_options_ and upgrade_options_ each holds a layout, which may holds more than one options
+    // place_options_ is used to place characters
+    // upgrade_options_ is used to upgrade or remove characters
     QGraphicsWidget* place_options_ = new QGraphicsWidget;
+    QGraphicsWidget* upgrade_options_ = new QGraphicsWidget;
     // character_types_ contains character types that can be placed in this field
     // TODO: Init from file
     QList<CharacterType> character_types_;
@@ -70,6 +73,10 @@ public:
     void loadFieldFromFile(const QString& file_path);
 
     void loadCharacterOptionFromFile(const QString& file_path);
+
+    // Initialize place_options_ and upgrade_options_
+    // Must be called explicitly, for no other functions will call it
+    void initOptionUi();
 
     void setFps(qreal fps);
 
