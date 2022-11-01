@@ -8,5 +8,9 @@
         <file>images/test_tower2.png</file>
         <file>images/test_tower3.png</file>
         <file>images/elf.png</file>
+        <file>icons/remove.png</file>
+        <file>icons/up_arrow.png</file>
+        <file>icons/x_square.svg</file>
+        <file>icons/chevrons_up.svg</file>
     </qresource>
 </RCC>
