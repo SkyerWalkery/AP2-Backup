@@ -2,7 +2,8 @@
 
 
 Grass::Grass(QGraphicsItem *parent) : Area(parent) {
-    setPixmap(QPixmap(TEXTURE));
+    int sz = static_cast<int>(area_size_);
+    setPixmap(QPixmap(TEXTURE).scaled(sz, sz));
 }
 
 int Grass::type() const {

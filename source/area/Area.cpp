@@ -1,5 +1,7 @@
 #include "area/Area.h"
 
+qreal Area::area_size_ = 0;
+
 Area::Area(QGraphicsItem *parent) : QGraphicsPixmapItem(parent) {
     // Without this flag, mouseReleaseEvent would not be called
     // Still don't know why
@@ -26,4 +28,8 @@ void Area::setOccupied(bool occupied) {
 
 int Area::type() const {
     return Type;
+}
+
+void Area::setAreaSize(qreal size) {
+    area_size_ = size;
 }

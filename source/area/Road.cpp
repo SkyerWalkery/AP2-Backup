@@ -2,7 +2,8 @@
 
 
 Road::Road(QGraphicsItem *parent) : Area(parent) {
-    setPixmap(QPixmap(TEXTURE));
+    int sz = static_cast<int>(area_size_);
+    setPixmap(QPixmap(TEXTURE).scaled(sz, sz));
 
     // Initialize from2to_ table
     int directions[5] = {-1, 0, 1, 0, -1};

@@ -8,8 +8,12 @@
 
 class Area: public QGraphicsPixmapItem{
 
+protected:
+
     // If this area has a character or other objects
     bool occupied_ = false;
+
+    static qreal area_size_; // Must be set before construct
 
 public:
     explicit Area(QGraphicsItem *parent = nullptr);
@@ -25,6 +29,8 @@ public:
     // Used in qgraphicsitem_cast
     enum { Type = UserType + 1 };
     int type() const override;
+
+    static void setAreaSize(qreal size);
 };
 
 #endif //AP_PROJ_AREA_H

@@ -35,6 +35,7 @@ void GameField::loadFieldFromFile(const QString &file_path) {
     line = in_file.readLine();
     int num_roads = line.toInt();
     QHash<AreaIndex, Area*> pos2road;
+    Area::setAreaSize(AREA_SIZE);
     for(int i = 0; i < num_roads; ++i){
         line = in_file.readLine();
         QStringList info = line.split(u',', Qt::SkipEmptyParts);
@@ -61,11 +62,7 @@ void GameField::loadFieldFromFile(const QString &file_path) {
             auto pos = QPoint(i, j);
             Area* item = pos2road.value(pos, new Grass());
             addItem(item);
-            // scale to 48 px
-            // height should minus 1
-            qreal area_scale_factor = AREA_SIZE / (item->boundingRect().height() - 1);
             item->setPos(AREA_SIZE * j, AREA_SIZE * i);
-            item->setScale(area_scale_factor);
             areas_[i].push_back(item);
         }
     }
@@ -83,7 +80,7 @@ void GameField::loadCharacterOptionFromFile(const QString& file_path) {
     for(auto type: character_types_){
         // Get icon
         QString file_name = typeToTexture(type);
-        auto button_pixmap = QPixmap(file_name);
+        auto button_pixmap = QPixmap(file_name).scaled(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE);
         /*
          * Add a background (not needed when a default background is given by QPushButton)
         auto mask = button_pixmap.createMaskFromColor(Qt::transparent, Qt::MaskOutColor);
@@ -92,7 +89,6 @@ void GameField::loadCharacterOptionFromFile(const QString& file_path) {
         painter.drawPixmap(button_pixmap.rect(), mask, mask.rect());
         painter.end();
          */
-        button_pixmap = button_pixmap.scaled(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE);
         auto* button = new QPushButton();
         button->setIcon(button_pixmap);
         button->setIconSize(QSize(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE));
@@ -105,7 +101,6 @@ void GameField::loadCharacterOptionFromFile(const QString& file_path) {
         build_options_layout->addItem(proxy);
     }
     this->place_options_->setLayout(build_options_layout);
-    // Scale to a fixed size
     addItem(place_options_);
     place_options_->setVisible(false);
     place_options_->setZValue(1);
