@@ -414,5 +414,21 @@ void GameField::upgradeCharacter() {
 }
 
 void GameField::removeCharacter() {
-
+    auto* area = dynamic_cast<Area*>(upgrade_options_->parentItem());
+    if(!area)
+        throw std::runtime_error("upgrade_options_ has invalid parent");
+    // If not has Character as a child, exception will be thrown
+    Character* character = nullptr;
+    for(auto* child: area->childItems()){
+        character = dynamic_cast<Character *>(child);
+        if(character)
+            break;
+    }
+    if(!character)
+        throw std::runtime_error("area doesn't has a Character");
+    // Update info of the area and remove the character
+    area->setOccupied(false);
+    if(!characters_.removeOne(character))
+        throw std::runtime_error("Fail to move character from list");
+    removeItem(character);
 }
