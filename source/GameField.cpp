@@ -185,8 +185,6 @@ void GameField::debugStart() {
         auto start_area = areas_[start_idx.x()][start_idx.y()];
         auto start_pos = start_area->pos();
         monster->setPos(start_pos);
-        qreal scale_factor = AREA_SIZE / (monster->boundingRect().height() - 1);
-        monster->setScale(scale_factor);
 
         int directions[5] = {-1, 0, 1, 0, -1};
         for(int i = 0; i < 4; ++i){
