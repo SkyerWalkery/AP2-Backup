@@ -1,7 +1,11 @@
 #include "Elf.h"
 
 Elf::Elf(QGraphicsItem *parent) :Character(parent){
-    setPixmap(QPixmap(TEXTURE));
+    int sz = static_cast<int>(CharacterSize);
+    if(sz <= 0)
+        throw std::invalid_argument("Character Size not initialized");
+    setPixmap(QPixmap(TEXTURE).scaled(sz, sz));
+
     damage_ = 1;
     recharge_time_ = 700; // ms
     attack_range_ = 5;

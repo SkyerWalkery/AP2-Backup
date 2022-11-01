@@ -186,6 +186,8 @@ void GameField::debugStart() {
         auto start_area = areas_[start_idx.x()][start_idx.y()];
         auto start_pos = start_area->pos();
         monster->setPos(start_pos);
+        // Set position as center of area
+        monster->setOffset(start_area->boundingRect().center() - monster->boundingRect().center());
 
         int directions[5] = {-1, 0, 1, 0, -1};
         for(int i = 0; i < 4; ++i){
@@ -370,16 +372,20 @@ void GameField::moveMonsters() {
 
 void GameField::placeCharacter(CharacterType type) {
     auto* character = typeToCharacter(type);
-    // Options ui pos has offset (refer to displayPlaceOptions()),
-    // which we need to make for
-    auto pos = place_options_->scenePos();
-    pos.setX(pos.x() + place_options_->size().width() / 2 - AREA_SIZE / 2);
-    pos.setY(pos.y() - AREA_SIZE);
-    auto area_idx = posToIndex(pos);
-    auto* area = areas_[area_idx.x()][area_idx.y()];
+    // First try cast it to Grass*,
+    // if it fails, try Road*.
+    // Exception will be thrown in case of continuous failures
+    // (Neither Grass nor Road)
+    Area* area = qgraphicsitem_cast<Grass*>(place_options_->parentItem());
+    if(!area)
+        area = qgraphicsitem_cast<Road*>(place_options_->parentItem());
+    if(!area)
+        throw std::runtime_error("place_options_ has invalid parent");
     // Set area as parent of the character
     // So we don't need to handle coordinates
     character->setParentItem(area);
+    // Set position as center of area
+    character->setOffset(area->boundingRect().center() - character->boundingRect().center());
     area->setOccupied(true);
     characters_.push_back(character);
 }
