@@ -85,7 +85,7 @@ void GameField::loadCharacterOptionFromFile(const QString& file_path) {
 void GameField::initOptionUi() {
 
     // Construct place buttons and set as invisible
-    auto* build_options_layout = new QGraphicsLinearLayout;
+    auto* place_options_layout = new QGraphicsLinearLayout;
     for(auto type: character_types_){
         // Get icon
         QString file_name = typeToTexture(type);
@@ -107,36 +107,39 @@ void GameField::initOptionUi() {
                 });
         auto* proxy = new QGraphicsProxyWidget;
         proxy->setWidget(button);
-        build_options_layout->addItem(proxy);
+        place_options_layout->addItem(proxy);
     }
-    this->place_options_->setLayout(build_options_layout);
+    this->place_options_->setLayout(place_options_layout);
     addItem(place_options_);
     place_options_->setVisible(false);
     place_options_->setZValue(1);
 
     // Construct upgrade buttons and set as invisible
     auto* upgrade_options_layout = new QGraphicsLinearLayout;
-    // TODO: To be implemented
-    for(auto type: character_types_){
-        // Get icon
-        QString file_name = typeToTexture(type);
-        auto button_pixmap = QPixmap(file_name).scaled(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE);
+    QStringList upgrade_options_icons = {UP_ICON, X_ICON};
+    for(const auto& icon: upgrade_options_icons){
+        auto button_pixmap = QPixmap(icon).scaled(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE);
 
         auto* button = new QPushButton();
         button->setIcon(button_pixmap);
         button->setIconSize(QSize(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE));
-        connect(button, &QPushButton::released,
-                [type = type, this](){
-                    this->placeCharacter(type);
-                });
+
+        // Connect button's signal to slots
+        if(icon == UP_ICON)
+            connect(button, &QPushButton::released, this, &GameField::upgradeCharacter);
+        else if(icon == X_ICON)
+            connect(button, &QPushButton::released, this, &GameField::removeCharacter);
+        else
+            throw std::invalid_argument("Invalid upgrade option type");
+
         auto* proxy = new QGraphicsProxyWidget;
         proxy->setWidget(button);
-        build_options_layout->addItem(proxy);
+        upgrade_options_layout->addItem(proxy);
     }
-    this->place_options_->setLayout(build_options_layout);
-    addItem(place_options_);
-    place_options_->setVisible(false);
-    place_options_->setZValue(1);
+    this->upgrade_options_->setLayout(upgrade_options_layout);
+    addItem(upgrade_options_);
+    upgrade_options_->setVisible(false);
+    upgrade_options_->setZValue(1);
 }
 
 void GameField::setFps(qreal fps) {
@@ -147,43 +150,36 @@ void GameField::setFps(qreal fps) {
 
 void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
-    if(place_options_->isVisible()) {
+    if(place_options_->isVisible() || upgrade_options_->isVisible()) {
         place_options_->setVisible(false);
+        upgrade_options_->setVisible(false);
         return;
     }
     auto pos = mouseEvent->scenePos();
     auto area_idx = posToIndex(pos);
-    auto* grass = qgraphicsitem_cast<Grass*>(areas_[area_idx.x()][area_idx.y()]);
-    if(!grass) // The area is road: do nothing.
-        return;
-    if(grass->isOccupied()){
-        // TODO: Edit the character
-    }
-    else{
-        // TODO: need to be implemented
-        // Grass is empty
-        // First, show towers can be built
-        // Then, (if player click) build a character
-        displayPlaceOptions(area_idx);
-    }
+    auto* area = areas_[area_idx.x()][area_idx.y()];
+    displayCharacterOptions(
+            area_idx,
+            area->isOccupied() ? upgrade_options_ : place_options_
+    );
 }
 
 
-void GameField::displayPlaceOptions(const AreaIndex& area_idx) {
+void GameField::displayCharacterOptions(const AreaIndex& area_idx, QGraphicsWidget* options) {
     auto* area = areas_[area_idx.x()][area_idx.y()];
     // Set the buttons below the area vertically
     // and at the center of the area horizontally
 
     // Reset old parent's z value, so that it wouldn't cover the options
-    auto* old_parent = qgraphicsitem_cast<Grass*>(place_options_->parentItem());
+    auto* old_parent = dynamic_cast<Area*>(options->parentItem());
     if(old_parent)
         old_parent->setZValue(0);
-    place_options_->setParentItem(area);
-    //Set old parent's z value, so that its child, place_options_ cannot be covered
+    options->setParentItem(area);
+    //Set old parent's z value, so that its child, options cannot be covered
     area->setZValue(1);
-    place_options_->setPos(area->boundingRect().center() - place_options_->rect().center());
-    place_options_->setY(area->boundingRect().height());
-    place_options_->setVisible(true);
+    options->setPos(area->boundingRect().center() - options->rect().center());
+    options->setY(area->boundingRect().height());
+    options->setVisible(true);
 }
 
 
@@ -401,13 +397,7 @@ void GameField::moveMonsters() {
 
 void GameField::placeCharacter(CharacterType type) {
     auto* character = typeToCharacter(type);
-    // First try cast it to Grass*,
-    // if it fails, try Road*.
-    // Exception will be thrown in case of continuous failures
-    // (Neither Grass nor Road)
-    Area* area = qgraphicsitem_cast<Grass*>(place_options_->parentItem());
-    if(!area)
-        area = qgraphicsitem_cast<Road*>(place_options_->parentItem());
+    auto* area = dynamic_cast<Area*>(place_options_->parentItem());
     if(!area)
         throw std::runtime_error("place_options_ has invalid parent");
     // Set area as parent of the character
@@ -417,4 +407,12 @@ void GameField::placeCharacter(CharacterType type) {
     character->setOffset(area->boundingRect().center() - character->boundingRect().center());
     area->setOccupied(true);
     characters_.push_back(character);
+}
+
+void GameField::upgradeCharacter() {
+
+}
+
+void GameField::removeCharacter() {
+
 }

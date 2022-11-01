@@ -36,6 +36,9 @@ class GameField: public QGraphicsScene{
     using Direction = QPair<int, int>;
     using AreaIndex = QPoint;
 
+    static constexpr const char* UP_ICON = ":/icons/chevrons_up.svg";
+    static constexpr const char* X_ICON = ":/icons/x_square.svg";
+
     static constexpr const qreal AREA_SIZE = 48; // px
     static constexpr const qreal CHARACTER_OPTION_SIZE = 32; // px
     static constexpr const qreal CHARACTER_SIZE = 36; // px
@@ -86,7 +89,7 @@ private:
 
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
 
-    void displayPlaceOptions(const AreaIndex& area_idx);
+    void displayCharacterOptions(const AreaIndex& area_idx, QGraphicsWidget* options);
 
     /*
     * Returns {row_idx, col_idx} of the area which pos is at.
@@ -148,6 +151,16 @@ private slots:
      * @param type: type of character (call typeToCharacter() to make a new character)
      */
     void placeCharacter(CharacterType type);
+
+    /*
+     * Slot for upgradeCharacter button
+     */
+    void upgradeCharacter();
+
+    /*
+     * Slot for removeCharacter button
+     */
+    void removeCharacter();
 
 };
 
