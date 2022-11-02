@@ -28,6 +28,7 @@
 #include "TestMonster.h"
 #include "Character.h"
 #include "Elf.h"
+#include "Knight.h"
 #include "CharacterType.h"
 
 

@@ -77,7 +77,7 @@ void GameField::loadCharacterOptionFromFile(const QString& file_path) {
     // For time, characters info are hard coded
     // TODO: Init from file
     character_types_.push_back(CharacterType::ELF);
-    character_types_.push_back(CharacterType::ELF);
+    character_types_.push_back(CharacterType::KNIGHT);
 
 
 }
@@ -267,6 +267,8 @@ Character *GameField::typeToCharacter(CharacterType type) {
     switch(type){
         case CharacterType::ELF:
             return new Elf;
+        case CharacterType::KNIGHT:
+            return new Knight;
         default:
             throw std::invalid_argument("Invalid character type");
     }
@@ -276,6 +278,8 @@ QString GameField::typeToTexture(CharacterType type) {
     switch(type){
         case CharacterType::ELF:
             return Elf::TEXTURE;
+        case CharacterType::KNIGHT:
+            return Knight::TEXTURE;
         default:
             throw std::invalid_argument("Invalid character type");
     }

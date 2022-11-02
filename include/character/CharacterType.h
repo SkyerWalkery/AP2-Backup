@@ -3,6 +3,7 @@
 
 enum class CharacterType{
     ELF = 1,
+    KNIGHT,
 };
 
 #endif //AP_PROJ_CHARACTERTYPE_H
