@@ -31,7 +31,7 @@ protected:
 public:
 
     static constexpr const int ON_GRASS = 0b01;
-    static constexpr const int ON_ROAD = 0b11;
+    static constexpr const int ON_ROAD = 0b10;
 
     /* static attribute of a character, needing to be redefined when in subclass
      * if AreaCond & ON_GRASS:
