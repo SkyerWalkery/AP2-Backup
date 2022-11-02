@@ -18,9 +18,6 @@ class Character: public QGraphicsPixmapItem{
 
 protected:
 
-    static constexpr const int ON_GRASS = 0b01;
-    static constexpr const int ON_ROAD = 0b11;
-
     int damage_ = 0; // Damage to monster per attack
 
     int recharge_time_ = 0; // Time (ms) to recharge before an attack
@@ -32,6 +29,9 @@ protected:
     static qreal CharacterSize; // Must be set before construct
 
 public:
+
+    static constexpr const int ON_GRASS = 0b01;
+    static constexpr const int ON_ROAD = 0b11;
 
     /* static attribute of a character, needing to be redefined when in subclass
      * if AreaCond & ON_GRASS:

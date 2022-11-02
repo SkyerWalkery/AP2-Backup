@@ -22,6 +22,7 @@
 #include <QGraphicsWidget>
 #include <QTransform>
 #include <QSizePolicy>
+#include <functional>
 #include "Grass.h"
 #include "Road.h"
 #include "Monster.h"
@@ -29,7 +30,6 @@
 #include "Character.h"
 #include "Elf.h"
 #include "Knight.h"
-#include "CharacterType.h"
 
 
 class GameField: public QGraphicsScene{
@@ -67,9 +67,11 @@ class GameField: public QGraphicsScene{
     // upgrade_options_ is used to upgrade or remove characters
     QGraphicsWidget* place_options_ = new QGraphicsWidget;
     QGraphicsWidget* upgrade_options_ = new QGraphicsWidget;
-    // character_types_ contains character types that can be placed in this field
+    // character_makers_ contains makers of characters that can be placed in this field
+    // character_textures_ is list of file name of corresponding textures
     // TODO: Init from file
-    QList<CharacterType> character_types_;
+    QList<std::function<Character*()>> character_makers_;
+    QStringList character_textures_;
 
 public:
     explicit GameField(QObject* parent = nullptr);
@@ -121,23 +123,6 @@ private:
 
     void checkGameEnd();
 
-    /*
-     * Map from type to pointer to a new Character
-     * If type is invalid, an exception will be thrown
-     */
-    static Character* typeToCharacter(CharacterType type);
-
-    /*
-     * Map from type to path of texture
-     * If type is invalid, an exception will be thrown
-     */
-    static QString typeToTexture(CharacterType type);
-
-    /*
-     * Returns true if character `type` can be placed on area with `cond`
-     */
-    static bool testAreaCond(CharacterType type, int cond);
-
 private slots:
 
     /*
@@ -151,7 +136,7 @@ private slots:
      * Note: need a lambda to pass parameter `type`
      * @param type: type of character (call typeToCharacter() to make a new character)
      */
-    void placeCharacter(CharacterType type);
+    void placeCharacter(const std::function<Character*()>& maker);
 
     /*
      * Slot for upgradeCharacter button

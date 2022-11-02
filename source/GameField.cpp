@@ -76,19 +76,21 @@ void GameField::loadFieldFromFile(const QString &file_path) {
 void GameField::loadCharacterOptionFromFile(const QString& file_path) {
     // For time, characters info are hard coded
     // TODO: Init from file
-    character_types_.push_back(CharacterType::ELF);
-    character_types_.push_back(CharacterType::KNIGHT);
-
-
+    character_makers_.push_back([]{return new Elf;});
+    character_makers_.push_back([]{return new Knight;});
+    character_textures_.push_back(Elf::TEXTURE);
+    character_textures_.push_back(Knight::TEXTURE);
+    if(character_textures_.size() != character_makers_.size())
+        throw std::invalid_argument("textures do not match makers");
 }
 
 void GameField::initOptionUi() {
 
     // Construct place buttons and set as invisible
     auto* place_options_layout = new QGraphicsLinearLayout;
-    for(auto type: character_types_){
-        // Get icon
-        QString file_name = typeToTexture(type);
+    for(int i = 0; i < character_makers_.size(); ++i){
+        auto& maker = character_makers_[i];
+        auto file_name = character_textures_[i];
         auto button_pixmap = QPixmap(file_name).scaled(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE);
         /*
          * Add a background (not needed when a default background is given by QPushButton)
@@ -102,8 +104,8 @@ void GameField::initOptionUi() {
         button->setIcon(button_pixmap);
         button->setIconSize(QSize(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE));
         connect(button, &QPushButton::released,
-                [type = type, this](){
-                    this->placeCharacter(type);
+                [maker = maker, this](){
+                    this->placeCharacter(maker);
                 });
         auto* proxy = new QGraphicsProxyWidget;
         proxy->setWidget(button);
@@ -263,38 +265,6 @@ void GameField::checkGameEnd() {
     timer_.stop();
 }
 
-Character *GameField::typeToCharacter(CharacterType type) {
-    switch(type){
-        case CharacterType::ELF:
-            return new Elf;
-        case CharacterType::KNIGHT:
-            return new Knight;
-        default:
-            throw std::invalid_argument("Invalid character type");
-    }
-}
-
-QString GameField::typeToTexture(CharacterType type) {
-    switch(type){
-        case CharacterType::ELF:
-            return Elf::TEXTURE;
-        case CharacterType::KNIGHT:
-            return Knight::TEXTURE;
-        default:
-            throw std::invalid_argument("Invalid character type");
-    }
-}
-
-bool GameField::testAreaCond(CharacterType type, int cond) {
-    switch(type){
-        case CharacterType::ELF:
-            return Elf::AreaCond & cond;
-        default:
-            throw std::invalid_argument("Invalid character type");
-    }
-}
-
-
 void GameField::moveMonsters() {
     for(auto* monster: monsters_){
         qreal total_move_dis = monster->getSpeed() * timer_.interval() / 1000;
@@ -399,11 +369,19 @@ void GameField::moveMonsters() {
 }
 
 
-void GameField::placeCharacter(CharacterType type) {
-    auto* character = typeToCharacter(type);
+void GameField::placeCharacter(const std::function<Character*()>& maker) {
+    auto* character = maker();
     auto* area = dynamic_cast<Area*>(place_options_->parentItem());
     if(!area)
         throw std::runtime_error("place_options_ has invalid parent");
+
+    // Check if the character can be placed on this area
+    // e.g. Character Elf cannot be placed on road
+    if((qgraphicsitem_cast<Grass*>(area) && !character->testAreaCond(Character::ON_GRASS))
+        || (qgraphicsitem_cast<Road*>(area) && !character->testAreaCond(Character::ON_ROAD))
+       )
+        return;
+
     // Set area as parent of the character
     // So we don't need to handle coordinates
     character->setParentItem(area);
