@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QGraphicsPixmapItem>
 #include <QFile>
+#include <QDir>
 #include <QStringList>
 #include <QSet>
 #include <QHash>
@@ -14,6 +15,7 @@
 #include <QTimer>
 #include <QtMath>
 #include <QtGlobal>
+#include <QRandomGenerator>
 #include <QPainter>
 #include <QPropertyAnimation>
 #include <QPushButton>
@@ -22,6 +24,7 @@
 #include <QGraphicsWidget>
 #include <QTransform>
 #include <QSizePolicy>
+#include <QQueue>
 #include <functional>
 #include "Grass.h"
 #include "Road.h"
@@ -50,7 +53,12 @@ class GameField: public QGraphicsScene{
     int num_cols_ = 0;
 
     QTimer timer_;
+    qint64 game_time_ = 0; // time (ms) since game start; It should be updated by updateField
     qreal fps_ = 59; // refresh rate
+
+    // Queue of (monster, generating time) pairs
+    // time (second of pair) should be sorted by ascending order
+    QQueue<QPair<Monster*, int>> monster_que_;
 
     QList<QList<Area*>> areas_;
     QList<Monster*> monsters_;
@@ -98,9 +106,24 @@ public:
 
     void setFps(qreal fps);
 
-    void debugStart();
+    // Start the game
+    // Should be called explicitly
+    void startGame();
 
 private:
+
+    /*
+     * Called by updateField()
+     * Move monsters in each frame
+     */
+    void moveMonsters();
+
+    /*
+     * Called by updateField()
+     * Check if monsters are to be generated in each frame.
+     * If so, do it.
+     */
+    void generateMonsters();
 
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
 
@@ -133,15 +156,19 @@ private:
      */
     void checkReachProtectionObjective();
 
+
     void checkGameEnd();
 
 private slots:
 
     /*
-     * Called by timer.
-     * Move monsters in each frame
+     * Slot for game timer
+     * It should do all things controlled by game timer,
+     * e.g. move monsters, make attack actions
+     * In order to ensure they're called in fixed order, we have this slot
+     * For more, please refer to implementation
      */
-    void moveMonsters();
+    void updateField();
 
     /*
      * Slot for placeCharacter button

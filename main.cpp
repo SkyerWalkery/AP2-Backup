@@ -5,9 +5,7 @@
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     GameField field;
-    field.loadFieldFromFile("FieldData/field.txt");
-    field.loadCharacterOptionFromFile("");
-    field.initOptionUi();
+    field.loadLevelFromFile("test_level");
     QGraphicsView view;
     // view.setRenderHint(QPainter::Antialiasing);
     view.setScene(&field);
@@ -16,7 +14,7 @@ int main(int argc, char *argv[]) {
     rect.setWidth(rect.width() + margin);
     rect.setHeight(rect.height() + margin);
     view.setFixedSize(rect.size().toSize());
-    field.debugStart();
+    field.startGame();
     view.show();
     return app.exec();
 }
