@@ -16,6 +16,16 @@ GameField::GameField(QObject* parent):
     Monster::setMonsterSize(MONSTER_SIZE);
 }
 
+
+void GameField::loadLevelFromFile(const QString& dir_path) {
+    // Load field data
+    loadFieldFromFile(QString("%1/field.dat").arg(dir_path));
+    // Load characters from data
+    loadCharacterOptionFromFile(QString("%1/characters.dat").arg(dir_path));
+    // Load monsters
+    loadMonsterQueueFromFile(QString("%1/monsters.dat").arg(dir_path));
+}
+
 void GameField::loadFieldFromFile(const QString &file_path) {
     QFile in_file(file_path);
     if(!in_file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -74,14 +84,38 @@ void GameField::loadFieldFromFile(const QString &file_path) {
 }
 
 void GameField::loadCharacterOptionFromFile(const QString& file_path) {
-    // For time, characters info are hard coded
-    // TODO: Init from file
-    character_makers_.push_back([]{return new Elf;});
-    character_makers_.push_back([]{return new Knight;});
-    character_textures_.push_back(Elf::TEXTURE);
-    character_textures_.push_back(Knight::TEXTURE);
-    if(character_textures_.size() != character_makers_.size())
-        throw std::invalid_argument("textures do not match makers");
+    // There are strings indicating characters in the file
+    // Each line represents a character, which may be "Elf", "Knight", etc.
+    // Read them out, and fill character_makers_ and character_textures_ correspondingly
+    QFile in_file(file_path);
+    if(!in_file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+    QString line;
+    while(!in_file.atEnd()){
+        line = in_file.readLine().trimmed();
+        std::function<Character*()> maker;
+        QString texture_file_path;
+        if(line.size() == 0 || line.startsWith("//")){
+            continue;
+        }
+        else if(line == "Elf"){
+            maker = []{return new Elf;};
+            texture_file_path = Elf::TEXTURE;
+        }
+        else if(line == "Knight"){
+            maker = []{return new Knight;};
+            texture_file_path = Knight::TEXTURE;
+        }
+        else{
+            throw std::invalid_argument("Invalid character in characters.dat");
+        }
+        character_makers_.push_back(maker);
+        character_textures_.push_back(texture_file_path);
+    }
+}
+
+void GameField::loadMonsterQueueFromFile(const QString& file_path) {
+
 }
 
 void GameField::initOptionUi() {

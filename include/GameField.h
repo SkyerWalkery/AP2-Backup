@@ -76,9 +76,21 @@ class GameField: public QGraphicsScene{
 public:
     explicit GameField(QObject* parent = nullptr);
 
+    /*
+     * Load data from files
+     * dir_path should contain 3 files:
+     * field.dat: data of field
+     * characters.dat: characters can be used
+     * monsters.dat: monsters that will appear in this level, along with time of appearance
+     * @param dir_path const QString& directory having data of field, monsters and characters cna be used
+     */
+    void loadLevelFromFile(const QString& dir_path);
+
     void loadFieldFromFile(const QString& file_path);
 
     void loadCharacterOptionFromFile(const QString& file_path);
+
+    void loadMonsterQueueFromFile(const QString& file_path);
 
     // Initialize place_options_ and upgrade_options_
     // Must be called explicitly, for no other functions will call it
