@@ -6,6 +6,10 @@ Monster::Monster(QGraphicsItem *parent): QGraphicsPixmapItem(parent){
     setZValue(2); // Ensure it wouldn't be covered by area selected
 }
 
+void Monster::checkImageOrientation() {
+    // Do nothing here
+}
+
 qreal Monster::getSpeed() const {
     return speed_;
 }
@@ -22,6 +26,7 @@ Monster::Direction Monster::getDirection() const {
 
 void Monster::setDirection(const Monster::Direction &direction) {
     direction_ = direction;
+    checkImageOrientation();
 }
 
 int Monster::getHealth() const {

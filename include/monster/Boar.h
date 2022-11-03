@@ -7,6 +7,10 @@ class Boar: public Monster{
 
     static constexpr const char* TEXTURE = ":/images/boar.png";
 
+    // Boar's image has orientation,
+    // which needs to be changed when left-right direction is changed
+    void checkImageOrientation() override;
+
 public:
 
     // Used in qgraphicsitem_cast

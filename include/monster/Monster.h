@@ -17,6 +17,9 @@ protected:
 
     static qreal MonsterSize; // Must be set before construct
 
+
+    virtual void checkImageOrientation();
+
 public:
 
     explicit Monster(QGraphicsItem *parent = nullptr);
