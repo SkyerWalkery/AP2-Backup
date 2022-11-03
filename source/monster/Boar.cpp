@@ -1,6 +1,6 @@
-#include "TestMonster.h"
+#include "Boar.h"
 
-TestMonster::TestMonster(QGraphicsItem *parent) : Monster(parent) {
+Boar::Boar(QGraphicsItem *parent) : Monster(parent) {
     int sz = static_cast<int>(MonsterSize);
     if(sz <= 0)
         throw std::invalid_argument("Monster Size not initialized");
@@ -9,6 +9,6 @@ TestMonster::TestMonster(QGraphicsItem *parent) : Monster(parent) {
     health_ = 10;
 }
 
-int TestMonster::type() const {
+int Boar::type() const {
     return Type;
 }

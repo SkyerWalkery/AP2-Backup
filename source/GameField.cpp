@@ -207,7 +207,7 @@ bool GameField::pointFloatEqual(const QPointF& p1, const QPointF& p2){
 
 void GameField::debugStart() {
     for(auto& start_idx: start_areas_idx_){
-        Monster* monster = new TestMonster();
+        Monster* monster = new Boar();
         addItem(monster);
         monsters_.push_back(monster);
         auto start_area = areas_[start_idx.x()][start_idx.y()];

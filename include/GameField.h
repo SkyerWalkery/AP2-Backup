@@ -26,7 +26,7 @@
 #include "Grass.h"
 #include "Road.h"
 #include "Monster.h"
-#include "TestMonster.h"
+#include "Boar.h"
 #include "Character.h"
 #include "Elf.h"
 #include "Knight.h"

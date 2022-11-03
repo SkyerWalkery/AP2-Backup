@@ -3,7 +3,7 @@
 qreal Monster::MonsterSize = 0;
 
 Monster::Monster(QGraphicsItem *parent): QGraphicsPixmapItem(parent){
-
+    setZValue(2); // Ensure it wouldn't be covered by area selected
 }
 
 qreal Monster::getSpeed() const {
