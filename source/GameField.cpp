@@ -302,6 +302,7 @@ void GameField::checkGameEnd() {
     background->setPen(Qt::NoPen);
     background->setBrush(QBrush(QColor(255, 0, 0, 128)));
     background->setRect(this->sceneRect());
+    background->setZValue(3); // Above all other
     addItem(background);
     timer_.stop();
 }

@@ -1,5 +1,4 @@
 from PIL import Image
-img = Image.new(mode="RGBA", size=(48, 48))
-small = Image.open("monster.png")
-img.paste(small, (2, 8))
-img.save("boar.png")
+img = Image.open('elf.webp')
+cropped = img.crop((8, 16, 72, 80))  # (left, upper, right, lower)
+cropped.save("elf.png", lossless=True, quality=100, method=6)
