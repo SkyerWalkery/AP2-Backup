@@ -120,7 +120,7 @@ void GameField::loadCharacterOptionFromFile(const QString& file_path) {
 
 void GameField::loadMonsterQueueFromFile(const QString& file_path) {
     // There lines in this file
-    // Each line is made up of (Monster name, appearing time(ms))
+    // Each line is made up of (Monster name, arrival time(ms))
     // e.g. one line is "Boar 30")
     QFile in_file(file_path);
     if(!in_file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -132,13 +132,13 @@ void GameField::loadMonsterQueueFromFile(const QString& file_path) {
         if(line.size() == 0 || line.startsWith("//"))
             continue;
         QStringList info = line.split(u' ', Qt::SkipEmptyParts);
-        QPair<Monster*, int> monster_appear;
+        QPair<Monster*, int> monster_arrival;
         if(info[0] == "Boar")
-            monster_appear.first = new Boar;
+            monster_arrival.first = new Boar;
         else
             throw std::invalid_argument("Invalid monster in monsters.dat");
-        monster_appear.second = info[1].toInt();
-        this->monster_que_.enqueue(monster_appear);
+        monster_arrival.second = info[1].toInt();
+        this->monster_que_.enqueue(monster_arrival);
     }
     in_file.close();
 }
@@ -411,8 +411,8 @@ void GameField::moveMonsters() {
 
 void GameField::generateMonsters() {
     while(!monster_que_.empty() && monster_que_.head().second <= game_time_){
-        auto monster_appear = monster_que_.dequeue();
-        auto *monster = monster_appear.first;
+        auto monster_arrival = monster_que_.dequeue();
+        auto *monster = monster_arrival.first;
         addItem(monster);
         monsters_.push_back(monster);
         // Select a start area randomly

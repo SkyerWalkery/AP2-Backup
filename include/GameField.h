@@ -56,7 +56,7 @@ class GameField: public QGraphicsScene{
     qint64 game_time_ = 0; // time (ms) since game start; It should be updated by updateField
     qreal fps_ = 59; // refresh rate
 
-    // Queue of (monster, generating time) pairs
+    // Queue of (monster, arrival time) pairs
     // time (second of pair) should be sorted by ascending order
     QQueue<QPair<Monster*, int>> monster_que_;
 
@@ -77,7 +77,6 @@ class GameField: public QGraphicsScene{
     QGraphicsWidget* upgrade_options_ = new QGraphicsWidget;
     // character_makers_ contains makers of characters that can be placed in this field
     // character_textures_ is list of file name of corresponding textures
-    // TODO: Init from file
     QList<std::function<Character*()>> character_makers_;
     QStringList character_textures_;
 
@@ -89,7 +88,7 @@ public:
      * dir_path should contain 3 files:
      * field.dat: data of field
      * characters.dat: characters can be used
-     * monsters.dat: monsters that will appear in this level, along with time of appearance
+     * monsters.dat: monsters that will appear in this level, along with time of arrival
      * @param dir_path const QString& directory having data of field, monsters and characters cna be used
      */
     void loadLevelFromFile(const QString& dir_path);
