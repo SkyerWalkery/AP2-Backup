@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/arrow-down.svg</file>
+        <file>images/arrow-left.svg</file>
+        <file>images/arrow-right.svg</file>
+        <file>images/arrow-up.svg</file>
+        <file>images/corner-down-left.svg</file>
+        <file>images/corner-down-right.svg</file>
+        <file>images/corner-left-down.svg</file>
+        <file>images/corner-left-up.svg</file>
+        <file>images/corner-right-down.svg</file>
+        <file>images/corner-right-up.svg</file>
+        <file>images/corner-up-left.svg</file>
+        <file>images/corner-up-right.svg</file>
+    </qresource>
+</RCC>

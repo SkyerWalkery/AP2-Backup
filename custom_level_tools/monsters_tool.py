@@ -86,7 +86,7 @@ class MonsterToolWindow(QMainWindow):
             return
 
         with open(file_info[0], 'w') as out_file:
-            for record in self.records:
+            for record in sorted(self.records):
                 out_file.write(f'{record.monster} {int(record.arrival_time * 1000)}\n')
 
 
