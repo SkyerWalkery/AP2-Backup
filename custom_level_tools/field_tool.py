@@ -24,6 +24,7 @@ class AreaLabel(QLabel):
         self.setMinimumSize(QSize(36, 36))
         self.setMaximumSize(QSize(64, 64))
         self.setStyleSheet("border: 2px solid black;")
+        self.setAlignment(Qt.AlignCenter)
 
         default_pixmap = QPixmap(QPixmap(':/images/corner-down-left.svg').size())
         default_pixmap.fill(Qt.transparent)
@@ -115,11 +116,11 @@ class AreaLabel(QLabel):
         self.setPixmap(new_pixmap)
 
     def to_file_format(self) -> str:
-        ret = f'{self.pos[0]},{self.pos[1]},'
+        ret = f'{self.pos[0]} {self.pos[1]} '
         d = (-1, 0, 1, 0, -1)
         for i in range(4):
             x, y = self.directions[(d[i], d[i + 1])]
-            ret += f'{x},{y},'
+            ret += f'{x} {y} '
         ret += f'{self.area_flag}'
         return ret
 
@@ -171,7 +172,7 @@ class FieldToolWindow(QMainWindow):
             return
 
         with open(file_info[0], 'w') as out_file:
-            out_file.write(f'{self.num_row},{self.num_col}\n')
+            out_file.write(f'{self.num_row} {self.num_col}\n')
             for i in range(self.main_layout.count()):
                 area_widget = self.main_layout.itemAt(i).widget()
                 out_file.write(area_widget.to_file_format() + '\n')
