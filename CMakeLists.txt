@@ -17,16 +17,19 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/area)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/monster)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/character)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/game_view)
 
 aux_source_directory(. MAIN_SRC)
 aux_source_directory(./source COMPONENTS_SRC)
 aux_source_directory(./source/area AREA_SRC)
 aux_source_directory(./source/monster MONSTER_SRC)
 aux_source_directory(source/character CHARACTER_SRC)
+aux_source_directory(source/game_view VIEW_SRC)
 
 add_executable(${PROJECT_NAME}
         ${MAIN_SRC} ${COMPONENTS_SRC}
-        ${AREA_SRC} ${MONSTER_SRC} ${CHARACTER_SRC}
+        ${AREA_SRC} ${MONSTER_SRC}
+        ${CHARACTER_SRC} ${VIEW_SRC}
         img_rsc.qrc
         )
 

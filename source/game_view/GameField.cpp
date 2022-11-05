@@ -1,4 +1,4 @@
-#include "GameField.h"
+#include "game_view/GameField.h"
 
 
 // TODO: init from file should be called by constructor
