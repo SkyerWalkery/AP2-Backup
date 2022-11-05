@@ -27,6 +27,8 @@ void GameField::loadLevelFromFile(const QString& dir_path) {
     loadCharacterOptionFromFile(QString("%1/characters.dat").arg(dir_path));
     // Load monsters
     loadMonsterQueueFromFile(QString("%1/monsters.dat").arg(dir_path));
+    // Load level settings
+    loadLevelSettingFromFile(QString("%1/level_setting.dat").arg(dir_path));
     // Some UI need to set up after initialization above
     initOptionUi();
 }
@@ -140,6 +142,17 @@ void GameField::loadMonsterQueueFromFile(const QString& file_path) {
         monster_arrival.second = info[1].toInt();
         this->monster_que_.enqueue(monster_arrival);
     }
+    in_file.close();
+}
+
+void GameField::loadLevelSettingFromFile(const QString& file_path) {
+    // Line 1: Life points of player
+    QFile in_file(file_path);
+    if(!in_file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    this->life_points_ = in_file.readLine().simplified().toInt();
+
     in_file.close();
 }
 

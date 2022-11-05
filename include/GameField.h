@@ -67,7 +67,7 @@ class GameField: public QGraphicsScene{
     QList<AreaIndex> start_areas_idx_;
     QList<AreaIndex> protect_areas_idx_;
 
-    int life_points_ = 1; // TODO: Init from file
+    int life_points_ = 1;
 
     // Below are components related to character.
     // place_options_ and upgrade_options_ each holds a layout, which may holds more than one options
@@ -98,6 +98,8 @@ public:
     void loadCharacterOptionFromFile(const QString& file_path);
 
     void loadMonsterQueueFromFile(const QString& file_path);
+
+    void loadLevelSettingFromFile(const QString& file_path);
 
     // Initialize place_options_ and upgrade_options_
     // Must be called explicitly, for no other functions will call it
