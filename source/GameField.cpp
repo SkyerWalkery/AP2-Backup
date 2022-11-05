@@ -38,8 +38,8 @@ void GameField::loadFieldFromFile(const QString &file_path) {
 
     QString line;
     // read length and width
-    line = in_file.readLine();
-    QStringList size = line.split(u',', Qt::SkipEmptyParts);
+    line = in_file.readLine().simplified();
+    QStringList size = line.split(u' ', Qt::SkipEmptyParts);
     num_rows_ = size[0].toInt();
     num_cols_ = size[1].toInt();
     if(num_rows_ <= 0 || num_cols_ <= 0)
@@ -53,12 +53,10 @@ void GameField::loadFieldFromFile(const QString &file_path) {
     // Each direction_ looks like "x,y", so it should be split by ',' as well
     // road_type: 1 to start, 2 to Protection Objective, otherwise 0
     // TODO: Invalid input
-    line = in_file.readLine();
-    int num_roads = line.toInt();
     QHash<AreaIndex, Area*> pos2road;
-    for(int i = 0; i < num_roads; ++i){
-        line = in_file.readLine();
-        QStringList info = line.split(u',', Qt::SkipEmptyParts);
+    while(!in_file.atEnd()){
+        line = in_file.readLine().simplified();
+        QStringList info = line.split(u' ', Qt::SkipEmptyParts);
         Road* road = new Road();
         int directions[5] = {-1, 0, 1, 0, -1};
         for(int k = 0; k < 4; ++k){
@@ -76,9 +74,9 @@ void GameField::loadFieldFromFile(const QString &file_path) {
     in_file.close();
 
     // fill the field
-    areas_ = QList<QList<Area*>>(num_cols_);
-    for(int i = 0; i < num_cols_; ++i){
-        for(int j = 0; j < num_rows_; ++j){
+    areas_ = QList<QList<Area*>>(num_rows_);
+    for(int i = 0; i < num_rows_; ++i){
+        for(int j = 0; j < num_cols_; ++j){
             auto pos = QPoint(i, j);
             Area* item = pos2road.value(pos, new Grass());
             addItem(item);
