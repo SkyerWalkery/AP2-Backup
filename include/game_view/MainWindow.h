@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QVBoxLayout>
 #include <QMenuBar>
+#include <QToolBar>
 #include "GameField.h"
 
 
@@ -11,7 +12,6 @@ class MainWindow: public QMainWindow{
 
     QLayout* main_layout_;
     GameField game_field_;
-    QGraphicsView game_view_;
 
 public:
 
