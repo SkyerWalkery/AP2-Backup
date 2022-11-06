@@ -7,6 +7,7 @@ Elf::Elf(QGraphicsItem *parent) :Character(parent){
     setPixmap(QPixmap(TEXTURE).scaled(sz, sz));
 
     health_ = 1;
+    can_be_attacked_ = false;
     damage_ = 1;
     recharge_time_ = 700; // ms
     attack_range_ = 5;

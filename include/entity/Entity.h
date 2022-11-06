@@ -25,6 +25,8 @@ protected:
 
     int health_ = 0;
 
+    bool can_be_attacked_ = true; // Some entities, such as ELf (on grass), cannot be attacked
+
     static qreal AreaSize; // Must be set before construct
 
     static qreal distanceBetween(const QPointF &p1, const QPointF &p2);
@@ -49,6 +51,8 @@ public:
     int getHealth() const;
 
     void setHealth(int health);
+
+    bool canBeAttacked() const;
 
 
     static void setAreaSize(qreal size);

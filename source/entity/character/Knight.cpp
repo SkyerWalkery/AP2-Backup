@@ -7,6 +7,7 @@ Knight::Knight(QGraphicsItem *parent) :Character(parent){
     setPixmap(QPixmap(TEXTURE).scaled(sz, sz));
 
     health_ = 10;
+    can_be_attacked_ = true;
     damage_ = 2;
     recharge_time_ = 500; // ms
     attack_range_ = 1;

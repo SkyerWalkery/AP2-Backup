@@ -40,6 +40,10 @@ void Entity::setHealth(int health) {
     health_ = health;
 }
 
+bool Entity::canBeAttacked() const {
+    return can_be_attacked_;
+}
+
 void Entity::setAreaSize(qreal size) {
     AreaSize = size;
 }
@@ -70,7 +74,7 @@ void Entity::attack(const QList<Entity*>& targets) {
     qreal min_dis = 99999999;
     Entity* target = nullptr;
     for(auto* entity: targets){
-        if(!entity->isAlive() || !inAttackRange(entity))
+        if(!entity->isAlive() || !entity->canBeAttacked() || !inAttackRange(entity))
             continue;
         auto dis = distanceBetween(scenePos(),entity->scenePos());
         if(dis < min_dis){
@@ -93,4 +97,3 @@ void Entity::attacked(Entity* attacker) {
 qreal Entity::distanceBetween(const QPointF &p1, const QPointF &p2) {
     return qSqrt(qPow(p1.x() - p2.x(), 2) + qPow(p1.y() - p2.y(), 2));
 }
-
