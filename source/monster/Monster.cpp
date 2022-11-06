@@ -37,6 +37,10 @@ void Monster::setHealth(int health) {
     health_ = health;
 }
 
+bool Monster::isAlive() const {
+    return getHealth() > 0;
+}
+
 void Monster::attacked(int damage) {
     setHealth(getHealth() - damage);
 }

@@ -48,14 +48,27 @@ void Character::setCharacterSize(qreal size) {
     CharacterSize = size;
 }
 
-bool Character::inAttackRange(const QPointF& pos) const {
+bool Character::inAttackRange(Monster* target) const {
+    auto pos = target->scenePos();
     auto this_pos = scenePos();
     qreal distance = qSqrt(qPow(this_pos.x() - pos.x(), 2) + qPow(this_pos.y() - pos.y(), 2));
     return distance <= getAttackRange() * CharacterSize;
 }
 
+bool Character::readyToAttack() const {
+    return recharged_ >= recharge_time_;
+}
+
+void Character::recharge(int time) {
+    recharged_ += time;
+}
+
 void Character::attack(Monster* monster) {
-    // TODO: Take recharge time into account
+    if(!monster || !readyToAttack())
+        return;
+
+    recharged_ %= recharge_time_;
     monster->attacked(getDamage());
+    qDebug() << "Attack " << monster->getHealth();
 }
 

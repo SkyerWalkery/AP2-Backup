@@ -276,6 +276,10 @@ bool GameField::pointFloatEqual(const QPointF& p1, const QPointF& p2){
     return qRealEqual(p1.x(), p2.x()) && qRealEqual(p1.y(), p2.y());
 }
 
+qreal GameField::distanceBetween(const QPointF &p1, const QPointF &p2) {
+    return qSqrt(qPow(p1.x() - p2.x(), 2) + qPow(p1.y() - p2.y(), 2));
+}
+
 
 void GameField::startGame() {
     timer_.start();
@@ -450,11 +454,46 @@ void GameField::generateMonsters() {
     }
 }
 
+void GameField::entityInteract() {
+    // Check each character, if any monster is in its range
+    // If so, try to make an attack
+    for(auto* character: characters_){
+        // Recharge the character
+        character->recharge(timer_.interval());
+        // Check if the character is ready to make an attack
+        if(!character->readyToAttack())
+            continue;
+
+        // Check if any monster is in its range
+        // If so, choose the nearest one
+        qreal min_dis = 99999999;
+        Monster* target = nullptr;
+        for(auto* monster: monsters_){
+            if(!character->inAttackRange(monster))
+                continue;
+            auto dis = distanceBetween(character->scenePos(), monster->scenePos());
+            if(dis < min_dis){
+                min_dis = dis;
+                target = monster;
+            }
+        }
+        if(target) {
+            character->attack(target);
+            // Remove dead monster
+            if (!target->isAlive()) {
+                monsters_.removeOne(target);
+                this->removeItem(target);
+            }
+        }
+    }
+}
+
 
 void GameField::updateField() {
     game_time_ += timer_.interval();
     generateMonsters();
     moveMonsters();
+    entityInteract();
     checkReachProtectionObjective();
     checkGameEnd();
 }

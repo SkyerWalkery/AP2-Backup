@@ -22,6 +22,8 @@ protected:
 
     int recharge_time_ = 0; // Time (ms) to recharge before an attack
 
+    int recharged_ = 0; // Time (ms) that the character has recharged since last attack
+
     qreal attack_range_ = 0; // Attack range (num of AREA_SIZE)
 
     int health_ = 0; // Only for characters that can be put on roads
@@ -73,11 +75,22 @@ public:
     // Helper methods
 
     /*
-     * Returns if pos is in character's attack range
+     * Returns if a monster is in character's attack range
      *
-     * @param scene pos of target
+     * @param target monster
      */
-    bool inAttackRange(const QPointF& pos) const;
+    bool inAttackRange(Monster* target) const;
+
+    /*
+     * Returns if the character is ready to make an attack
+     * i.e. recharged_ >= recharge_time
+     */
+    bool readyToAttack() const;
+
+    /*
+     * Add to recharged_
+     */
+    void recharge(int time);
 
     // Virtual methods that default ones are given
     /*

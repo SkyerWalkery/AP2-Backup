@@ -126,6 +126,13 @@ private:
      */
     void generateMonsters();
 
+    /*
+     * Called by updateField()
+     * Check monsters and characters, handle interactions between them
+     * e.g. An Elf attack a Boar, a Boar attacks a Knight
+     */
+    void entityInteract();
+
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
 
     void displayCharacterOptions(const AreaIndex& area_idx, QGraphicsWidget* options);
@@ -149,6 +156,11 @@ private:
      * Note: qRealEqual(qreal, qreal) is called in this method
      */
     static bool pointFloatEqual(const QPointF& p1, const QPointF& p2);
+
+    /*
+     * Return distance between p1 and p2
+     */
+    static qreal distanceBetween(const QPointF& p1, const QPointF& p2);
 
     /*
      * Check if any monster has reached the Protection Objective.

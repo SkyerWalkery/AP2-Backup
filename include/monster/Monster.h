@@ -36,6 +36,8 @@ public:
 
     void setHealth(int health);
 
+    bool isAlive() const;
+
     /*
      * Called by character when it trys to attack.
      * The default implementation only reduce the health
