@@ -28,6 +28,7 @@
 #include <functional>
 #include "Grass.h"
 #include "Road.h"
+#include "Entity.h"
 #include "Monster.h"
 #include "Boar.h"
 #include "Character.h"

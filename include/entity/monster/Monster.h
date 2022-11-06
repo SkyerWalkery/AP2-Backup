@@ -3,9 +3,10 @@
 
 #include <QGraphicsPixmapItem>
 #include <QPair>
+#include "Entity.h"
 
 
-class Monster: public QGraphicsPixmapItem{
+class Monster: public Entity{
 
     using Direction = QPair<int, int>;
 
@@ -13,7 +14,6 @@ protected:
 
     Direction direction_ = qMakePair(0, 0);
     qreal speed_ = 10.0; // num of px per second to move
-    int health_ = 0;
 
     static qreal MonsterSize; // Must be set before construct
 
@@ -22,7 +22,7 @@ protected:
 
 public:
 
-    explicit Monster(QGraphicsItem *parent = nullptr);
+    using Entity::Entity;
 
     qreal getSpeed() const;
 
@@ -31,18 +31,6 @@ public:
     Direction getDirection() const;
 
     void setDirection(const Direction& direction);
-
-    int getHealth() const;
-
-    void setHealth(int health);
-
-    bool isAlive() const;
-
-    /*
-     * Called by character when it trys to attack.
-     * The default implementation only reduce the health
-     */
-    virtual void attacked(int damage);
 
     static void setMonsterSize(qreal size);
 };

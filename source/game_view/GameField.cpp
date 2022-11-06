@@ -11,6 +11,7 @@ GameField::GameField(QObject* parent):
 
     // Initialize some info of Character, Area and Monster
     // including area size
+    Entity::setAreaSize(AREA_SIZE);
     Character::setCharacterSize(CHARACTER_SIZE);
     Area::setAreaSize(AREA_SIZE);
     Monster::setMonsterSize(MONSTER_SIZE);
@@ -327,6 +328,17 @@ void GameField::checkGameEnd() {
 
 void GameField::moveMonsters() {
     for(auto* monster: monsters_){
+        // Check if any character blocks its way
+        // If so, stop it from moving
+        bool blocked = false;
+        for(auto* character: characters_)
+            if(monster->collidesWithItem(character)){
+                blocked = true;
+                break;
+            }
+        if(blocked)
+            continue;
+
         qreal total_move_dis = monster->getSpeed() * timer_.interval() / 1000;
         while(total_move_dis > REAL_COMPENSATION){
             // Limit move_dis in one loop
