@@ -6,6 +6,7 @@ Knight::Knight(QGraphicsItem *parent) :Character(parent){
         throw std::invalid_argument("Character Size not initialized");
     setPixmap(QPixmap(TEXTURE).scaled(sz, sz));
 
+    health_ = 10;
     damage_ = 2;
     recharge_time_ = 500; // ms
     attack_range_ = 1;

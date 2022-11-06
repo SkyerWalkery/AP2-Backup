@@ -5,6 +5,10 @@ Boar::Boar(QGraphicsItem *parent) : Monster(parent) {
     if(sz <= 0)
         throw std::invalid_argument("Monster Size not initialized");
     setPixmap(QPixmap(TEXTURE).scaled(sz, sz));
+
+    // Set entity attributes
+    damage_ = 1;
+    recharge_time_ = 800;
     speed_ = 25;
     health_ = 10;
 }

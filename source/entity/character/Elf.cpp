@@ -6,6 +6,7 @@ Elf::Elf(QGraphicsItem *parent) :Character(parent){
         throw std::invalid_argument("Character Size not initialized");
     setPixmap(QPixmap(TEXTURE).scaled(sz, sz));
 
+    health_ = 1;
     damage_ = 1;
     recharge_time_ = 700; // ms
     attack_range_ = 5;

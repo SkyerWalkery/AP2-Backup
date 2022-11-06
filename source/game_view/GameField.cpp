@@ -498,6 +498,34 @@ void GameField::entityInteract() {
             }
         }
     }
+
+    // Check each monster, and try to attack character in its range
+    for(auto* monster: monsters_){
+        monster->recharge(timer_.interval());
+        if(!monster->readyToAttack())
+            continue;
+
+        // Choose the nearest one (in range) and attack
+        qreal min_dis = 99999999;
+        Character* target = nullptr;
+        for(auto* character: characters_){
+            if(!monster->collidesWithItem(character))
+                continue;
+            auto dis = distanceBetween(character->scenePos(), monster->scenePos());
+            if(dis < min_dis){
+                min_dis = dis;
+                target = character;
+            }
+        }
+        if(target) {
+            monster->attack(target);
+            // Remove dead monster
+            if (!target->isAlive()) {
+                characters_.removeOne(target);
+                this->removeItem(target);
+            }
+        }
+    }
 }
 
 

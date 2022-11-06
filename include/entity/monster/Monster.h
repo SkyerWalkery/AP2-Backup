@@ -22,7 +22,7 @@ protected:
 
 public:
 
-    using Entity::Entity;
+    explicit Monster(QGraphicsItem *parent = nullptr);
 
     qreal getSpeed() const;
 

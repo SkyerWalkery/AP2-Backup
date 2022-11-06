@@ -2,6 +2,12 @@
 
 qreal Monster::MonsterSize = 0;
 
+Monster::Monster(QGraphicsItem *parent) : Entity(parent) {
+    // Monster's attack range is 1 block by default
+    attack_range_ = 1;
+    setZValue(2);
+}
+
 void Monster::checkImageOrientation() {
     // Do nothing here
 }
