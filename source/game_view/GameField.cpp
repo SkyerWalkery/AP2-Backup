@@ -509,7 +509,7 @@ void GameField::entityInteract() {
         qreal min_dis = 99999999;
         Character* target = nullptr;
         for(auto* character: characters_){
-            if(!monster->collidesWithItem(character))
+            if(!monster->inAttackRange(character))
                 continue;
             auto dis = distanceBetween(character->scenePos(), monster->scenePos());
             if(dis < min_dis){
