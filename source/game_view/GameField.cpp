@@ -302,16 +302,19 @@ void GameField::checkReachProtectionObjective() {
         removeItem(monster);
         it = monsters_.erase(it);
     }
-    checkGameEnd();
 }
 
 void GameField::checkGameEnd() {
-    if(life_points_ > 0)
+    if(life_points_ > 0 && (!monsters_.empty() || !monster_que_.empty()))
         return;
 
     auto* background = new QGraphicsRectItem;
     background->setPen(Qt::NoPen);
-    background->setBrush(QBrush(QColor(255, 0, 0, 128)));
+    background->setBrush(QBrush(
+            (monsters_.empty() && monster_que_.empty()) ?
+            QColor(0, 255, 0, 128) : // Win
+            QColor(255, 0, 0, 128) // Lose
+    ));
     background->setRect(this->sceneRect());
     background->setZValue(3); // Above all other
     addItem(background);
@@ -418,7 +421,6 @@ void GameField::moveMonsters() {
                 total_move_dis += move_dis;
         }
     }
-    checkReachProtectionObjective();
 }
 
 
@@ -453,6 +455,8 @@ void GameField::updateField() {
     game_time_ += timer_.interval();
     generateMonsters();
     moveMonsters();
+    checkReachProtectionObjective();
+    checkGameEnd();
 }
 
 
