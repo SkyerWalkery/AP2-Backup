@@ -45,9 +45,7 @@ void Entity::setAreaSize(qreal size) {
 }
 
 bool Entity::inAttackRange(Entity* target) const {
-    auto pos = target->scenePos();
-    auto this_pos = scenePos();
-    qreal distance = qSqrt(qPow(this_pos.x() - pos.x(), 2) + qPow(this_pos.y() - pos.y(), 2));
+    qreal distance = distanceBetween(scenePos(), target->scenePos());
     return distance <= getAttackRange() * AreaSize;
 }
 
@@ -63,16 +61,36 @@ bool Entity::isAlive() const {
     return getHealth() > 0;
 }
 
-void Entity::attack(Entity* target) {
-    if(!target || !readyToAttack())
+void Entity::attack(const QList<Entity*>& targets) {
+    if(!readyToAttack())
         return;
 
-    recharged_ %= recharge_time_;
-    target->attacked(getDamage());
-    qDebug() << "Attack " << target->getHealth();
+    // Check if any entity is in attack range
+    // If so, choose the nearest one
+    qreal min_dis = 99999999;
+    Entity* target = nullptr;
+    for(auto* entity: targets){
+        if(!entity->isAlive() || !inAttackRange(entity))
+            continue;
+        auto dis = distanceBetween(scenePos(),entity->scenePos());
+        if(dis < min_dis){
+            min_dis = dis;
+            target = entity;
+        }
+    }
+    if(target) {
+        recharged_ %= recharge_time_;
+        target->attacked(this);
+        qDebug() << "Attack " << target->getHealth();
+    }
 }
 
-void Entity::attacked(int damage) {
+void Entity::attacked(Entity* attacker) {
+    int damage = attacker->getDamage();
     setHealth(getHealth() - damage);
+}
+
+qreal Entity::distanceBetween(const QPointF &p1, const QPointF &p2) {
+    return qSqrt(qPow(p1.x() - p2.x(), 2) + qPow(p1.y() - p2.y(), 2));
 }
 

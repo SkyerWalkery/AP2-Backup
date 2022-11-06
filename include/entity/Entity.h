@@ -3,6 +3,7 @@
 
 #include <QGraphicsItem>
 #include <QGraphicsPixmapItem>
+#include <QList>
 
 /*
  * Abstract base class of all entities
@@ -25,6 +26,8 @@ protected:
     int health_ = 0;
 
     static qreal AreaSize; // Must be set before construct
+
+    static qreal distanceBetween(const QPointF &p1, const QPointF &p2);
 
 public:
 
@@ -74,12 +77,13 @@ public:
 
     // Virtual methods that default ones are given
     /*
-     * Try to attack an entity
+     * Try to attack one or more entities
+     * Default implementation is to attack the nearest one
      * Note: target->attacked() would be called
      */
-    virtual void attack(Entity* monster);
+    virtual void attack(const QList<Entity*>& targets);
 
-    virtual void attacked(int damage);
+    virtual void attacked(Entity* attacker);
 
 };
 

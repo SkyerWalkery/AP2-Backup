@@ -134,6 +134,13 @@ private:
      */
     void entityInteract();
 
+    /*
+     * Remove dead entities, including characters and monsters
+     */
+    void removeDeadEntity();
+
+    void removeCharacter(Character* character);
+
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
 
     void displayCharacterOptions(const AreaIndex& area_idx, QGraphicsWidget* options);
@@ -192,14 +199,14 @@ private slots:
     void placeCharacter(const std::function<Character*()>& maker);
 
     /*
-     * Slot for upgradeCharacter button
+     * Slot for upgradeCharacterFromOption button
      */
-    void upgradeCharacter();
+    void upgradeCharacterFromOption();
 
     /*
-     * Slot for removeCharacter button
+     * Slot for removeCharacterFromOption button
      */
-    void removeCharacter();
+    void removeCharacterFromOption();
 
 };
 

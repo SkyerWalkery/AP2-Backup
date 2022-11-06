@@ -201,9 +201,9 @@ void GameField::initOptionUi() {
 
         // Connect button's signal to slots
         if(icon == UP_ICON)
-            connect(button, &QPushButton::released, this, &GameField::upgradeCharacter);
+            connect(button, &QPushButton::released, this, &GameField::upgradeCharacterFromOption);
         else if(icon == X_ICON)
-            connect(button, &QPushButton::released, this, &GameField::removeCharacter);
+            connect(button, &QPushButton::released, this, &GameField::removeCharacterFromOption);
         else
             throw std::invalid_argument("Invalid upgrade option type");
 
@@ -467,65 +467,64 @@ void GameField::generateMonsters() {
 }
 
 void GameField::entityInteract() {
-    // Check each character, if any monster is in its range
-    // If so, try to make an attack
+    // Call each character::attack(), making a possible attack
+    QList<Entity*> targets;
+    for(Entity* target: monsters_)
+        targets.push_back(target);
     for(auto* character: characters_){
         // Recharge the character
         character->recharge(timer_.interval());
         // Check if the character is ready to make an attack
-        if(!character->readyToAttack())
-            continue;
-
-        // Check if any monster is in its range
-        // If so, choose the nearest one
-        qreal min_dis = 99999999;
-        Monster* target = nullptr;
-        for(auto* monster: monsters_){
-            if(!character->inAttackRange(monster))
-                continue;
-            auto dis = distanceBetween(character->scenePos(), monster->scenePos());
-            if(dis < min_dis){
-                min_dis = dis;
-                target = monster;
-            }
-        }
-        if(target) {
-            character->attack(target);
-            // Remove dead monster
-            if (!target->isAlive()) {
-                monsters_.removeOne(target);
-                this->removeItem(target);
-            }
-        }
+        if(character->readyToAttack())
+            character->attack(targets);
     }
+    targets.clear();
+    removeDeadEntity();
 
     // Check each monster, and try to attack character in its range
+    for(Entity* target: characters_)
+        targets.push_back(target);
     for(auto* monster: monsters_){
         monster->recharge(timer_.interval());
-        if(!monster->readyToAttack())
-            continue;
+        if(monster->readyToAttack())
+            monster->attack(targets);
+    }
+    removeDeadEntity();
+}
 
-        // Choose the nearest one (in range) and attack
-        qreal min_dis = 99999999;
-        Character* target = nullptr;
-        for(auto* character: characters_){
-            if(!monster->inAttackRange(character))
-                continue;
-            auto dis = distanceBetween(character->scenePos(), monster->scenePos());
-            if(dis < min_dis){
-                min_dis = dis;
-                target = character;
-            }
+void GameField::removeDeadEntity() {
+    auto it_m = monsters_.begin();
+    while(it_m != monsters_.end()){
+        auto* monster = *it_m;
+        if(monster->isAlive()){
+            ++it_m;
         }
-        if(target) {
-            monster->attack(target);
-            // Remove dead monster
-            if (!target->isAlive()) {
-                characters_.removeOne(target);
-                this->removeItem(target);
-            }
+        else{
+            it_m = monsters_.erase(it_m);
+            this->removeItem(monster);
         }
     }
+
+    // Cannot delete while iterating
+    // Use a list to place them temporarily
+    QList<Character*> dead_characters;
+    for(auto* character: characters_)
+        if(!character->isAlive())
+            dead_characters.push_back(character);
+    for(auto* dead_one: dead_characters)
+        removeCharacter(dead_one);
+}
+
+void GameField::removeCharacter(Character *character) {
+    auto* area = dynamic_cast<Area*>(character->parentItem());
+    if(!area)
+        throw std::runtime_error("upgrade_options_ has invalid parent");
+
+    // Update info of the area and remove the character
+    area->setOccupied(false);
+    if(!characters_.removeOne(character))
+        throw std::runtime_error("Fail to move character from list");
+    this->removeItem(character);
 }
 
 
@@ -561,11 +560,11 @@ void GameField::placeCharacter(const std::function<Character*()>& maker) {
     characters_.push_back(character);
 }
 
-void GameField::upgradeCharacter() {
+void GameField::upgradeCharacterFromOption() {
 
 }
 
-void GameField::removeCharacter() {
+void GameField::removeCharacterFromOption() {
     auto* area = dynamic_cast<Area*>(upgrade_options_->parentItem());
     if(!area)
         throw std::runtime_error("upgrade_options_ has invalid parent");
