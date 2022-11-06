@@ -5,11 +5,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     game_field_.loadLevelFromFile("test_level");
     auto* view = new QGraphicsView();
     view->setScene(&game_field_);
-    QRectF rect = game_field_.sceneRect();
-    qreal margin = 64;
-    rect.setWidth(rect.width() + margin);
-    rect.setHeight(rect.height() + margin);
-    view->setFixedSize(rect.size().toSize());
+    view->setSceneRect(game_field_.sceneRect());
 
     // Set main layout
     main_layout_ = new QVBoxLayout();
