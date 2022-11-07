@@ -7,9 +7,11 @@
 
 /*
  * Abstract base class of all entities
- * Inherited by Character and Monster\
+ * Inherited by Character and Monster
  * Note:
- * 1. You may need to override attack() and attacked() when needed
+ * * You may need to override attack() and attacked() when needed;
+ * * damage_, recharge_time and attack_range_ should be set if you want to make a valid attack
+ * * If one entity cannot be attacked, can_be_attacked_ should be set false
  */
 class Entity: public QGraphicsPixmapItem{
 
@@ -23,7 +25,7 @@ protected:
 
     qreal attack_range_ = 0; // Attack range (num of AREA_SIZE)
 
-    int health_ = 0;
+    int health_ = 1;
 
     bool can_be_attacked_ = true; // Some entities, such as ELf (on grass), cannot be attacked
 
@@ -58,7 +60,6 @@ public:
     static void setAreaSize(qreal size);
 
     // Helper methods
-
     /*
      * Returns if an entity is in attack range
      *

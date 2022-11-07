@@ -90,16 +90,21 @@ public:
      * field.dat: data of field
      * characters.dat: characters can be used
      * monsters.dat: monsters that will appear in this level, along with time of arrival
+     * level_setting.dat: other settings of this level, such as life points of player
      * @param dir_path const QString& directory having data of field, monsters and characters cna be used
      */
     void loadLevelFromFile(const QString& dir_path);
 
+    // Called by loadLevelFromFile()
     void loadFieldFromFile(const QString& file_path);
 
+    // Called by loadLevelFromFile()
     void loadCharacterOptionFromFile(const QString& file_path);
 
+    // Called by loadLevelFromFile()
     void loadMonsterQueueFromFile(const QString& file_path);
 
+    // Called by loadLevelFromFile()
     void loadLevelSettingFromFile(const QString& file_path);
 
     // Initialize place_options_ and upgrade_options_
@@ -139,10 +144,22 @@ private:
      */
     void removeDeadEntity();
 
+    /*
+     * Remove specific character
+     * Note:
+     * Statement of area holding the character should be reset
+     * characters_ should be updated
+     */
     void removeCharacter(Character* character);
 
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
 
+    /*
+     * Called when click on an area, either holding a character or not
+     *
+     * @param area_idx Index of area in this->areas_
+     * @param options Option GUI that is to show
+     */
     void displayCharacterOptions(const AreaIndex& area_idx, QGraphicsWidget* options);
 
     /*
@@ -177,7 +194,11 @@ private:
      */
     void checkReachProtectionObjective();
 
-
+    /*
+     * Check if game is end
+     * Win: There no monster in field and monster_que_, and life_point_ > 0
+     * Lose: Otherwise
+     */
     void checkGameEnd();
 
 private slots:

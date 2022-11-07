@@ -17,7 +17,9 @@ class Character: public Entity{
 
 protected:
 
-    static qreal CharacterSize; // Must be set before construct
+    // Must be set before construct
+    // setCharacterSize() should be called
+    static qreal CharacterSize;
 
 public:
 

@@ -13,7 +13,10 @@ protected:
     // If this area has a character or other objects
     bool occupied_ = false;
 
-    static qreal area_size_; // Must be set before construct
+    // Must be set before construct
+    // setAreaSize() should be called
+    static qreal AreaSize;
+
 
 public:
     explicit Area(QGraphicsItem *parent = nullptr);
