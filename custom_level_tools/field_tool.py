@@ -98,17 +98,17 @@ class AreaLabel(QLabel):
 
         # From left
         if self.directions[(1, 0)] == (0, -1):
-            painter.drawPixmap(0, 0, QPixmap(':/images/corner-left-up.svg'))
+            painter.drawPixmap(0, 0, QPixmap(':/images/corner-right-up.svg'))
         elif self.directions[(1, 0)] == (0, 1):
-            painter.drawPixmap(0, 0, QPixmap(':/images/corner-left-down.svg'))
+            painter.drawPixmap(0, 0, QPixmap(':/images/corner-right-down.svg'))
         elif self.directions[(1, 0)] == (1, 0):
             painter.drawPixmap(0, 0, QPixmap(':/images/arrow-right.svg'))
 
         # From right
         if self.directions[(-1, 0)] == (0, -1):
-            painter.drawPixmap(0, 0, QPixmap(':/images/corner-right-up.svg'))
+            painter.drawPixmap(0, 0, QPixmap(':/images/corner-left-up.svg'))
         elif self.directions[(-1, 0)] == (0, 1):
-            painter.drawPixmap(0, 0, QPixmap(':/images/corner-right-down.svg'))
+            painter.drawPixmap(0, 0, QPixmap(':/images/corner-left-down.svg'))
         elif self.directions[(-1, 0)] == (-1, 0):
             painter.drawPixmap(0, 0, QPixmap(':/images/arrow-left.svg'))
 
@@ -124,6 +124,10 @@ class AreaLabel(QLabel):
         ret += f'{self.area_flag}'
         return ret
 
+    # If directions are all (0, 0), it shouldn't be written into file
+    def should_write(self) -> bool:
+        return any((d != (0, 0)) for d in self.directions.values())
+
 
 class FieldToolWindow(QMainWindow):
 
@@ -134,6 +138,8 @@ class FieldToolWindow(QMainWindow):
         file_menu: QMenu = menu_bar.addMenu('File')
         save_action: QAction = file_menu.addAction('Save')
         save_action.triggered.connect(self.save_as_file)
+        load_action: QAction = file_menu.addAction('Load')
+        load_action.triggered.connect(self.load_from_file)
         reset_action: QAction = file_menu.addAction('Reset')
         reset_action.triggered.connect(self.reset_field)
 
@@ -175,7 +181,43 @@ class FieldToolWindow(QMainWindow):
             out_file.write(f'{self.num_row} {self.num_col}\n')
             for i in range(self.main_layout.count()):
                 area_widget = self.main_layout.itemAt(i).widget()
-                out_file.write(area_widget.to_file_format() + '\n')
+                if area_widget.should_write():
+                    out_file.write(area_widget.to_file_format() + '\n')
+
+    def load_from_file(self):
+        file_info: Tuple[str, str, int] = QFileDialog.getOpenFileName(
+            self, "Load File",
+            "field.dat",
+            "Data (*.dat)"
+        )  # Tuple[file directory, filter, length]
+        if len(file_info[0]) == 0:
+            return
+
+        with open(file_info[0], 'r') as in_file:
+            self.num_row, self.num_col = map(int, in_file.readline().split())
+            roads_idx: Set[Tuple[int, int]] = set()
+            self.main_layout: QGridLayout = QGridLayout()
+            for line in in_file.readlines():
+                info = list(line.split())
+                r, c = int(info[0]), int(info[1])
+                d = (-1, 0, 1, 0, -1)
+                directions = {}
+                for i in range(4):
+                    directions[(d[i], d[i + 1])] = int(info[i * 2 + 2]), int(info[i * 2 + 3])
+                flag = info[10]
+                area = AreaLabel((r, c))
+                area.directions = directions
+                area.area_flag = flag
+                area.update_pixmap()
+                self.main_layout.addWidget(area, r, c)
+                roads_idx.add((r, c))
+            for i in range(self.num_row):
+                for j in range(self.num_col):
+                    if (i, j) not in roads_idx:
+                        self.main_layout.addWidget(AreaLabel((i, j)), i, j)
+            self.central_widget = QWidget()
+            self.central_widget.setLayout(self.main_layout)
+            self.setCentralWidget(self.central_widget)
 
 
 if __name__ == '__main__':
