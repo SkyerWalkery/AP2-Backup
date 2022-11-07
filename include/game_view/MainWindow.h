@@ -11,13 +11,18 @@
 class MainWindow: public QMainWindow{
 
     QLayout* main_layout_;
-    GameField game_field_;
+    GameField* game_field_;
+    QGraphicsView* game_view_;
 
 public:
 
     explicit MainWindow(QWidget *parent = nullptr);
 
     void startGame();
+
+private slots:
+
+    void resetGame();
 };
 
 
