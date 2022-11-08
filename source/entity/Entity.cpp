@@ -87,6 +87,14 @@ void Entity::attack(const QList<Entity*>& targets) {
         }
     }
     if(target) {
+        attack(target);
+    }
+}
+
+void Entity::attack(Entity *target) {
+    if(!readyToAttack())
+        return;
+    if(target) {
         recharged_ %= recharge_time_;
         target->attacked(this);
     }

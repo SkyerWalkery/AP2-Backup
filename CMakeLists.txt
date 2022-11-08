@@ -18,6 +18,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/area)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/entity)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/entity/monster)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/entity/character)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/particle)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/game_view)
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} MAIN_SRC)
@@ -26,13 +27,14 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/area AREA_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/entity ENTITY_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/entity/monster MONSTER_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/entity/character CHARACTER_SRC)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/particle PARTICLE_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/game_view VIEW_SRC)
 
 add_executable(${PROJECT_NAME}
         ${MAIN_SRC} ${COMPONENTS_SRC}
         ${AREA_SRC} ${ENTITY_SRC}
         ${MONSTER_SRC} ${CHARACTER_SRC}
-        ${VIEW_SRC}
+        ${PARTICLE_SRC} ${VIEW_SRC}
         img_rsc.qrc
         )
 

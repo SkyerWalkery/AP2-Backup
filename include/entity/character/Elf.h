@@ -1,7 +1,10 @@
 #ifndef AP_PROJ_ELF_H
 #define AP_PROJ_ELF_H
 
+#include <QColor>
+#include <QPen>
 #include "Character.h"
+#include "MoveCircleParticle.h"
 
 
 class Elf: public Character{
@@ -21,6 +24,8 @@ public:
     int type() const override;
 
     bool testAreaCond(int cond) override;
+
+    void attack(Entity* target) override;
 
 };
 

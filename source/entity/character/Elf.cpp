@@ -1,5 +1,6 @@
 #include "Elf.h"
 
+
 Elf::Elf(QGraphicsItem *parent) :Character(parent){
     int sz = static_cast<int>(CharacterSize);
     if(sz <= 0)
@@ -19,4 +20,18 @@ int Elf::type() const {
 
 bool Elf::testAreaCond(int cond) {
     return (cond & AreaCond) != 0;
+}
+
+void Elf::attack(Entity * target) {
+    Entity::attack(target);
+
+
+    // Add attack visual effect
+    auto* attack_effect = new MoveCircleParticle(this);
+    attack_effect->setStartPos(this->boundingRect().center());
+    attack_effect->setEndPos(target->boundingRect().center());
+    attack_effect->setPen(Qt::NoPen);
+    attack_effect->setBrush(QColor(252, 253, 151));
+    attack_effect->setRect(-3, -3, 6, 6);
+    attack_effect->startAnimation();
 }
