@@ -10,7 +10,7 @@ Boar::Boar(QGraphicsItem *parent) : Monster(parent) {
     damage_ = 1;
     recharge_time_ = 800;
     speed_ = 25;
-    health_ = 10;
+    health_ = max_health_ = 10;
 }
 
 int Boar::type() const {

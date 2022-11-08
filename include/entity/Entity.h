@@ -26,6 +26,7 @@ protected:
     qreal attack_range_ = 0; // Attack range (num of AREA_SIZE)
 
     int health_ = 1;
+    int max_health_ = 1;
 
     bool can_be_attacked_ = true; // Some entities, such as ELf (on grass), cannot be attacked
 
@@ -53,6 +54,8 @@ public:
     int getHealth() const;
 
     void setHealth(int health);
+
+    int getMaxHealth() const;
 
     bool canBeAttacked() const;
 

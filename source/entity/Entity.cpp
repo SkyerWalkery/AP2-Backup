@@ -40,6 +40,10 @@ void Entity::setHealth(int health) {
     health_ = health;
 }
 
+int Entity::getMaxHealth() const {
+    return max_health_;
+}
+
 bool Entity::canBeAttacked() const {
     return can_be_attacked_;
 }
@@ -85,7 +89,6 @@ void Entity::attack(const QList<Entity*>& targets) {
     if(target) {
         recharged_ %= recharge_time_;
         target->attacked(this);
-        qDebug() << "Attack " << target->getHealth();
     }
 }
 
