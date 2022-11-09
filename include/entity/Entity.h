@@ -5,6 +5,7 @@
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 #include <QList>
+#include "ActionAttack.h"
 
 /*
  * Abstract base class of all entities
@@ -107,7 +108,7 @@ public:
     // You can override this method to add effect when attacking an entity
     virtual void attack(Entity* target);
 
-    virtual void attacked(Entity* attacker);
+    virtual void attacked(const ActionAttack& action);
 
 };
 

@@ -38,7 +38,7 @@ public:
 
     static void setMonsterSize(qreal size);
 
-    void attacked(Entity* attacker) override;
+    void attacked(const ActionAttack& action) override;
 
 };
 

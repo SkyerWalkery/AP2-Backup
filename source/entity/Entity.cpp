@@ -96,12 +96,14 @@ void Entity::attack(Entity *target) {
         return;
     if(target) {
         recharged_ %= recharge_time_;
-        target->attacked(this);
+        ActionAttack attack(this, target);
+        attack.setDamage(getDamage());
+        target->attacked(attack);
     }
 }
 
-void Entity::attacked(Entity* attacker) {
-    int damage = attacker->getDamage();
+void Entity::attacked(const ActionAttack& action) {
+    int damage = action.getDamage();
     setHealth(getHealth() - damage);
 }
 
