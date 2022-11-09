@@ -1,4 +1,5 @@
 #include "Monster.h"
+#include <QPen>
 
 qreal Monster::MonsterSize = 0;
 

@@ -1,5 +1,7 @@
 #include "Elf.h"
 #include <QGraphicsScene>
+#include <QColor>
+#include <QPen>
 
 
 Elf::Elf(QGraphicsItem *parent) :Character(parent){

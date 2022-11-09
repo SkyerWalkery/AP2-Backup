@@ -1,9 +1,7 @@
 #ifndef AP_PROJ_ROAD_H
 #define AP_PROJ_ROAD_H
 
-#include <QHash>
 #include <QPair>
-#include <QList>
 #include "Area.h"
 
 class Road: public Area{

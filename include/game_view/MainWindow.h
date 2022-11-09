@@ -2,10 +2,8 @@
 #define AP_PROJ_MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsView>
 #include <QVBoxLayout>
-#include <QMenuBar>
-#include <QToolBar>
-#include <QFileDialog>
 #include "GameField.h"
 
 

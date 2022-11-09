@@ -1,8 +1,6 @@
 #ifndef AP_PROJ_ELF_H
 #define AP_PROJ_ELF_H
 
-#include <QColor>
-#include <QPen>
 #include "Character.h"
 #include "MoveCircleParticle.h"
 

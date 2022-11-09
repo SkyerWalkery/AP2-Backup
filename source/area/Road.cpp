@@ -1,4 +1,7 @@
 #include "Road.h"
+#include <QHash>
+#include <QList>
+
 
 
 Road::Road(QGraphicsItem *parent) : Area(parent) {

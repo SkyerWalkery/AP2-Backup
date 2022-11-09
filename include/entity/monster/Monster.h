@@ -4,7 +4,6 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsRectItem>
 #include <QPair>
-#include <QPen>
 #include "Entity.h"
 
 

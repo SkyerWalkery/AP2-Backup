@@ -1,4 +1,4 @@
-#include "area/Area.h"
+#include "Area.h"
 
 qreal Area::AreaSize = 0;
 

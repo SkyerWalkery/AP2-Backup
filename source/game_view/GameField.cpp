@@ -1,4 +1,6 @@
-#include "game_view/GameField.h"
+#include "GameField.h"
+#include <QFile>
+#include <QDir>
 
 
 // TODO: init from file should be called by constructor

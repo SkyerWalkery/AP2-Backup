@@ -1,4 +1,7 @@
 #include "MainWindow.h"
+#include <QMenuBar>
+#include <QToolBar>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     // Initialize game field
