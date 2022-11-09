@@ -6,7 +6,8 @@ Elf::Elf(QGraphicsItem *parent) :Character(parent){
     int sz = static_cast<int>(CharacterSize);
     if(sz <= 0)
         throw std::invalid_argument("Character Size not initialized");
-    setPixmap(QPixmap(TEXTURE).scaled(sz, sz));
+    texture_pixmap_ = QPixmap(TEXTURE).scaled(sz, sz);
+    setPixmap(texture_pixmap_);
 
     health_ = max_health_ = 1;
     can_be_attacked_ = false;
@@ -24,10 +25,10 @@ bool Elf::testAreaCond(int cond) {
 }
 
 void Elf::attack(Entity * target) {
-    Entity::attack(target);
+    Character::attack(target);
 
 
-    // Add attack visual effect
+    // Add tryAttack visual effect
     auto* attack_effect = new MoveCircleParticle(this);
     attack_effect->setStartPos(this->boundingRect().center());
     attack_effect->setEndPos(target->mapToItem(this, target->boundingRect().center()));

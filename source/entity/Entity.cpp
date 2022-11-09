@@ -69,11 +69,11 @@ bool Entity::isAlive() const {
     return getHealth() > 0;
 }
 
-void Entity::attack(const QList<Entity*>& targets) {
+void Entity::tryAttack(const QList<Entity*>& targets) {
     if(!readyToAttack())
         return;
 
-    // Check if any entity is in attack range
+    // Check if any entity is in tryAttack range
     // If so, choose the nearest one
     qreal min_dis = 99999999;
     Entity* target = nullptr;
@@ -87,7 +87,7 @@ void Entity::attack(const QList<Entity*>& targets) {
         }
     }
     if(target) {
-        attack(target);
+        this->attack(target);
     }
 }
 
@@ -107,4 +107,12 @@ void Entity::attacked(Entity* attacker) {
 
 qreal Entity::distanceBetween(const QPointF &p1, const QPointF &p2) {
     return qSqrt(qPow(p1.x() - p2.x(), 2) + qPow(p1.y() - p2.y(), 2));
+}
+
+void Entity::flipHorizontally() {
+    QTransform flip_transform;
+    flip_transform.scale(-1, 1);
+    texture_pixmap_ = texture_pixmap_.transformed(flip_transform);
+    setPixmap(texture_pixmap_);
+    is_horizontally_flipped_ = !is_horizontally_flipped_;
 }

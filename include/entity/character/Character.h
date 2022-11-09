@@ -11,7 +11,7 @@
  * Abstract base class of all characters
  * When inherit this, you need to pay attention to these:
  * 1. SunCost needs to be defined, even if cost of your character is 0 too.
- * 2. You may need to override attack() when needed
+ * 2. You may need to override tryAttack() when needed
  */
 class Character: public Entity{
 
@@ -45,6 +45,8 @@ public:
     virtual bool testAreaCond(int cond) = 0;
 
     static void setCharacterSize(qreal size);
+
+    void attack(Entity* target) override;
 
 };
 

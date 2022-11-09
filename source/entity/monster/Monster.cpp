@@ -3,7 +3,7 @@
 qreal Monster::MonsterSize = 0;
 
 Monster::Monster(QGraphicsItem *parent) : Entity(parent) {
-    attack_range_ = 1; // Monster's attack range is 1 block by default
+    attack_range_ = 1; // Monster's tryAttack range is 1 block by default
     can_be_attacked_ = true;
     setZValue(2);
 
@@ -43,11 +43,6 @@ void Monster::updateHealthBar() {
     health_bar_->setRect(0, 0, bar_len, 4);
 }
 
-
-void Monster::checkImageOrientation() {
-    // Do nothing here
-}
-
 qreal Monster::getSpeed() const {
     return speed_;
 }
@@ -64,7 +59,9 @@ Monster::Direction Monster::getDirection() const {
 
 void Monster::setDirection(const Monster::Direction &direction) {
     direction_ = direction;
-    checkImageOrientation();
+    // Set orientation according to monster's moving direction
+    if((direction_.first == -1) ^ is_horizontally_flipped_)
+        flipHorizontally();
 }
 
 void Monster::setMonsterSize(qreal size) {

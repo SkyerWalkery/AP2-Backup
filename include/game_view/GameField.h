@@ -135,7 +135,7 @@ private:
     /*
      * Called by updateField()
      * Check monsters and characters, handle interactions between them
-     * e.g. An Elf attack a Boar, a Boar attacks a Knight
+     * e.g. An Elf tryAttack a Boar, a Boar attacks a Knight
      */
     void entityInteract();
 
@@ -206,7 +206,7 @@ private slots:
     /*
      * Slot for game timer
      * It should do all things controlled by game timer,
-     * e.g. move monsters, make attack actions
+     * e.g. move monsters, make tryAttack actions
      * In order to ensure they're called in fixed order, we have this slot
      * For more, please refer to implementation
      */

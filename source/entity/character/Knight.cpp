@@ -4,7 +4,8 @@ Knight::Knight(QGraphicsItem *parent) :Character(parent){
     int sz = static_cast<int>(CharacterSize);
     if(sz <= 0)
         throw std::invalid_argument("Character Size not initialized");
-    setPixmap(QPixmap(TEXTURE).scaled(sz, sz));
+    texture_pixmap_ = QPixmap(TEXTURE).scaled(sz, sz);
+    setPixmap(texture_pixmap_);
 
     health_ = max_health_ = 10;
     can_be_attacked_ = true;

@@ -25,8 +25,6 @@ protected:
 
     void updateHealthBar();
 
-    virtual void checkImageOrientation();
-
 public:
 
     explicit Monster(QGraphicsItem *parent = nullptr);

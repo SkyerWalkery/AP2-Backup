@@ -467,27 +467,27 @@ void GameField::generateMonsters() {
 }
 
 void GameField::entityInteract() {
-    // Call each character::attack(), making a possible attack
+    // Call each character::attack(), making a possible tryAttack
     QList<Entity*> targets;
     for(Entity* target: monsters_)
         targets.push_back(target);
     for(auto* character: characters_){
         // Recharge the character
         character->recharge(timer_.interval());
-        // Check if the character is ready to make an attack
+        // Check if the character is ready to make an tryAttack
         if(character->readyToAttack())
-            character->attack(targets);
+            character->tryAttack(targets);
     }
     targets.clear();
     removeDeadEntity();
 
-    // Check each monster, and try to attack character in its range
+    // Check each monster, and try to tryAttack character in its range
     for(Entity* target: characters_)
         targets.push_back(target);
     for(auto* monster: monsters_){
         monster->recharge(timer_.interval());
         if(monster->readyToAttack())
-            monster->attack(targets);
+            monster->tryAttack(targets);
     }
     removeDeadEntity();
 }
