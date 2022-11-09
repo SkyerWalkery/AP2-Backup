@@ -1,4 +1,5 @@
 #include "Elf.h"
+#include <QGraphicsScene>
 
 
 Elf::Elf(QGraphicsItem *parent) :Character(parent){
@@ -29,9 +30,10 @@ void Elf::attack(Entity * target) {
     // Add attack visual effect
     auto* attack_effect = new MoveCircleParticle(this);
     attack_effect->setStartPos(this->boundingRect().center());
-    attack_effect->setEndPos(target->boundingRect().center());
-    attack_effect->setPen(Qt::NoPen);
+    attack_effect->setEndPos(target->mapToItem(this, target->boundingRect().center()));
+    attack_effect->setPen(QPen(Qt::white));
     attack_effect->setBrush(QColor(252, 253, 151));
     attack_effect->setRect(-3, -3, 6, 6);
+    attack_effect->setSpeed(500);
     attack_effect->startAnimation();
 }

@@ -21,6 +21,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/entity/character)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/particle)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/game_view)
 
+# Need to add this line to handle Q_OBJECT macro
+set(PARTICLE_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/particle/MoveCircleParticle.h)
+
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} MAIN_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source COMPONENTS_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/area AREA_SRC)
@@ -35,6 +38,7 @@ add_executable(${PROJECT_NAME}
         ${AREA_SRC} ${ENTITY_SRC}
         ${MONSTER_SRC} ${CHARACTER_SRC}
         ${PARTICLE_SRC} ${VIEW_SRC}
+        ${PARTICLE_HEADERS}
         img_rsc.qrc
         )
 

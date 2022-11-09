@@ -12,9 +12,9 @@
 
 class MoveCircleParticle: public QObject, public QGraphicsEllipseItem{
     Q_OBJECT
-    Q_PROPERTY(QPointF pos READ pos WRITE setPos)
+    Q_PROPERTY(QPointF pos_ READ pos WRITE setPos)
 
-    qreal speed_ = 100; // px per second
+    qreal speed_ = 300; // px per second
 
     QPointF start_pos_;
     QPointF end_pos_;

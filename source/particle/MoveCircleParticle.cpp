@@ -11,7 +11,7 @@ void MoveCircleParticle::setSpeed(qreal speed) {
 }
 
 void MoveCircleParticle::startAnimation() {
-    auto *moveAnimation = new QPropertyAnimation(this, "pos");
+    auto *moveAnimation = new QPropertyAnimation(this, "pos_");
     auto dis = qSqrt(qPow(start_pos_.x() - end_pos_.x(), 2) + qPow(start_pos_.y() - end_pos_.y(), 2));
     moveAnimation->setDuration(static_cast<int>(dis * 1000 / speed_));
     moveAnimation->setStartValue(start_pos_);
@@ -22,10 +22,10 @@ void MoveCircleParticle::startAnimation() {
 
 }
 
-void MoveCircleParticle::setEndPos(QPointF start_pos) {
+void MoveCircleParticle::setStartPos(QPointF start_pos) {
     start_pos_ = start_pos;
 }
 
-void MoveCircleParticle::setStartPos(QPointF end_pos) {
+void MoveCircleParticle::setEndPos(QPointF end_pos) {
     end_pos_ = end_pos;
 }
