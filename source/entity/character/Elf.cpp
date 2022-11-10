@@ -26,9 +26,10 @@ bool Elf::testAreaCond(int cond) {
     return (cond & AreaCond) != 0;
 }
 
-void Elf::attack(Entity * target) {
-    Character::attack(target);
+void Elf::attack(ActionAttack& action) {
+    Character::attack(action);
 
+    auto* target = action.getAcceptor();
 
     // Add tryAttack visual effect
     auto* attack_effect = new RangedAttackParticle(this);

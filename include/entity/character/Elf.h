@@ -23,7 +23,7 @@ public:
 
     bool testAreaCond(int cond) override;
 
-    void attack(Entity* target) override;
+    void attack(ActionAttack& action) override;
 
 };
 

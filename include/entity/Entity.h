@@ -106,9 +106,9 @@ public:
     virtual void tryAttack(const QList<Entity*>& targets);
 
     // You can override this method to add effect when attacking an entity
-    virtual void attack(Entity* target);
+    virtual void attack(ActionAttack& action);
 
-    virtual void attacked(const ActionAttack& action);
+    virtual void attacked(ActionAttack& action);
 
 };
 

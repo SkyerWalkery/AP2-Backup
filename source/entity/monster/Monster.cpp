@@ -69,7 +69,7 @@ void Monster::setMonsterSize(qreal size) {
     MonsterSize = size;
 }
 
-void Monster::attacked(const ActionAttack& action) {
+void Monster::attacked(ActionAttack& action) {
     Entity::attacked(action);
 
     updateHealthBar();

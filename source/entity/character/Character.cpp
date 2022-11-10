@@ -6,9 +6,10 @@ void Character::setCharacterSize(qreal size) {
     CharacterSize = size;
 }
 
-void Character::attack(Entity *target) {
-    Entity::attack(target);
+void Character::attack(ActionAttack& action) {
+    Entity::attack(action);
 
+    auto* target = action.getAcceptor();
     // When try to tryAttack a monster at self's left
     // Orientation of texture should be flipped
     bool at_left = target->mapToItem(this, QPointF(0, 0)).x() < 0;

@@ -46,7 +46,7 @@ public:
 
     static void setCharacterSize(qreal size);
 
-    void attack(Entity* target) override;
+    void attack(ActionAttack& action) override;
 
 };
 

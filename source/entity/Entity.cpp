@@ -87,22 +87,20 @@ void Entity::tryAttack(const QList<Entity*>& targets) {
         }
     }
     if(target) {
-        this->attack(target);
-    }
-}
-
-void Entity::attack(Entity *target) {
-    if(!readyToAttack())
-        return;
-    if(target) {
-        recharged_ %= recharge_time_;
         ActionAttack attack(this, target);
-        attack.setDamage(getDamage());
-        target->attacked(attack);
+        this->attack(attack);
     }
 }
 
-void Entity::attacked(const ActionAttack& action) {
+void Entity::attack(ActionAttack& action) {
+    if(auto* target = action.getAcceptor(); target != nullptr) {
+        recharged_ %= recharge_time_;
+        action.setDamage(getDamage());
+        target->attacked(action);
+    }
+}
+
+void Entity::attacked(ActionAttack& action) {
     int damage = action.getDamage();
     setHealth(getHealth() - damage);
 }
