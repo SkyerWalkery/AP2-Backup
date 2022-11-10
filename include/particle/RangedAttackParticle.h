@@ -1,16 +1,16 @@
 #ifndef AP_PROJ_MOVINGPARTICLE_H
 #define AP_PROJ_MOVINGPARTICLE_H
 
-#include <QGraphicsLineItem>
+#include <QGraphicsEllipseItem>
 #include <QObject>
 #include <QPropertyAnimation>
 
 /*
- * Line particles that can move
+ * Visual effect of ranged attack.
+ * i.e. A ball that can move toward specific direction
  * e.g. arrow of Elf
  */
-
-class MoveCircleParticle: public QObject, public QGraphicsEllipseItem{
+class RangedAttackParticle: public QObject, public QGraphicsEllipseItem{
     Q_OBJECT
     Q_PROPERTY(QPointF pos_ READ pos WRITE setPos)
 

@@ -1,4 +1,6 @@
 #include "Knight.h"
+#include "MeleePrickParticle.h"
+#include <QPen>
 
 Knight::Knight(QGraphicsItem *parent) :Character(parent){
     int sz = static_cast<int>(CharacterSize);
@@ -20,4 +22,22 @@ int Knight::type() const {
 
 bool Knight::testAreaCond(int cond) {
     return (cond & AreaCond) != 0;
+}
+
+void Knight::attack(ActionAttack& action) {
+    Character::attack(action);
+
+    auto* target = action.getAcceptor();
+
+    // Add tryAttack visual effect
+    auto* attack_effect = new MeleePrickParticle(this);
+    attack_effect->setAttackerPos(this->boundingRect().center());
+    attack_effect->setTargetPos(target->mapToItem(this, target->boundingRect().center()));
+    QPen pen;
+    pen.setColor(QColor(255, 255, 51));
+    pen.setWidth(5);
+    pen.setCapStyle(Qt::RoundCap);
+    attack_effect->setPen(pen);
+    attack_effect->setSpeed(300);
+    attack_effect->startAnimation();
 }

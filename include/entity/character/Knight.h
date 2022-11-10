@@ -22,6 +22,8 @@ public:
 
     bool testAreaCond(int cond) override;
 
+    void attack(ActionAttack& action) override;
+
 };
 
 
