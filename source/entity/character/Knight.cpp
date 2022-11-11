@@ -33,8 +33,7 @@ void Knight::attack(ActionAttack& action) {
     auto* attack_effect = new MeleePrickParticle(this);
     attack_effect->setAttackerPos(this->boundingRect().center());
     attack_effect->setTargetPos(target->mapToItem(this, target->boundingRect().center()));
-    QPen pen;
-    pen.setColor(QColor(255, 255, 51));
+    QPen pen(QColor(255, 255, 51));
     pen.setWidth(5);
     pen.setCapStyle(Qt::RoundCap);
     attack_effect->setPen(pen);
