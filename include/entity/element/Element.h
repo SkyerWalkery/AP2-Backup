@@ -3,6 +3,7 @@
 
 
 enum class Element{
+    NONE = 0,
     // Basic elements
     PYRO = 1,
     HYDRO,

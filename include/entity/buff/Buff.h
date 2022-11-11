@@ -11,6 +11,10 @@ enum class Buff{
     // Name from weapon Wolf's Gravestone in genshin impact
     WOLF_S_GRAVESTONE = 1,
 
+    // Entity corroded will lose health per second
+    CAUSE_CORROSION,
+    CORRODED,
+
     // Temporarily increases move speed by a set percentage (30%) (only for movable entities)
     // Name from weapon Favonius Sword in genshin impact
     WINDFALL,

@@ -8,10 +8,10 @@ Boar::Boar(QGraphicsItem *parent) : Monster(parent) {
     setPixmap(texture_pixmap_);
 
     // Set entity attributes
-    damage_ = 1;
+    damage_ = 10;
     recharge_time_ = 800;
     speed_ = 25;
-    health_ = max_health_ = 10;
+    health_ = max_health_ = 100;
 }
 
 int Boar::type() const {

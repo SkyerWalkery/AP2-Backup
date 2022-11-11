@@ -13,7 +13,7 @@ Elf::Elf(QGraphicsItem *parent) :Character(parent){
 
     health_ = max_health_ = 1;
     can_be_attacked_ = false;
-    damage_ = 1;
+    damage_ = 10;
     recharge_time_ = 700; // ms
     attack_range_ = 5;
 }

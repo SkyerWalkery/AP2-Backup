@@ -5,6 +5,9 @@
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 #include <QList>
+#include <QHash>
+#include "Buff.h"
+#include "Element.h"
 #include "ActionAttack.h"
 
 /*
@@ -37,6 +40,16 @@ protected:
     int max_health_ = 1;
 
     bool can_be_attacked_ = true; // Some entities, such as ELf (on grass), cannot be attacked
+
+    // buffs of this entity
+    // key is Buff type, which is enum (refer to Buff.h)
+    // value is duration left now (ms)
+    QHash<Buff, int> buffs_;
+
+    // Refer to the design in Genshin Impact
+    // Element aura is created through an elemental attack
+    // For simplicity, only one aura is allowed
+    Element element_aura_ = Element::NONE;
 
     static qreal AreaSize; // Must be set before construct
 
