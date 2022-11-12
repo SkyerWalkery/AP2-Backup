@@ -27,7 +27,7 @@ QColor Monster::getHealthBarColor() const {
     // If health is at max, set health bar as invisible
     if(health_ >= max_health_)
         return Qt::transparent;
-    return HealthBarColor[getHealth() * HealthBarColor.size() / getMaxHealth()];
+    return HealthBarColor[qMax(getHealth(), 0) * HealthBarColor.size() / getMaxHealth()];
 }
 
 void Monster::updateHealthBar() {
@@ -40,7 +40,7 @@ void Monster::updateHealthBar() {
     health_bar_->setPen(pen);
 
     // Set length of bar
-    qreal bar_len = MonsterSize * getHealth() / getMaxHealth();
+    qreal bar_len = MonsterSize * qMax(getHealth(), 0) / getMaxHealth();
     health_bar_->setRect(0, 0, bar_len, 4);
 }
 

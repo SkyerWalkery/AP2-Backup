@@ -151,7 +151,7 @@ void Entity::manageBuff() {
         if(buff_it.value() <= 0)
             buff_it = buffs_.erase(buff_it);
         else
-            buff_it++;
+            ++buff_it;
     }
 }
 
