@@ -571,6 +571,19 @@ void GameField::removeCharacter(Character *character) {
     this->removeItem(character);
 }
 
+Character* GameField::getCharacterInArea(Area* area){
+    if(!area)
+        throw std::runtime_error("area cannot be null");
+    // If the area does not have Character as a child, null would be returned
+    Character* character = nullptr;
+    for(auto* child: area->childItems()){
+        character = dynamic_cast<Character *>(child);
+        if(character)
+            break;
+    }
+    return character;
+}
+
 
 void GameField::updateEntityBuff() {
     for(auto* character: characters_)
@@ -622,12 +635,7 @@ void GameField::removeCharacterFromUi() {
     if(!area)
         throw std::runtime_error("upgrade_options_ has invalid parent");
     // If not has Character as a child, exception will be thrown
-    Character* character = nullptr;
-    for(auto* child: area->childItems()){
-        character = dynamic_cast<Character *>(child);
-        if(character)
-            break;
-    }
+    Character* character = getCharacterInArea(area);
     if(!character)
         throw std::runtime_error("area doesn't has a Character");
     // Update info of the area and remove the character
@@ -638,5 +646,14 @@ void GameField::removeCharacterFromUi() {
 }
 
 void GameField::addCharacterBuffFromUI(Buff buff) {
-    // TODO: To be implemented
+    // No character is selected
+    if(!upgrade_options_->isVisible())
+        return;
+
+    auto* area = dynamic_cast<Area*>(upgrade_options_->parentItem());
+    // If not has Character as a child, exception will be thrown
+    Character* character = getCharacterInArea(area);
+    if(!character)
+        throw std::runtime_error("area doesn't has a Character");
+    character->addBuff(buff, 10 * 1000); // default duration is 10s
 }

@@ -173,6 +173,13 @@ private:
     void displayCharacterOptions(const AreaIndex& area_idx, QGraphicsWidget* options);
 
     /*
+     * Returns character that in specific area
+     *
+     * @param area: area that you want to find character from
+     */
+    Character* getCharacterInArea(Area* area);
+
+    /*
     * Returns {row_idx, col_idx} of the area which pos is at.
     * If pos is out of rect of scene, a valid pair will still be returned.
     * -1 <= row_idx <= num_rows, -1 <= col_idx <= num_cols.
