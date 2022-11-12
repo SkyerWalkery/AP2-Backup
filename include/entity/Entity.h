@@ -53,6 +53,8 @@ protected:
 
     static qreal AreaSize; // Must be set before construct
 
+    static int GameRefreshInterval; // Must be set before construct
+
     static qreal distanceBetween(const QPointF &p1, const QPointF &p2);
 
     /*
@@ -63,7 +65,7 @@ protected:
 
 public:
 
-    using QGraphicsPixmapItem::QGraphicsPixmapItem;
+    explicit Entity(QGraphicsItem *parent = nullptr);
 
     //Below are setters and getters
     int getDamage() const;
@@ -89,6 +91,8 @@ public:
 
     static void setAreaSize(qreal size);
 
+    static void setRefreshInterval(int interval);
+
     // Helper methods
     /*
      * Returns if an entity is in tryAttack range
@@ -104,9 +108,9 @@ public:
     bool readyToAttack() const;
 
     /*
-     * Add to recharged_
+     * Add refresh interval to recharged_
      */
-    void recharge(int time);
+    void recharge();
 
     bool isAlive() const;
 
@@ -122,6 +126,22 @@ public:
     virtual void attack(ActionAttack& action);
 
     virtual void attacked(ActionAttack& action);
+
+    /*
+     * Update buffs on the entity, called once every frame (timer's interval)
+     * 1. subtract time (time since last call) from each buff's duration left
+     * 2. if dur <= 0, remove it from buffs_
+     * 3. do things of buff letting you do, e.g. lose health if corroded
+     *
+     * @param time: time since last call, i.e. main timer's interval in GameField
+     */
+    virtual void manageBuff();
+
+    /*
+     * Add buff to the entity, whose duration is `duration`
+     * If buff exists, add `duration` to buffs_[buff]
+     */
+    virtual void addBuff(Buff buff, int duration);
 
 };
 

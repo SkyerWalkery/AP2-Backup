@@ -14,6 +14,7 @@ GameField::GameField(QObject* parent):
     // Initialize some info of Character, Area and Monster
     // including area size
     Entity::setAreaSize(AREA_SIZE);
+    Entity::setRefreshInterval(timer_.interval());
     Character::setCharacterSize(CHARACTER_SIZE);
     Area::setAreaSize(AREA_SIZE);
     Monster::setMonsterSize(MONSTER_SIZE);
@@ -475,7 +476,7 @@ void GameField::entityInteract() {
         targets.push_back(target);
     for(auto* character: characters_){
         // Recharge the character
-        character->recharge(timer_.interval());
+        character->recharge();
         // Check if the character is ready to make an tryAttack
         if(character->readyToAttack())
             character->tryAttack(targets);
@@ -487,7 +488,7 @@ void GameField::entityInteract() {
     for(Entity* target: characters_)
         targets.push_back(target);
     for(auto* monster: monsters_){
-        monster->recharge(timer_.interval());
+        monster->recharge();
         if(monster->readyToAttack())
             monster->tryAttack(targets);
     }
@@ -527,6 +528,14 @@ void GameField::removeCharacter(Character *character) {
     if(!characters_.removeOne(character))
         throw std::runtime_error("Fail to move character from list");
     this->removeItem(character);
+}
+
+
+void GameField::updateEntityBuff() {
+    for(auto* character: characters_)
+        character->manageBuff();
+    for(auto* monster: monsters_)
+        monster->manageBuff();
 }
 
 

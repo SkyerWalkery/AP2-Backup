@@ -2,8 +2,23 @@
 
 qreal Entity::AreaSize = 0;
 
+int Entity::GameRefreshInterval = 0;
+
+Entity::Entity(QGraphicsItem *parent) : QGraphicsPixmapItem(parent) {
+    // Check if some static members are initialized correctly
+    if(AreaSize <= 0)
+        throw std::runtime_error("Entity: AreaSize not initialized correctly");
+    if(GameRefreshInterval <= 0)
+        throw std::runtime_error("Entity: GameRefreshInterval not initialized correctly");
+}
+
 int Entity::getDamage() const {
-    return damage_;
+    int real_damage = damage_;
+    // If buff exists...
+    if(buffs_.contains(Buff::WOLF_S_GRAVESTONE))
+        real_damage += damage_ / 3; // Damage increase by 30%
+
+    return real_damage;
 }
 
 void Entity::setDamage(int damage) {
@@ -52,6 +67,10 @@ void Entity::setAreaSize(qreal size) {
     AreaSize = size;
 }
 
+void Entity::setRefreshInterval(int interval) {
+    GameRefreshInterval = interval;
+}
+
 bool Entity::inAttackRange(Entity* target) const {
     qreal distance = distanceBetween(scenePos(), target->scenePos());
     return distance <= getAttackRange() * AreaSize;
@@ -61,8 +80,15 @@ bool Entity::readyToAttack() const {
     return recharged_ >= recharge_time_;
 }
 
-void Entity::recharge(int time) {
-    recharged_ += time;
+void Entity::recharge() {
+    int recharged_val = GameRefreshInterval;
+    // If buff exists...
+    if(buffs_.contains(Buff::WOLF_S_GRAVESTONE))
+        recharged_val += GameRefreshInterval / 3; // Damage speed increase by 30%
+    if(buffs_.contains(Buff::FROZEN))
+        recharged_val = 0; // Cannot attack at all
+
+    recharged_ += recharged_val;
 }
 
 bool Entity::isAlive() const {
@@ -115,4 +141,20 @@ void Entity::flipHorizontally() {
     texture_pixmap_ = texture_pixmap_.transformed(flip_transform);
     setPixmap(texture_pixmap_);
     is_horizontally_flipped_ = !is_horizontally_flipped_;
+}
+
+void Entity::manageBuff() {
+    auto buff_it = buffs_.begin();
+    while(buff_it != buffs_.end()){
+        buff_it.value() -= GameRefreshInterval;
+        // time up for this buff
+        if(buff_it.value() <= 0)
+            buff_it = buffs_.erase(buff_it);
+        else
+            buff_it++;
+    }
+}
+
+void Entity::addBuff(Buff buff, int duration) {
+    buffs_[buff] = buffs_.value(buff, 0) + duration;
 }

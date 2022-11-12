@@ -126,6 +126,12 @@ private:
 
     /*
      * Called by updateField()
+     * Update buffs of entities
+     */
+    void updateEntityBuff();
+
+    /*
+     * Called by updateField()
      * Check monsters and characters, handle interactions between them
      * e.g. An Elf tryAttack a Boar, a Boar attacks a Knight
      */

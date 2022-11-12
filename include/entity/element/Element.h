@@ -10,8 +10,6 @@ enum class Element{
     CYRO,
     ANEMO,
 
-    // elements that are mainly from reactions
-    FROZEN, // Hydro and Cyro, which will stop an entity from moving for a while
 };
 
 #endif //AP_PROJ_ELEMENT_H

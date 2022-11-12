@@ -15,9 +15,12 @@ enum class Buff{
     CAUSE_CORROSION,
     CORRODED,
 
+    // Entity cannot move or attack temporarily
+    FROZEN,
+
     // Temporarily increases move speed by a set percentage (30%) (only for movable entities)
     // Name from weapon Favonius Sword in genshin impact
-    WINDFALL,
+    WINDFALL, // TODO: To be implemented
 
     // Entity can flash a distance
     // Name from weapon Wine and Song in genshin impact

@@ -45,6 +45,11 @@ void Monster::updateHealthBar() {
 }
 
 qreal Monster::getSpeed() const {
+    qreal real_speed = speed_;
+    // If buff exists...
+    if(buffs_.contains(Buff::WINDFALL))
+        real_speed += speed_ / 3; // Speed increases by 30%
+
     return speed_;
 }
 
