@@ -33,11 +33,15 @@ class GameField: public QGraphicsScene{
     using Direction = QPair<int, int>;
     using AreaIndex = QPoint;
 
-    static constexpr const char* UP_ICON = ":/icons/chevrons_up.svg";
-    static constexpr const char* X_ICON = ":/icons/x_square.svg";
+    static constexpr const char* ICON_UP = ":/icons/chevrons_up.svg";
+    static constexpr const char* ICON_X = ":/icons/x_square.svg";
+    static constexpr const char* ICON_DAMAGE_UP = ":/icons/damage_up.png";
+    static constexpr const char* ICON_MOVE_SPEED_UP = ":/icons/movement_speed_up.png";
+
 
     static constexpr const qreal AREA_SIZE = 48; // px
     static constexpr const qreal CHARACTER_OPTION_SIZE = 32; // px
+    static constexpr const qreal BUFF_OPTION_SIZE = 32; // px
     static constexpr const qreal CHARACTER_SIZE = 48; // px
     static constexpr const qreal MONSTER_SIZE = 48; // px
     static constexpr const qreal REAL_COMPENSATION = 0.0000001;
@@ -63,15 +67,19 @@ class GameField: public QGraphicsScene{
     int life_points_ = 1;
 
     // Below are components related to character.
-    // place_options_ and upgrade_options_ each holds a layout, which may holds more than one options
-    // place_options_ is used to place characters
-    // upgrade_options_ is used to upgrade or remove characters
+    // place_options_ and upgrade_options_ each holds a layout, which may holds more than one options.
+    // place_options_ is used to place characters.
+    // upgrade_options_ is used to upgrade or remove characters.
     QGraphicsWidget* place_options_ = new QGraphicsWidget;
     QGraphicsWidget* upgrade_options_ = new QGraphicsWidget;
-    // character_makers_ contains makers of characters that can be placed in this field
-    // character_textures_ is list of file name of corresponding textures
+    // character_makers_ contains makers of characters that can be placed in this field.
+    // character_textures_ is list of file name of corresponding textures.
     QList<std::function<Character*()>> character_makers_;
     QStringList character_textures_;
+
+    // buff_options_ holds a layout, which contains multiple buffs that can be used.
+    // This layout should be visible when an area with character on it is selected
+    QGraphicsWidget* buff_options_ = new QGraphicsWidget;
 
 public:
     explicit GameField(QObject* parent = nullptr);
@@ -101,7 +109,11 @@ public:
 
     // Initialize place_options_ and upgrade_options_
     // Must be called explicitly, for no other functions will call it
-    void initOptionUi();
+    void initCharacterOptionUi();
+
+    // Initialize buff_options_
+    // Must be called explicitly
+    void initBuffOptionUi();
 
     void setFps(qreal fps);
 

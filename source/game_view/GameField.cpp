@@ -34,7 +34,8 @@ void GameField::loadLevelFromFile(const QString& dir_path) {
     // Load level settings
     loadLevelSettingFromFile(QString("%1/level_setting.dat").arg(dir_path));
     // Some UI need to set up after initialization above
-    initOptionUi();
+    initCharacterOptionUi();
+    initBuffOptionUi();
 }
 
 void GameField::loadFieldFromFile(const QString &file_path) {
@@ -160,7 +161,7 @@ void GameField::loadLevelSettingFromFile(const QString& file_path) {
     in_file.close();
 }
 
-void GameField::initOptionUi() {
+void GameField::initCharacterOptionUi() {
 
     // Construct place buttons and set as invisible
     auto* place_options_layout = new QGraphicsLinearLayout;
@@ -194,7 +195,7 @@ void GameField::initOptionUi() {
 
     // Construct upgrade buttons and set as invisible
     auto* upgrade_options_layout = new QGraphicsLinearLayout;
-    QStringList upgrade_options_icons = {UP_ICON, X_ICON};
+    QStringList upgrade_options_icons = {ICON_UP, ICON_X};
     for(const auto& icon: upgrade_options_icons){
         auto button_pixmap = QPixmap(icon).scaled(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE);
 
@@ -203,9 +204,9 @@ void GameField::initOptionUi() {
         button->setIconSize(QSize(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE));
 
         // Connect button's signal to slots
-        if(icon == UP_ICON)
+        if(icon == ICON_UP)
             connect(button, &QPushButton::released, this, &GameField::upgradeCharacterFromOption);
-        else if(icon == X_ICON)
+        else if(icon == ICON_X)
             connect(button, &QPushButton::released, this, &GameField::removeCharacterFromOption);
         else
             throw std::invalid_argument("Invalid upgrade option type");
@@ -220,6 +221,42 @@ void GameField::initOptionUi() {
     upgrade_options_->setZValue(1);
 }
 
+void GameField::initBuffOptionUi() {
+    auto* buff_options_layout = new QGraphicsLinearLayout;
+    QStringList buff_options_icons = {ICON_DAMAGE_UP, ICON_MOVE_SPEED_UP};
+    for(const auto& icon: buff_options_icons){
+        auto button_pixmap = QPixmap(icon).scaled(BUFF_OPTION_SIZE, BUFF_OPTION_SIZE);
+
+        auto* button = new QPushButton();
+        button->setIcon(button_pixmap);
+        button->setIconSize(QSize(BUFF_OPTION_SIZE, BUFF_OPTION_SIZE));
+
+        // Connect button's signal to slots
+        if(icon == ICON_DAMAGE_UP)
+            ;
+        else if(icon == ICON_MOVE_SPEED_UP)
+            ;
+        else
+            throw std::invalid_argument("Invalid upgrade option type");
+
+        auto* proxy = new QGraphicsProxyWidget;
+        proxy->setWidget(button);
+        buff_options_layout->addItem(proxy);
+    }
+    this->buff_options_->setLayout(buff_options_layout);
+    addItem(buff_options_);
+    // Still don't know why when visibility is true, rect() always returns a rect of 0x0
+    // So rect is set by hand (though I know is not a good practice)
+    //buff_options_->setVisible(false);
+    buff_options_->setGeometry(
+            0, 0,
+        (BUFF_OPTION_SIZE + 3) * static_cast<qreal>(buff_options_icons.size()),
+            BUFF_OPTION_SIZE);
+    buff_options_->setPos(this->width() - buff_options_->rect().width(), 0);
+    buff_options_->setVisible(true);
+    buff_options_->setZValue(1);
+}
+
 void GameField::setFps(qreal fps) {
     fps_ = fps;
     timer_.setInterval(static_cast<int>(1000 /* ms */ / fps_));
@@ -228,12 +265,19 @@ void GameField::setFps(qreal fps) {
 
 void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
+    // TODO: Pos out of bound rect of scene
     if(place_options_->isVisible() || upgrade_options_->isVisible()) {
         place_options_->setVisible(false);
         upgrade_options_->setVisible(false);
         return;
     }
+
     auto pos = mouseEvent->scenePos();
+    // If pos out of bound of scene, just ignore this event
+    // If player wants to click on some UI, don't display character options
+    if(!this->sceneRect().contains(pos) || buff_options_->geometry().contains(pos))
+        return;
+
     auto area_idx = posToIndex(pos);
     auto* area = areas_[area_idx.x()][area_idx.y()];
     displayCharacterOptions(
@@ -542,6 +586,7 @@ void GameField::updateEntityBuff() {
 void GameField::updateField() {
     game_time_ += timer_.interval();
     generateMonsters();
+    updateEntityBuff();
     moveMonsters();
     entityInteract();
     checkReachProtectionObjective();
