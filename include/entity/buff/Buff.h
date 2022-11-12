@@ -38,8 +38,5 @@ enum class Buff{
     INFUSION_FROZEN,
 };
 
-inline quint64 qHash(const Buff& buff){
-    return qHash(static_cast<int>(buff));
-}
 
 #endif //AP_PROJ_BUFF_H

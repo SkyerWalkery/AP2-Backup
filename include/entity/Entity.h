@@ -6,7 +6,7 @@
 #include <QPixmap>
 #include <QList>
 #include <QHash>
-#include "Buff.h"
+#include "BuffUtil.h"
 #include "Element.h"
 #include "ActionAttack.h"
 

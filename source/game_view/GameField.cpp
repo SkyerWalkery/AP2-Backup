@@ -205,9 +205,9 @@ void GameField::initCharacterOptionUi() {
 
         // Connect button's signal to slots
         if(icon == ICON_UP)
-            connect(button, &QPushButton::released, this, &GameField::upgradeCharacterFromOption);
+            connect(button, &QPushButton::released, this, &GameField::upgradeCharacterFromUi);
         else if(icon == ICON_X)
-            connect(button, &QPushButton::released, this, &GameField::removeCharacterFromOption);
+            connect(button, &QPushButton::released, this, &GameField::removeCharacterFromUi);
         else
             throw std::invalid_argument("Invalid upgrade option type");
 
@@ -223,24 +223,22 @@ void GameField::initCharacterOptionUi() {
 
 void GameField::initBuffOptionUi() {
     auto* buff_options_layout = new QGraphicsLinearLayout;
-    QStringList buff_options_icons = {ICON_DAMAGE_UP, ICON_MOVE_SPEED_UP};
-    for(const auto& icon: buff_options_icons){
-        auto button_pixmap = QPixmap(icon).scaled(BUFF_OPTION_SIZE, BUFF_OPTION_SIZE);
+    for(auto buff: BuffUtil::characterBuffs()){
+        auto icon_name = BuffUtil::buffToIcon(buff);
+        auto button_pixmap = QPixmap(icon_name).scaled(BUFF_OPTION_SIZE, BUFF_OPTION_SIZE);
 
         auto* button = new QPushButton();
         button->setIcon(button_pixmap);
         button->setIconSize(QSize(BUFF_OPTION_SIZE, BUFF_OPTION_SIZE));
 
         // Connect button's signal to slots
-        if(icon == ICON_DAMAGE_UP)
-            ;
-        else if(icon == ICON_MOVE_SPEED_UP)
-            ;
-        else
-            throw std::invalid_argument("Invalid upgrade option type");
+        connect(button, &QPushButton::released,
+                [buff=buff, this](){this->addCharacterBuffFromUI(buff);}
+                );
 
         auto* proxy = new QGraphicsProxyWidget;
         proxy->setWidget(button);
+        buff_option_buttons_[buff] = proxy;
         buff_options_layout->addItem(proxy);
     }
     this->buff_options_->setLayout(buff_options_layout);
@@ -250,7 +248,7 @@ void GameField::initBuffOptionUi() {
     //buff_options_->setVisible(false);
     buff_options_->setGeometry(
             0, 0,
-        (BUFF_OPTION_SIZE + 3) * static_cast<qreal>(buff_options_icons.size()),
+        (BUFF_OPTION_SIZE + 3) * static_cast<qreal>(BuffUtil::characterBuffs().size()),
             BUFF_OPTION_SIZE);
     buff_options_->setPos(this->width() - buff_options_->rect().width(), 0);
     buff_options_->setVisible(true);
@@ -265,7 +263,6 @@ void GameField::setFps(qreal fps) {
 
 void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
-    // TODO: Pos out of bound rect of scene
     if(place_options_->isVisible() || upgrade_options_->isVisible()) {
         place_options_->setVisible(false);
         upgrade_options_->setVisible(false);
@@ -616,11 +613,11 @@ void GameField::placeCharacter(const std::function<Character*()>& maker) {
     characters_.push_back(character);
 }
 
-void GameField::upgradeCharacterFromOption() {
+void GameField::upgradeCharacterFromUi() {
 
 }
 
-void GameField::removeCharacterFromOption() {
+void GameField::removeCharacterFromUi() {
     auto* area = dynamic_cast<Area*>(upgrade_options_->parentItem());
     if(!area)
         throw std::runtime_error("upgrade_options_ has invalid parent");
@@ -638,4 +635,8 @@ void GameField::removeCharacterFromOption() {
     if(!characters_.removeOne(character))
         throw std::runtime_error("Fail to move character from list");
     removeItem(character);
+}
+
+void GameField::addCharacterBuffFromUI(Buff buff) {
+    // TODO: To be implemented
 }

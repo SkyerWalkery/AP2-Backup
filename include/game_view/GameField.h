@@ -18,6 +18,7 @@
 #include <QTransform>
 #include <QQueue>
 #include <functional>
+#include "BuffUtil.h"
 #include "Grass.h"
 #include "Road.h"
 #include "Entity.h"
@@ -35,9 +36,6 @@ class GameField: public QGraphicsScene{
 
     static constexpr const char* ICON_UP = ":/icons/chevrons_up.svg";
     static constexpr const char* ICON_X = ":/icons/x_square.svg";
-    static constexpr const char* ICON_DAMAGE_UP = ":/icons/damage_up.png";
-    static constexpr const char* ICON_MOVE_SPEED_UP = ":/icons/movement_speed_up.png";
-
 
     static constexpr const qreal AREA_SIZE = 48; // px
     static constexpr const qreal CHARACTER_OPTION_SIZE = 32; // px
@@ -80,6 +78,8 @@ class GameField: public QGraphicsScene{
     // buff_options_ holds a layout, which contains multiple buffs that can be used.
     // This layout should be visible when an area with character on it is selected
     QGraphicsWidget* buff_options_ = new QGraphicsWidget;
+    // You can use buff to control corresponding button
+    QHash<Buff, QGraphicsProxyWidget*> buff_option_buttons_;
 
 public:
     explicit GameField(QObject* parent = nullptr);
@@ -230,14 +230,22 @@ private slots:
     void placeCharacter(const std::function<Character*()>& maker);
 
     /*
-     * Slot for upgradeCharacterFromOption button
+     * Slot for upgradeCharacterFromUi button
      */
-    void upgradeCharacterFromOption();
+    void upgradeCharacterFromUi();
 
     /*
-     * Slot for removeCharacterFromOption button
+     * Slot for removeCharacterFromUi button
      */
-    void removeCharacterFromOption();
+    void removeCharacterFromUi();
+
+    /*
+     * Slot for buttons in buff_options
+     * When button is triggered, the buff will be set on character selected
+     * Note: At most 2 compatible buff can exist at same time
+     */
+    void addCharacterBuffFromUI(Buff buff);
+
 
 };
 
