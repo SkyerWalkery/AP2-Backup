@@ -84,7 +84,7 @@ class GameField: public QGraphicsScene{
 public:
     explicit GameField(QObject* parent = nullptr);
 
-    /*
+    /**
      * Load data from files
      * dir_path should contain 3 files:
      * field.dat: data of field
@@ -107,54 +107,60 @@ public:
     // Called by loadLevelFromFile()
     void loadLevelSettingFromFile(const QString& file_path);
 
-    // Initialize place_options_ and upgrade_options_
-    // Must be called explicitly, for no other functions will call it
+    /**
+     * Initialize place_options_ and upgrade_options_
+     * Must be called explicitly, for no other functions will call it
+     */
     void initCharacterOptionUi();
 
-    // Initialize buff_options_
-    // Must be called explicitly
+    /**
+     * Initialize buff_options_
+     * Must be called explicitly
+     */
     void initBuffOptionUi();
 
     void setFps(qreal fps);
 
-    // Start the game
-    // Should be called explicitly
+    /**
+     * Start the game
+     * Should be called explicitly
+     */
     void startGame();
 
 private:
 
-    /*
+    /**
      * Called by updateField()
      * Move monsters in each frame
      */
     void moveMonsters();
 
-    /*
+    /**
      * Called by updateField()
      * Check if monsters are to be generated in each frame.
      * If so, do it.
      */
     void generateMonsters();
 
-    /*
+    /**
      * Called by updateField()
      * Update buffs of entities
      */
     void updateEntityBuff();
 
-    /*
+    /**
      * Called by updateField()
      * Check monsters and characters, handle interactions between them
      * e.g. An Elf tryAttack a Boar, a Boar attacks a Knight
      */
     void entityInteract();
 
-    /*
+    /**
      * Remove dead entities, including characters and monsters
      */
     void removeDeadEntity();
 
-    /*
+    /**
      * Remove specific character
      * Note:
      * Statement of area holding the character should be reset
@@ -164,7 +170,7 @@ private:
 
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
 
-    /*
+    /**
      * Called when click on an area, either holding a character or not
      *
      * @param area_idx Index of area in this->areas_
@@ -172,46 +178,54 @@ private:
      */
     void displayCharacterOptions(const AreaIndex& area_idx, QGraphicsWidget* options);
 
-    /*
+    /**
+     * Update checked value of buff option buttons.
+     * Set checked if character has buff, unchecked otherwise.
+     * This method should be called by mouseReleaseEvent() only.
+     * @param area_idx Index of area that the character is placed in
+     */
+     void updateBuffOptionChecked(const AreaIndex& area_idx);
+
+    /**
      * Returns character that in specific area
      *
      * @param area: area that you want to find character from
      */
     Character* getCharacterInArea(Area* area);
 
-    /*
+    /**
     * Returns {row_idx, col_idx} of the area which pos is at.
     * If pos is out of rect of scene, a valid pair will still be returned.
     * -1 <= row_idx <= num_rows, -1 <= col_idx <= num_cols.
     */
     static AreaIndex posToIndex(QPointF pos);
 
-    /*
+    /**
      * Return if r1 equals to r2
      * Taking double precision into account
      */
     static bool qRealEqual(qreal r1, qreal r2);
 
-    /*
+    /**
      * Return if pos1 equals to pos2
      * Taking double precision into account
      * Note: qRealEqual(qreal, qreal) is called in this method
      */
     static bool pointFloatEqual(const QPointF& p1, const QPointF& p2);
 
-    /*
+    /**
      * Return distance between p1 and p2
      */
     static qreal distanceBetween(const QPointF& p1, const QPointF& p2);
 
-    /*
+    /**
      * Check if any monster has reached the Protection Objective.
      * If so, remove it from the field and minus life_points_ by 1.
      * If
      */
     void checkReachProtectionObjective();
 
-    /*
+    /**
      * Check if game is end
      * Win: There no monster in field and monster_que_, and life_point_ > 0
      * Lose: Otherwise
@@ -220,7 +234,7 @@ private:
 
 private slots:
 
-    /*
+    /**
      * Slot for game timer
      * It should do all things controlled by game timer,
      * e.g. move monsters, make tryAttack actions
@@ -229,24 +243,24 @@ private slots:
      */
     void updateField();
 
-    /*
+    /**
      * Slot for placeCharacter button
      * Note: need a lambda to pass parameter `type`
      * @param type: type of character (call typeToCharacter() to make a new character)
      */
     void placeCharacter(const std::function<Character*()>& maker);
 
-    /*
+    /**
      * Slot for upgradeCharacterFromUi button
      */
     void upgradeCharacterFromUi();
 
-    /*
+    /**
      * Slot for removeCharacterFromUi button
      */
     void removeCharacterFromUi();
 
-    /*
+    /**
      * Slot for buttons in buff_options
      * When button is triggered, the buff will be set on character selected
      * Note: At most 2 compatible buff can exist at same time

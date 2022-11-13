@@ -228,6 +228,7 @@ void GameField::initBuffOptionUi() {
         auto button_pixmap = QPixmap(icon_name).scaled(BUFF_OPTION_SIZE, BUFF_OPTION_SIZE);
 
         auto* button = new QPushButton();
+        button->setCheckable(true); // Checked if character has this buff
         button->setIcon(button_pixmap);
         button->setIconSize(QSize(BUFF_OPTION_SIZE, BUFF_OPTION_SIZE));
 
@@ -245,7 +246,7 @@ void GameField::initBuffOptionUi() {
     addItem(buff_options_);
     // Still don't know why when visibility is true, rect() always returns a rect of 0x0
     // So rect is set by hand (though I know is not a good practice)
-    //buff_options_->setVisible(false);
+    buff_options_->setVisible(false);
     buff_options_->setGeometry(
             0, 0,
         (BUFF_OPTION_SIZE + 3) * static_cast<qreal>(BuffUtil::characterBuffs().size()),
@@ -281,6 +282,11 @@ void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
             area_idx,
             area->isOccupied() ? upgrade_options_ : place_options_
     );
+
+    // Visible only when a character is selected
+    buff_options_->setVisible(area->isOccupied());
+    if(area->isOccupied())
+        updateBuffOptionChecked(area_idx);
 }
 
 
@@ -299,6 +305,26 @@ void GameField::displayCharacterOptions(const AreaIndex& area_idx, QGraphicsWidg
     options->setPos(area->boundingRect().center() - options->rect().center());
     options->setY(area->boundingRect().height());
     options->setVisible(true);
+}
+
+void GameField::updateBuffOptionChecked(const AreaIndex& area_idx){
+    auto* area = areas_[area_idx.x()][area_idx.y()];
+    if(!area)
+        throw std::runtime_error("upgrade_options_ has invalid parent");
+    // If not has Character as a child, exception will be thrown
+    Character* character = getCharacterInArea(area);
+    if(!character)
+        throw std::runtime_error("area doesn't has a Character");
+
+    for(auto buff: BuffUtil::characterBuffs()){
+        auto* buff_button = buff_option_buttons_[buff];
+        // Proxy must have a QPushButton
+        auto* button = qobject_cast<QPushButton*>(buff_button->widget());
+        if(character->hasBuff(buff))
+            button->setChecked(true);
+        else
+            button->setChecked(false);
+    }
 }
 
 
@@ -427,7 +453,6 @@ void GameField::moveMonsters() {
              *
              * For more details, refer to code below
              */
-
             /* Note:
              * Under normal conditions, next_area would not out of range,
              * so just ignore the condition
