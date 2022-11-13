@@ -3,7 +3,7 @@
 
 #include <QHash>
 
-/*
+/**
  * Enum of buff
  */
 enum class Buff{
@@ -26,7 +26,7 @@ enum class Buff{
     // Name from weapon Wine and Song in genshin impact
     EVER_CHANGING,
 
-    /*
+    /**
      * Below buffs are related to Elemental Infusion.
      * If infused with element X, it would make an attack with X infused
      * Also got names from genshin impact

@@ -48,7 +48,9 @@ void Entity::setAttackRange(qreal range) {
 }
 
 int Entity::getHealth() const {
-    return health_;
+    // Health is 0 at least
+    // negative value will lead to various problems among code
+    return qMax(health_, 0);
 }
 
 void Entity::setHealth(int health) {
@@ -157,4 +159,8 @@ void Entity::manageBuff() {
 
 void Entity::addBuff(Buff buff, int duration) {
     buffs_[buff] = buffs_.value(buff, 0) + duration;
+}
+
+bool Entity::hasBuff(Buff buff) const {
+    return buffs_.contains(buff);
 }

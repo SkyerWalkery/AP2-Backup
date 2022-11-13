@@ -15,7 +15,7 @@ class BuffUtil{
 
 public:
 
-    /*
+    /**
      * Returns a const QList of buffs which characters can have.
      */
     static const QList<Buff>& characterBuffs(){
@@ -32,7 +32,7 @@ public:
         return character_buffs;
     }
 
-    /*
+    /**
      * Returns file name of icon of buff
      */
     static QString buffToIcon(Buff buff){

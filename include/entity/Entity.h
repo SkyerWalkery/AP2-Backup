@@ -10,7 +10,7 @@
 #include "Element.h"
 #include "ActionAttack.h"
 
-/*
+/**
  * Abstract base class of all entities
  * Inherited by Character and Monster
  * Note:
@@ -57,7 +57,7 @@ protected:
 
     static qreal distanceBetween(const QPointF &p1, const QPointF &p2);
 
-    /*
+    /**
      * Flip the texture of entity.
      * e.g. when a monster try to change its moving direction
      */
@@ -94,20 +94,20 @@ public:
     static void setRefreshInterval(int interval);
 
     // Helper methods
-    /*
+    /**
      * Returns if an entity is in tryAttack range
      *
-     * @param target entity
+     * @param  target target entity
      */
     bool inAttackRange(Entity* target) const;
 
-    /*
+    /**
      * Returns if the entity is ready to make an tryAttack
      * i.e. recharged_ >= recharge_time
      */
     bool readyToAttack() const;
 
-    /*
+    /**
      * Add refresh interval to recharged_
      */
     void recharge();
@@ -115,7 +115,7 @@ public:
     bool isAlive() const;
 
     // Virtual methods that default ones are given
-    /*
+    /**
      * Try to attack one or more entities
      * Default implementation is to tryAttack the nearest one
      * Note: target->attacked() would be called
@@ -127,7 +127,7 @@ public:
 
     virtual void attacked(ActionAttack& action);
 
-    /*
+    /**
      * Update buffs on the entity, called once every frame (timer's interval)
      * 1. subtract time (time since last call) from each buff's duration left
      * 2. if dur <= 0, remove it from buffs_
@@ -137,11 +137,16 @@ public:
      */
     virtual void manageBuff();
 
-    /*
+    /**
      * Add buff to the entity, whose duration is `duration`
      * If buff exists, add `duration` to buffs_[buff]
      */
     virtual void addBuff(Buff buff, int duration);
+
+    /**
+     * Returns if the entity has specific buff
+     */
+     bool hasBuff(Buff buff) const;
 
 };
 

@@ -4,7 +4,7 @@
 // #include "Entity.h"
 class Entity;
 
-/*
+/**
  * Base class of all action
  * An Action is between two Entities (initiator and acceptor).
  * May be attack, of other effect.

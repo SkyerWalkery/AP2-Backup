@@ -5,7 +5,7 @@
 #include "Action.h"
 
 
-/*
+/**
  * When entity X attacks entity Y, we construct an ActionAttack with necessary info,
  * and convey it to entity attacked
  */
