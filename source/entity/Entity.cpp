@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include <QRandomGenerator>
 
 qreal Entity::AreaSize = 0;
 
@@ -124,13 +125,27 @@ void Entity::attack(ActionAttack& action) {
     if(auto* target = action.getAcceptor(); target != nullptr) {
         recharged_ %= recharge_time_;
         action.setDamage(getDamage());
+        // Add buff if needed
+        if(this->hasBuff(Buff::INFUSION_FROZEN)) {
+            // Each attack has 30% of probability of freezing target
+            // 0.5s of frozen status by default
+            int randint = QRandomGenerator::global()->bounded(100);
+            if(randint < 30)
+                action.setBuff(Buff::FROZEN, static_cast<int>(0.5 * 1000));
+        }
         target->attacked(action);
     }
 }
 
 void Entity::attacked(ActionAttack& action) {
+    // Receive damage from attack
     int damage = action.getDamage();
     setHealth(getHealth() - damage);
+
+    // attack may carry a buff
+    auto [buff, duration] = action.getBuff();
+    if(buff != Buff::NONE)
+        this->addBuff(buff, duration);
 }
 
 qreal Entity::distanceBetween(const QPointF &p1, const QPointF &p2) {

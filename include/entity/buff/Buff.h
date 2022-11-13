@@ -7,6 +7,9 @@
  * Enum of buff
  */
 enum class Buff{
+
+    NONE = 0,
+
     // Temporarily increases atk damage and atk speed by a set percentage (30%)
     // Name from weapon Wolf's Gravestone in genshin impact
     WOLF_S_GRAVESTONE = 1,

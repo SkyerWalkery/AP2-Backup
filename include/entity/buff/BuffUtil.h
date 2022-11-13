@@ -45,6 +45,13 @@ public:
                 throw std::invalid_argument("No icon for buff");
         }
     }
+
+    /**
+     * Returns if the specific buff is a de-buff
+     */
+     static bool isDeBuff(Buff buff){
+         return buff == Buff::CORRODED || buff == Buff::FROZEN;
+     }
 };
 
 
