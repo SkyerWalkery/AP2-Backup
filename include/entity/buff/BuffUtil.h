@@ -21,6 +21,7 @@ public:
     static const QList<Buff>& characterBuffs(){
         static QList<Buff> character_buffs = {
                 Buff::WOLF_S_GRAVESTONE,
+                Buff::CAUSE_CORROSION,
                 /*
                 Buff::INFUSION_PYRO,
                 Buff::INFUSION_HYDRO,
@@ -40,6 +41,8 @@ public:
             case Buff::WOLF_S_GRAVESTONE:
                 return ICON_DAMAGE_UP;
             case Buff::INFUSION_FROZEN:
+                return ICON_DAMAGE_UP; // TODO: Proper image to be found
+            case Buff::CAUSE_CORROSION:
                 return ICON_DAMAGE_UP; // TODO: Proper image to be found
             default:
                 throw std::invalid_argument("No icon for buff");

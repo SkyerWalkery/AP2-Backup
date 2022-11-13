@@ -31,6 +31,9 @@ QColor Monster::getHealthBarColor() const {
 }
 
 void Monster::updateHealthBar() {
+    // No damage taken until now, don't show health bar
+    if(getHealth() == getMaxHealth())
+        return;
     // Set color accordingly
     auto pen = health_bar_->pen();
     pen.setColor(Qt::white);
@@ -77,8 +80,7 @@ void Monster::setMonsterSize(qreal size) {
     MonsterSize = size;
 }
 
-void Monster::attacked(ActionAttack& action) {
-    Entity::attacked(action);
-
+void Monster::updateStatus() {
+    Entity::updateStatus();
     updateHealthBar();
 }

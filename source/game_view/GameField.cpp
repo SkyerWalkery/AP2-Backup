@@ -541,8 +541,6 @@ void GameField::entityInteract() {
     for(Entity* target: monsters_)
         targets.push_back(target);
     for(auto* character: characters_){
-        // Recharge the character
-        character->recharge();
         // Check if the character is ready to make an tryAttack
         if(character->readyToAttack())
             character->tryAttack(targets);
@@ -554,7 +552,6 @@ void GameField::entityInteract() {
     for(Entity* target: characters_)
         targets.push_back(target);
     for(auto* monster: monsters_){
-        monster->recharge();
         if(monster->readyToAttack())
             monster->tryAttack(targets);
     }
@@ -610,18 +607,20 @@ Character* GameField::getCharacterInArea(Area* area){
 }
 
 
-void GameField::updateEntityBuff() {
-    for(auto* character: characters_)
-        character->manageBuff();
-    for(auto* monster: monsters_)
-        monster->manageBuff();
+void GameField::updateEntityStatus() {
+    for(auto* character: characters_) {
+        character->updateStatus();
+    }
+    for(auto* monster: monsters_) {
+        monster->updateStatus();
+    }
 }
 
 
 void GameField::updateField() {
     game_time_ += timer_.interval();
     generateMonsters();
-    updateEntityBuff();
+    updateEntityStatus();
     moveMonsters();
     entityInteract();
     checkReachProtectionObjective();

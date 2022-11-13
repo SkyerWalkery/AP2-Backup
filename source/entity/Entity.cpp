@@ -126,12 +126,20 @@ void Entity::attack(ActionAttack& action) {
         recharged_ %= recharge_time_;
         action.setDamage(getDamage());
         // Add buff if needed
+        // TODO: Multiple buffs
         if(this->hasBuff(Buff::INFUSION_FROZEN)) {
             // Each attack has 30% of probability of freezing target
             // 0.5s of frozen status by default
             int randint = QRandomGenerator::global()->bounded(100);
             if(randint < 30)
                 action.setBuff(Buff::FROZEN, static_cast<int>(0.5 * 1000));
+        }
+        if(this->hasBuff(Buff::CAUSE_CORROSION)) {
+            // Each attack has 30% of probability of corrode target
+            // 5s of corrosion status by default
+            int randint = QRandomGenerator::global()->bounded(100);
+            if(randint < 30)
+                action.setBuff(Buff::CORRODED, static_cast<int>(5 * 1000));
         }
         target->attacked(action);
     }
@@ -146,6 +154,31 @@ void Entity::attacked(ActionAttack& action) {
     auto [buff, duration] = action.getBuff();
     if(buff != Buff::NONE)
         this->addBuff(buff, duration);
+}
+
+void Entity::updateStatus() {
+    manageBuff();
+    doContinuousExtraDamage();
+    recharge();
+}
+
+void Entity::doContinuousExtraDamage() {
+    int damage_rate = 0;
+    if(buffs_.contains(Buff::CORRODED))
+        damage_rate += 10; // Corrosion does 10 damage per second
+
+    // No damage is taken
+    if(damage_rate == 0){
+        continuous_extra_damage_counter_ = 0;
+        return;
+    }
+    continuous_extra_damage_counter_ += GameRefreshInterval;
+    if(continuous_extra_damage_counter_ < 1000)
+        return;
+
+    int num_damage = continuous_extra_damage_counter_ / 1000;
+    continuous_extra_damage_counter_ %= 1000;
+    setHealth(getHealth() - num_damage * damage_rate);
 }
 
 qreal Entity::distanceBetween(const QPointF &p1, const QPointF &p2) {

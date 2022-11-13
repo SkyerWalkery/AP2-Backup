@@ -144,9 +144,9 @@ private:
 
     /**
      * Called by updateField()
-     * Update buffs of entities
+     * Update status of entities, e.g. buff, continuous damage...
      */
-    void updateEntityBuff();
+    void updateEntityStatus();
 
     /**
      * Called by updateField()

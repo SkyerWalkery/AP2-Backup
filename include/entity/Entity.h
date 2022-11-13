@@ -51,6 +51,11 @@ protected:
     // For simplicity, only one aura is allowed
     Element element_aura_ = Element::NONE;
 
+    // Counter (ms) for damage above
+    // It's updated per frame. Once it's greater than or equal to 1000(ms), do damage.
+    // Note: when damage rate is 0, counter should always be set 0
+    int continuous_extra_damage_counter_ = 0;
+
     static qreal AreaSize; // Must be set before construct
 
     static int GameRefreshInterval; // Must be set before construct
@@ -62,6 +67,25 @@ protected:
      * e.g. when a monster try to change its moving direction
      */
     void flipHorizontally();
+
+    /**
+     * Called in updateStatus().
+     * Do continuous extra damage.
+     * Add continuous_extra_damage_counter_ by timer interval.
+     * If counter >= 1000(ms), do damage.
+     * Damage is determined by buffs, from which a damage rate can be calculated.
+     * Note: when rate is 0, counter should always be set 0
+     */
+    void doContinuousExtraDamage();
+
+    /**
+     * Called in updateStatus().
+     * Update buffs on the entity, called once every frame (timer's interval)
+     * 1. subtract time (time since last call) from each buff's duration left
+     * 2. if dur <= 0, remove it from buffs_
+     * 3. do things of buff letting you do, e.g. lose health if corroded
+     */
+    virtual void manageBuff();
 
 public:
 
@@ -97,7 +121,7 @@ public:
     /**
      * Returns if an entity is in tryAttack range
      *
-     * @param  target target entity
+     * @param target target entity
      */
     bool inAttackRange(Entity* target) const;
 
@@ -128,14 +152,11 @@ public:
     virtual void attacked(ActionAttack& action);
 
     /**
-     * Update buffs on the entity, called once every frame (timer's interval)
-     * 1. subtract time (time since last call) from each buff's duration left
-     * 2. if dur <= 0, remove it from buffs_
-     * 3. do things of buff letting you do, e.g. lose health if corroded
-     *
-     * @param time: time since last call, i.e. main timer's interval in GameField
+     * Update status per frame
+     * Should be called in GameField::updateEntityStatus()
      */
-    virtual void manageBuff();
+    virtual void updateStatus();
+
 
     /**
      * Add buff to the entity, whose duration is `duration`
