@@ -13,6 +13,11 @@
         <file>icons/up_arrow.png</file>
         <file>icons/damage_up.png</file>
         <file>icons/movement_speed_up.png</file>
+        <file>icons/corrosion.png</file>
+        <file>icons/element_anemo.png</file>
+        <file>icons/element_cryo.png</file>
+        <file>icons/element_hydro.png</file>
+        <file>icons/element_pyro.png</file>
         <!-- Below 7 icons are from https://feathericons.com/ -->
         <!-- Size: 32px, Stroke width: 2px -->
         <file>icons/x_square.svg</file>
