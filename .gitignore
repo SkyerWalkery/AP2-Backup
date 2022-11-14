@@ -2,3 +2,4 @@
 cmake-build-debug/
 custom_level_tools/.idea/
 font/
+test_helpers/image_studio/
