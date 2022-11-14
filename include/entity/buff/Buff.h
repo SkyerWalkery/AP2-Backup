@@ -36,7 +36,7 @@ enum class Buff{
      */
     INFUSION_PYRO = 1001,
     INFUSION_HYDRO,
-    INFUSION_CYRO,
+    INFUSION_CRYO,
     INFUSION_ANEMO,
     INFUSION_FROZEN,
 };

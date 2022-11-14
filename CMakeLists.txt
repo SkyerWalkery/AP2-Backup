@@ -31,6 +31,7 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} MAIN_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source COMPONENTS_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/area AREA_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/entity ENTITY_SRC)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/entity/buff BUFF_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/entity/action ACTION_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/entity/monster MONSTER_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/entity/character CHARACTER_SRC)
@@ -39,7 +40,7 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/game_view VIEW_SRC)
 
 add_executable(${PROJECT_NAME}
         ${MAIN_SRC} ${COMPONENTS_SRC}
-        ${AREA_SRC} ${ENTITY_SRC}
+        ${AREA_SRC} ${ENTITY_SRC} ${BUFF_SRC}
         ${ACTION_SRC} ${MONSTER_SRC} ${CHARACTER_SRC}
         ${PARTICLE_SRC} ${VIEW_SRC}
         ${PARTICLE_HEADER}

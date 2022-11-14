@@ -42,7 +42,7 @@ protected:
     bool can_be_attacked_ = true; // Some entities, such as ELf (on grass), cannot be attacked
 
     // buffs of this entity
-    // key is Buff type, which is enum (refer to Buff.h)
+    // key is buff type, which is enum (refer to buff.h)
     // value is duration left now (ms)
     QHash<Buff, int> buffs_;
 
