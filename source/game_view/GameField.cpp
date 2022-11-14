@@ -233,6 +233,16 @@ void GameField::initBuffOptionUi() {
 
         auto* button = new QPushButton();
         button->setCheckable(true); // Checked if character has this buff
+        // Set visual effect of different states of button
+        button->setStyleSheet(
+            "QPushButton {"
+                "background-color: rgba(160, 160, 160, 255);"
+                "border: 2px solid rgba(81, 81, 81, 255);"
+            "}"
+            "QPushButton:checked {"
+                "background-color: rgba(96, 96, 96, 255);"
+                "border: 2px solid rgba(81, 81, 81, 255);"
+            "}");
         button->setIcon(button_pixmap);
         button->setIconSize(QSize(BUFF_OPTION_SIZE, BUFF_OPTION_SIZE));
 
