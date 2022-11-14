@@ -263,9 +263,11 @@ private slots:
     /**
      * Slot for buttons in buff_options
      * When button is triggered, the buff will be set on character selected
+     * If button is unchecked, trigger leads to adding buff to character;
+     * otherwise to removing buff of character
      * Note: At most 2 compatible buff can exist at same time
      */
-    void addCharacterBuffFromUI(Buff buff);
+    void manageCharacterBuffFromUI(Buff buff);
 
 
 };

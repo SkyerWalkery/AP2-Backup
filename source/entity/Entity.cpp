@@ -17,7 +17,7 @@ int Entity::getDamage() const {
     int real_damage = damage_;
     // If buff exists...
     if(buffs_.contains(Buff::WOLF_S_GRAVESTONE))
-        real_damage += damage_ / 3; // Damage increase by 30%
+        real_damage += damage_ * 3; // Damage increase by 30%
 
     return real_damage;
 }
@@ -207,6 +207,11 @@ void Entity::manageBuff() {
 
 void Entity::addBuff(Buff buff, int duration) {
     buffs_[buff] = buffs_.value(buff, 0) + duration;
+}
+
+void Entity::removeBuff(Buff buff) {
+    // If buff doesn't exist in buffs_, QHash::remove would return false
+    buffs_.remove(buff);
 }
 
 bool Entity::hasBuff(Buff buff) const {

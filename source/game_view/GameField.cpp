@@ -247,8 +247,8 @@ void GameField::initBuffOptionUi() {
         button->setIconSize(QSize(BUFF_OPTION_SIZE, BUFF_OPTION_SIZE));
 
         // Connect button's signal to slots
-        connect(button, &QPushButton::released,
-                [buff=buff, this](){this->addCharacterBuffFromUI(buff);}
+        connect(button, &QPushButton::toggled,
+                [buff=buff, this](){ this->manageCharacterBuffFromUI(buff);}
                 );
 
         auto* proxy = new QGraphicsProxyWidget;
@@ -280,6 +280,7 @@ void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     if(place_options_->isVisible() || upgrade_options_->isVisible()) {
         place_options_->setVisible(false);
         upgrade_options_->setVisible(false);
+        buff_options_->setVisible(false);
         return;
     }
 
@@ -682,7 +683,7 @@ void GameField::removeCharacterFromUi() {
     removeItem(character);
 }
 
-void GameField::addCharacterBuffFromUI(Buff buff) {
+void GameField::manageCharacterBuffFromUI(Buff buff) {
     // No character is selected
     if(!upgrade_options_->isVisible())
         return;
@@ -692,5 +693,8 @@ void GameField::addCharacterBuffFromUI(Buff buff) {
     Character* character = getCharacterInArea(area);
     if(!character)
         throw std::runtime_error("area doesn't has a Character");
-    character->addBuff(buff, 10 * 1000); // default duration is 10s
+    if(character->hasBuff(buff))
+        character->removeBuff(buff);
+    else
+        character->addBuff(buff, 10 * 1000); // default duration is 10s
 }

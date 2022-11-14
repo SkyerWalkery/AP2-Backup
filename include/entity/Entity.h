@@ -162,7 +162,13 @@ public:
      * Add buff to the entity, whose duration is `duration`
      * If buff exists, add `duration` to buffs_[buff]
      */
-    virtual void addBuff(Buff buff, int duration);
+    void addBuff(Buff buff, int duration);
+
+    /**
+     * Remove buff of the entity
+     * If entity does not have the given buff, just ignore it (no exception will be thrown)
+     */
+     void removeBuff(Buff buff);
 
     /**
      * Returns if the entity has specific buff
