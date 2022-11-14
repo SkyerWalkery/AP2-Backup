@@ -145,6 +145,10 @@ void GameField::loadMonsterQueueFromFile(const QString& file_path) {
         else
             throw std::invalid_argument("Invalid monster in monsters.dat");
         monster_arrival.second = info[1].toInt();
+        // Add buffs
+        // By default, buff duration is 100 seconds
+        for(int i = 2; i < info.size(); ++i)
+            monster_arrival.first->addBuff(BuffUtil::stringToBuff(info[i]), 100 * 1000);
         this->monster_que_.enqueue(monster_arrival);
     }
     in_file.close();
@@ -252,7 +256,6 @@ void GameField::initBuffOptionUi() {
         (BUFF_OPTION_SIZE + 3) * static_cast<qreal>(BuffUtil::characterBuffs().size()),
             BUFF_OPTION_SIZE);
     buff_options_->setPos(this->width() - buff_options_->rect().width(), 0);
-    buff_options_->setVisible(true);
     buff_options_->setZValue(1);
 }
 

@@ -50,6 +50,20 @@ public:
     }
 
     /**
+     * Returns buff that given string indicated.
+     * Exception will be thrown if invalid string is given
+     */
+     static Buff stringToBuff(const QString& str){
+         auto upper_str = str.toUpper();
+         if(upper_str == "WINDFALL")
+             return Buff::WINDFALL;
+         else if(upper_str == "EVER_CHANGING")
+             return Buff::EVER_CHANGING;
+         else
+             throw std::invalid_argument("No matching Buff for given string");
+     }
+
+    /**
      * Returns if the specific buff is a de-buff
      */
      static bool isDeBuff(Buff buff){

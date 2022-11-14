@@ -4,19 +4,25 @@ from PySide6 import QtWidgets, QtGui
 from PySide6.QtCore import Qt, QRect, QRunnable, Slot, QThreadPool, QDir
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QApplication, QMainWindow, QListWidget, QVBoxLayout, QHBoxLayout, QComboBox, \
-    QDoubleSpinBox, QWidget, QPushButton, QMenuBar, QMenu, QLabel, QFileDialog
+    QDoubleSpinBox, QWidget, QPushButton, QMenuBar, QMenu, QLabel, QFileDialog, QLineEdit
 
 
 class MonsterRecord:
+
+    global_monster_id = 1
+
     def __init__(self):
+        self.id = MonsterRecord.global_monster_id
+        MonsterRecord.global_monster_id += 1
         self.monster: str = ''
         self.arrival_time: int = 0  # ms
+        self.buffs: List[str] = []  # can only be 'WINDFALL' or 'EVER_CHANGING'
 
     def __str__(self):
-        return str(self.arrival_time) + " ms  " + self.monster
+        return f'id: {self.id} {self.monster} {self.arrival_time}(ms) {self.buffs}'
 
     def __eq__(self, other):
-        return self.monster == other.monster and self.arrival_time == other.arrival_time
+        return self.id == other.id
 
     def __lt__(self, other):
         return self.arrival_time < other.arrival_time
@@ -40,6 +46,8 @@ class MonsterToolWindow(QMainWindow):
         ])
         self.arrival_time_selector: QDoubleSpinBox = QDoubleSpinBox()
         self.arrival_time_selector.setRange(0, 600)  # 0 - 10 min
+        self.buff_setting: QLineEdit = QLineEdit()
+        self.buff_setting.setPlaceholderText('Buffs separated by space. e.g. "WINDFALL EVER_CHANGING')
         self.add_record_btn: QPushButton = QPushButton('Add')
         self.add_record_btn.released.connect(self.add_record)
         self.remove_record_btn: QPushButton = QPushButton('Remove')
@@ -49,6 +57,7 @@ class MonsterToolWindow(QMainWindow):
         self.edit_bar: QHBoxLayout = QHBoxLayout()
         self.edit_bar.addWidget(self.monster_selector)
         self.edit_bar.addWidget(self.arrival_time_selector)
+        self.edit_bar.addWidget(self.buff_setting)
         self.edit_bar.addWidget(self.add_record_btn)
         self.edit_bar.addWidget(self.remove_record_btn)
         self.main_layout.addWidget(self.record_list)
@@ -63,6 +72,7 @@ class MonsterToolWindow(QMainWindow):
         record: MonsterRecord = MonsterRecord()
         record.monster = self.monster_selector.currentText()
         record.arrival_time = int(self.arrival_time_selector.value() * 1000)
+        record.buffs = list(sorted(self.buff_setting.text().strip().split()))
         self.record_list.addItem(record.__str__())
         self.records.append(record)
 
@@ -71,9 +81,7 @@ class MonsterToolWindow(QMainWindow):
         if 0 <= curr_row < self.record_list.count():
             record_info = self.record_list.takeItem(curr_row).text().split()
             record: MonsterRecord = MonsterRecord()
-            record.monster = record_info[2]
-            # info[1] is 'ms'
-            record.arrival_time = int(record_info[0])
+            record.id = int(record_info[1])  # info[0] is 'id:'
             self.records.remove(record)
 
     def save_as_file(self):
@@ -87,7 +95,10 @@ class MonsterToolWindow(QMainWindow):
 
         with open(file_info[0], 'w') as out_file:
             for record in sorted(self.records):
-                out_file.write(f'{record.monster} {int(record.arrival_time * 1000)}\n')
+                out_file.write(f'{record.monster} {record.arrival_time}')
+                for buff in record.buffs:
+                    out_file.write(' ' + buff)
+                out_file.write('\n')
 
 
 if __name__ == '__main__':
