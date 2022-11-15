@@ -26,6 +26,8 @@ enum class Buff{
     WINDFALL, // TODO: To be implemented
 
     // Entity can flash a distance
+    // This skill is automatically used when a monster is blocked by a character,
+    // and has cd of 10 seconds by default (you can change it in monster.h/cpp)
     // Name from weapon Wine and Song in genshin impact
     EVER_CHANGING,
 

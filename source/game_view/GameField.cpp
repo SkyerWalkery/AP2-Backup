@@ -420,10 +420,17 @@ void GameField::moveMonsters() {
                 blocked = true;
                 break;
             }
-        if(blocked)
-            continue;
 
         qreal total_move_dis = monster->getSpeed() * timer_.interval() / 1000;
+        // Try to flash if blocked by a character
+        // Default flash distance is 2 blocks' length
+        if(blocked) {
+            if(monster->tryFlash())
+                total_move_dis = AREA_SIZE * 2;
+            else
+                continue;
+        }
+
         while(total_move_dis > REAL_COMPENSATION){
             // Limit move_dis in one loop
             // so that it is not more than one area.
@@ -451,7 +458,7 @@ void GameField::moveMonsters() {
                 // direction may need to be changed
                 if(pointFloatEqual(monster->pos(), cur_area->pos()))
                     monster->setDirection(cur_area->getToDirection(monster->getDirection()));
-                break;
+                continue;
             }
 
             /* Go into another area
@@ -696,5 +703,5 @@ void GameField::manageCharacterBuffFromUI(Buff buff) {
     if(character->hasBuff(buff))
         character->removeBuff(buff);
     else
-        character->addBuff(buff, 10 * 1000); // default duration is 10s
+        character->addBuff(buff, 100 * 1000); // default duration is 100s
 }

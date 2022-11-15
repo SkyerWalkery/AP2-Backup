@@ -83,4 +83,16 @@ void Monster::setMonsterSize(qreal size) {
 void Monster::updateStatus() {
     Entity::updateStatus();
     updateHealthBar();
+    rechargeSkill();
+}
+
+void Monster::rechargeSkill() {
+    skill_recharged_ += GameRefreshInterval;
+}
+
+bool Monster::tryFlash(){
+    if(!hasBuff(Buff::EVER_CHANGING) || skill_recharged_ < SKILL_CD)
+        return false;
+    skill_recharged_ %= SKILL_CD;
+    return true;
 }

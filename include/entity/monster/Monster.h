@@ -20,9 +20,18 @@ protected:
 
     static qreal MonsterSize; // Must be set before construct
 
+    // CD (ms) for skill, e.g. flash (when having "EVER-CHANGING" buff)
+    static constexpr const int SKILL_CD = 10 * 1000;
+
+    // Recharged val (ms) for using skill
+    // Should be updated in rechargeSkill() and when using a skill
+    int skill_recharged_ = 0;
+
     QColor getHealthBarColor() const;
 
     void updateHealthBar();
+
+    void rechargeSkill();
 
 public:
 
@@ -35,6 +44,12 @@ public:
     Direction getDirection() const;
 
     void setDirection(const Direction& direction);
+
+    /**
+     * Try to make a flash when blocked (this condition is met by default, you should check it in GameField::moveMonsters())
+     * @returns false if not having Buff::EVER_CHANGING or not recharged, true otherwise
+     */
+    bool tryFlash();
 
     static void setMonsterSize(qreal size);
 
