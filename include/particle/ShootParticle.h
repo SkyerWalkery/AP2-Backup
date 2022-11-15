@@ -6,11 +6,11 @@
 #include <QPropertyAnimation>
 
 /**
- * Visual effect of ranged attack.
+ * Visual effect of ranged attack (like a shoot).
  * i.e. A ball that can move toward specific direction
  * e.g. arrow of Elf
  */
-class RangedAttackParticle: public QObject, public QGraphicsEllipseItem{
+class ShootParticle: public QObject, public QGraphicsEllipseItem{
     Q_OBJECT
     Q_PROPERTY(QPointF pos_ READ pos WRITE setPos)
 

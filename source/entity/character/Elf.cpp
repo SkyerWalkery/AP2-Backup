@@ -32,7 +32,7 @@ void Elf::attack(ActionAttack& action) {
     auto* target = action.getAcceptor();
 
     // Add tryAttack visual effect
-    auto* attack_effect = new RangedAttackParticle(this);
+    auto* attack_effect = new ShootParticle(this);
     attack_effect->setStartPos(this->boundingRect().center());
     attack_effect->setEndPos(target->mapToItem(this, target->boundingRect().center()));
     attack_effect->setPen(QPen(Qt::white));
