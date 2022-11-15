@@ -21,3 +21,4 @@ If you want to add your custom buff, please follow steps below
   - e.g. If effect is decrease damage, add your code to `Entity::getDamage()`, or anywhere else you like.
 - If it works through attack action, I recommend you to make it by ActionAttack system:
   - e.g. `Buff::CAUSE_CORROSION` add `Buff::CORROSION` to target; it adds `Buff::CORROSION` to ActionAttack in `Entity::attack()` first, and target will get it in `Entity::attacked()`.
+- If it can lead to buff aura, you must give a string with color to display (refer to BuffUtil::buffToString and BuffUtil::buffToColor).

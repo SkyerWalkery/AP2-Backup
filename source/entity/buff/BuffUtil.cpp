@@ -40,6 +40,28 @@ Buff BuffUtil::stringToBuff(const QString& str){
         throw std::invalid_argument("No matching buff for given string");
 }
 
+QString BuffUtil::buffToString(Buff buff){
+    switch (buff) {
+        case Buff::FROZEN:
+            return "Frozen";
+        case Buff::CORRODED:
+            return "Corrode";
+        default:
+            throw std::invalid_argument("No matching string for buff");
+    }
+}
+
+QColor BuffUtil::buffToColor(Buff buff){
+    switch (buff) {
+        case Buff::FROZEN:
+            return {142, 255, 247};
+        case Buff::CORRODED:
+            return {254, 139, 139};
+        default:
+            throw std::invalid_argument("No matching string for buff");
+    }
+}
+
 bool BuffUtil::isDeBuff(Buff buff){
     return buff == Buff::CORRODED || buff == Buff::FROZEN;
 }

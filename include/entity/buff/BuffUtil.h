@@ -3,6 +3,7 @@
 
 #include "Buff.h"
 #include <QList>
+#include <QColor>
 
 
 /**
@@ -29,9 +30,26 @@ public:
 
     /**
      * Returns buff that given string indicated.
-     * Exception will be thrown if invalid string is given
+     * Exception will be thrown if invalid string is given.
+     * Used in monster data file loading
+     *
+     * @param str buff's name in file, which is case-insensitive
      */
      static Buff stringToBuff(const QString& str);
+
+     /**
+      * Returns string that represents given buff.
+      * Exception will be thrown if invalid buff is given, i.e. no string is set for this buff.
+      * Used in display effect when an attack leads to buff
+      */
+     static QString buffToString(Buff buff);
+
+    /**
+     * Returns color that represents given buff.
+     * Exception will be thrown if invalid buff is given, i.e. no color is set for this buff.
+     * Used in display effect when an attack leads to buff
+     */
+    static QColor buffToColor(Buff buff);
 
     /**
      * Returns if the specific buff is a de-buff

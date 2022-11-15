@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>font/HYWenHei-85W-zh-cn.ttf</file>
+    </qresource>
+</RCC>

@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "SimpleTextParticle.h"
 #include <QRandomGenerator>
 
 qreal Entity::AreaSize = 0;
@@ -152,8 +153,14 @@ void Entity::attacked(ActionAttack& action) {
 
     // attack may carry a buff
     auto [buff, duration] = action.getBuff();
-    if(buff != Buff::NONE)
-        this->addBuff(buff, duration);
+    if(buff == Buff::NONE)
+        return;
+
+    this->addBuff(buff, duration);
+    // Add visual effect of buff
+    auto* buff_effect = new SimpleTextParticle(BuffUtil::buffToString(buff), this);
+    buff_effect->setTextColor(BuffUtil::buffToColor(buff));
+    buff_effect->startAnimation();
 }
 
 void Entity::updateStatus() {

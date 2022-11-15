@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QPropertyAnimation>
 
-/*
+/**
  * Visual effect of ranged attack.
  * i.e. A ball that can move toward specific direction
  * e.g. arrow of Elf

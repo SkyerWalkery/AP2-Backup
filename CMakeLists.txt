@@ -44,7 +44,7 @@ add_executable(${PROJECT_NAME}
         ${ACTION_SRC} ${MONSTER_SRC} ${CHARACTER_SRC}
         ${PARTICLE_SRC} ${VIEW_SRC}
         ${PARTICLE_HEADER}
-        img_rsc.qrc
+        img_rsc.qrc font_rsc.qrc
         )
 
 target_link_libraries(

@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QPropertyAnimation>
 
-/*
+/**
  * Visual effect of melee attack.
  * i.e. A line that can move forward / backward (prick) or "sweep"
  * e.g. attack of Knight
