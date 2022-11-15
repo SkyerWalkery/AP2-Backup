@@ -127,20 +127,20 @@ void Entity::attack(ActionAttack& action) {
         recharged_ %= recharge_time_;
         action.setDamage(getDamage());
         // Add buff if needed
-        // TODO: Multiple buffs
-        if(this->hasBuff(Buff::INFUSION_FROZEN)) {
-            // Each attack has 30% of probability of freezing target
-            // 0.5s of frozen status by default
-            int randint = QRandomGenerator::global()->bounded(100);
-            if(randint < 30)
-                action.setBuff(Buff::FROZEN, static_cast<int>(0.5 * 1000));
-        }
-        if(this->hasBuff(Buff::CAUSE_CORROSION)) {
-            // Each attack has 30% of probability of corrode target
-            // 5s of corrosion status by default
-            int randint = QRandomGenerator::global()->bounded(100);
-            if(randint < 30)
-                action.setBuff(Buff::CORRODED, static_cast<int>(5 * 1000));
+        // Target has 30% probability of getting a de-buff
+        // Each de-buff shares this 30% equally
+        auto* random = QRandomGenerator::global();
+        if(random->bounded(100) < 30) {
+            QList<QPair<Buff, int>> candidates; // candidate buffs (with duration) that may be attached to target
+            if (this->hasBuff(Buff::INFUSION_FROZEN))
+                candidates.push_back(qMakePair(Buff::FROZEN, static_cast<int>(0.5 * 1000)));
+            if (this->hasBuff(Buff::CAUSE_CORROSION))
+                candidates.push_back(qMakePair(Buff::CORRODED, static_cast<int>(5 * 1000)));
+            // add de-buff to action
+            if(!candidates.empty()) {
+                auto&[buff, duration] = candidates[random->bounded(candidates.size())];
+                action.setBuff(buff, duration);
+            }
         }
         target->attacked(action);
     }
