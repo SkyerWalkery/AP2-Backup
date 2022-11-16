@@ -38,13 +38,15 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/entity/character CHARACT
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/particle PARTICLE_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/source/game_view VIEW_SRC)
 
+file(GLOB QRC_FILE "${CMAKE_CURRENT_SOURCE_DIR}/resources/*.qrc")
+
 add_executable(${PROJECT_NAME}
         ${MAIN_SRC} ${COMPONENTS_SRC}
         ${AREA_SRC} ${ENTITY_SRC} ${BUFF_SRC}
         ${ACTION_SRC} ${MONSTER_SRC} ${CHARACTER_SRC}
         ${PARTICLE_SRC} ${VIEW_SRC}
         ${PARTICLE_HEADER}
-        img_rsc.qrc font_rsc.qrc style_rsc.qrc
+        ${QRC_FILE}
         )
 
 target_link_libraries(
