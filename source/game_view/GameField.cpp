@@ -34,6 +34,7 @@ void GameField::loadLevelFromFile(const QString& dir_path) {
     // Load level settings
     loadLevelSettingFromFile(QString("%1/level_setting.dat").arg(dir_path));
     // Some UI need to set up after initialization above
+    loadStyleFromFile();
     initCharacterOptionUi();
     initBuffOptionUi();
 }
@@ -165,6 +166,14 @@ void GameField::loadLevelSettingFromFile(const QString& file_path) {
     in_file.close();
 }
 
+void GameField::loadStyleFromFile(){
+    QFile in_file(CHARACTER_OPTION_BUTTON_STYLE_FILE);
+    if(in_file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        character_option_button_style_ = in_file.readAll();
+        in_file.close();
+    }
+}
+
 void GameField::initCharacterOptionUi() {
 
     // Construct place buttons and set as invisible
@@ -184,7 +193,7 @@ void GameField::initCharacterOptionUi() {
         auto* button = new QPushButton();
         button->setIcon(button_pixmap);
         button->setIconSize(QSize(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE));
-        button->setStyleSheet(CHARACTER_OPTION_BUTTON_STYLE);
+        button->setStyleSheet(character_option_button_style_);
         connect(button, &QPushButton::released,
                 [maker = maker, this](){
                     this->placeCharacter(maker);
@@ -207,7 +216,7 @@ void GameField::initCharacterOptionUi() {
         auto* button = new QPushButton();
         button->setIcon(button_pixmap);
         button->setIconSize(QSize(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE));
-        button->setStyleSheet(CHARACTER_OPTION_BUTTON_STYLE);
+        button->setStyleSheet(character_option_button_style_);
 
         // Connect button's signal to slots
         if(icon == ICON_UP)
@@ -236,7 +245,7 @@ void GameField::initBuffOptionUi() {
         auto* button = new QPushButton();
         button->setCheckable(true); // Checked if character has this buff
         // Set visual effect of different states of button
-        button->setStyleSheet(CHARACTER_OPTION_BUTTON_STYLE);
+        button->setStyleSheet(character_option_button_style_);
         button->setIcon(button_pixmap);
         button->setIconSize(QSize(BUFF_OPTION_SIZE, BUFF_OPTION_SIZE));
 

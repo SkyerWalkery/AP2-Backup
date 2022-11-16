@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>styles/character_option_button.qss</file>
+    </qresource>
+</RCC>
