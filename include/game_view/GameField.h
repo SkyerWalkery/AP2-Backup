@@ -34,6 +34,39 @@ class GameField: public QGraphicsScene{
     using Direction = QPair<int, int>;
     using AreaIndex = QPoint;
 
+    // Style of button
+    // Refer to design of Minecraft
+    static constexpr const char* CHARACTER_OPTION_BUTTON_STYLE =
+        "QPushButton {"
+            "background-color: rgba(160, 160, 160, 255);"
+            "border-left: 2px solid rgba(255, 255, 255, 255);"
+            "border-top: 2px solid rgba(255, 255, 255, 255);"
+            "border-right: 2px solid rgba(85, 85, 85, 255);"
+            "border-bottom: 2px solid rgba(85, 85, 85, 255);"
+        "}"
+        "QPushButton:checked {"
+            "background-color: rgba(31, 131, 5, 255);"
+            "border-left: 2px solid rgba(99, 167, 84, 255);"
+            "border-top: 2px solid rgba(99, 167, 84, 255);"
+            "border-right: 2px solid rgba(21, 94, 4, 255);"
+            "border-bottom: 2px solid rgba(21, 94, 4, 255);"
+        "}"
+        "QPushButton:pressed {"
+            "background-color: rgba(31, 131, 5, 255);"
+            "border-left: 2px solid rgba(99, 167, 84, 255);"
+            "border-top: 2px solid rgba(99, 167, 84, 255);"
+            "border-right: 2px solid rgba(21, 94, 4, 255);"
+            "border-bottom: 2px solid rgba(21, 94, 4, 255);"
+        "}"
+        "QPushButton:hover:!pressed:!checked {"
+            "background-color: rgba(181, 181, 181, 255);"
+            "border-left: 2px solid rgba(255, 255, 255, 255);"
+            "border-top: 2px solid rgba(255, 255, 255, 255);"
+            "border-right: 2px solid rgba(85, 85, 85, 255);"
+            "border-bottom: 2px solid rgba(85, 85, 85, 255);"
+        "}";
+
+
     static constexpr const char* ICON_UP = ":/icons/chevrons_up.svg";
     static constexpr const char* ICON_X = ":/icons/x_square.svg";
 
