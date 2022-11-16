@@ -22,3 +22,7 @@ If you want to add your custom buff, please follow steps below
 - If it works through attack action, I recommend you to make it by ActionAttack system:
   - e.g. `Buff::CAUSE_CORROSION` add `Buff::CORROSION` to target; it adds `Buff::CORROSION` to ActionAttack in `Entity::attack()` first, and target will get it in `Entity::attacked()`.
 - If it can lead to buff aura, you must give a string with color to display (refer to BuffUtil::buffToString and BuffUtil::buffToColor).
+
+## Things to pay attention to about buff
+- A character or monster can have 2 buffs at most (de-buff not included) (you can modify it in `Entity::addBuff()`)
+- Once added through UI, character buff can last for 100 seconds (you can modify it in `GameField.cpp`)

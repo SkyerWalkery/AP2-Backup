@@ -213,7 +213,19 @@ void Entity::manageBuff() {
 }
 
 void Entity::addBuff(Buff buff, int duration) {
-    buffs_[buff] = buffs_.value(buff, 0) + duration;
+    if(hasBuff(buff)) {
+        buffs_[buff] += duration;
+        return;
+    }
+
+    // An entity can have 2 buffs at most (de-buff not included)
+    int num_buff = static_cast<int>(buffs_.size());
+    for(auto key = buffs_.keyBegin(); key != buffs_.keyEnd(); ++key){
+        if(BuffUtil::isDeBuff(*key))
+            --num_buff;
+    }
+    if(num_buff < 2)
+        buffs_[buff] = duration;
 }
 
 void Entity::removeBuff(Buff buff) {
