@@ -4,6 +4,7 @@
 #include <exception>
 #include "Action.h"
 #include "Buff.h"
+#include "Element.h"
 
 
 /**
@@ -19,6 +20,11 @@ class ActionAttack: public Action{
     Buff buff_to_target_ = Buff::NONE;
     int buff_duration_ = 0;
 
+    // element that this attack is infused with
+    // may not be added to target, such as Anemo
+    Element element_infusion_ = Element::NONE;
+
+
 public:
     using Action::Action;
 
@@ -29,6 +35,10 @@ public:
     QPair<Buff, int> getBuff() const;
 
     void setBuff(Buff buff, int duration);
+
+    Element getElement() const;
+
+    void setElement(Element element);
 };
 
 #endif //AP_PROJ_ACTIONATTACK_H

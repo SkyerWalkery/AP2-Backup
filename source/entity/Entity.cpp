@@ -118,14 +118,15 @@ void Entity::tryAttack(const QList<Entity*>& targets) {
     }
     if(target) {
         ActionAttack attack(this, target);
-        this->attack(attack);
+        this->attack(attack, targets);
     }
 }
 
-void Entity::attack(ActionAttack& action) {
+void Entity::attack(ActionAttack& action, const QList<Entity*>& candidate_targets) {
     if(auto* target = action.getAcceptor(); target != nullptr) {
         recharged_ %= recharge_time_;
         action.setDamage(getDamage());
+
         // Add buff if needed
         // Target has 30% probability of getting a de-buff
         // Each de-buff shares this 30% equally
@@ -142,25 +143,54 @@ void Entity::attack(ActionAttack& action) {
                 action.setBuff(buff, duration);
             }
         }
-        target->attacked(action);
+
+        // Add element infusion if needed
+        if(this->hasBuff(Buff::INFUSION_ANEMO))
+            action.setElement(Element::ANEMO);
+        else if(this->hasBuff(Buff::INFUSION_CRYO))
+            action.setElement(Element::CRYO);
+        else if(this->hasBuff(Buff::INFUSION_HYDRO))
+            action.setElement(Element::HYDRO);
+        else if(this->hasBuff(Buff::INFUSION_PYRO))
+            action.setElement(Element::PYRO);
+
+        target->attacked(action, candidate_targets);
     }
 }
 
-void Entity::attacked(ActionAttack& action) {
+void Entity::attacked(ActionAttack& action, const QList<Entity*>& candidate_targets) {
     // Receive damage from attack
     int damage = action.getDamage();
     setHealth(getHealth() - damage);
 
     // attack may carry a buff
     auto [buff, duration] = action.getBuff();
-    if(buff == Buff::NONE)
-        return;
+    if(buff != Buff::NONE) {
+        this->addBuff(buff, duration);
+        // Add visual effect of buff
+        auto *buff_effect = new SimpleTextParticle(BuffUtil::buffToString(buff), this);
+        buff_effect->setTextColor(BuffUtil::buffToColor(buff));
+        buff_effect->startAnimation();
+    }
 
-    this->addBuff(buff, duration);
-    // Add visual effect of buff
-    auto* buff_effect = new SimpleTextParticle(BuffUtil::buffToString(buff), this);
-    buff_effect->setTextColor(BuffUtil::buffToColor(buff));
-    buff_effect->startAnimation();
+    // Consider elements' effects
+    // If infused with anemo, attack is turned into AOE
+    if(action.getElement() == Element::ANEMO){
+        // AOE is done below
+        // Iterate candidate targets, create new attack to those near self
+        for(auto* candidate_target: candidate_targets){
+            if(candidate_target == this)
+                continue;
+            if(distanceBetween(scenePos(), candidate_target->scenePos()) <= AreaSize){
+                // attacker is the origin one that has attacked self
+                ActionAttack aoe(action.getInitiator(), candidate_target);
+                // Anemo infusion's aoe damage is one-third of origin damage by default
+                aoe.setDamage(action.getDamage() / 3);
+                // No buff and no element
+                candidate_target->attacked(aoe, candidate_targets);
+            }
+        }
+    }
 }
 
 void Entity::updateStatus() {

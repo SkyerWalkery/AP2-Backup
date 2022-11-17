@@ -19,3 +19,11 @@ void ActionAttack::setBuff(Buff buff, int duration) {
     buff_to_target_ = buff;
     buff_duration_ = duration;
 }
+
+Element ActionAttack::getElement() const {
+    return element_infusion_;
+}
+
+void ActionAttack::setElement(Element element) {
+    element_infusion_ = element;
+}

@@ -26,8 +26,8 @@ bool Elf::testAreaCond(int cond) {
     return (cond & AreaCond) != 0;
 }
 
-void Elf::attack(ActionAttack& action) {
-    Character::attack(action);
+void Elf::attack(ActionAttack& action, const QList<Entity*>& candidate_targets) {
+    Character::attack(action, candidate_targets);
 
     auto* target = action.getAcceptor();
 
@@ -35,7 +35,11 @@ void Elf::attack(ActionAttack& action) {
     auto* attack_effect = new ShootParticle(this);
     attack_effect->setStartPos(this->boundingRect().center());
     attack_effect->setEndPos(target->mapToItem(this, target->boundingRect().center()));
-    attack_effect->setParticleColor(QColor(252, 253, 151));
     attack_effect->setSpeed(500);
+    attack_effect->setParticleColor(QColor(252, 253, 151));
+    // If infused with anemo, an explosion animation should be appended
+    if(hasBuff(Buff::INFUSION_ANEMO))
+        // TODO: Add color to element
+        attack_effect->setShouldExplode(true);
     attack_effect->startAnimation();
 }

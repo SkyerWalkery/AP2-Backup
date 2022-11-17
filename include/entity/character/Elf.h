@@ -23,7 +23,7 @@ public:
 
     bool testAreaCond(int cond) override;
 
-    void attack(ActionAttack& action) override;
+    void attack(ActionAttack& action, const QList<Entity*>& candidate_targets) override;
 
 };
 

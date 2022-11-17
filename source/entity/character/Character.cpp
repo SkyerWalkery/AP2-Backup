@@ -6,8 +6,8 @@ void Character::setCharacterSize(qreal size) {
     CharacterSize = size;
 }
 
-void Character::attack(ActionAttack& action) {
-    Entity::attack(action);
+void Character::attack(ActionAttack& action, const QList<Entity*>& candidate_targets) {
+    Entity::attack(action, candidate_targets);
 
     auto* target = action.getAcceptor();
     // When try to tryAttack a monster at self's left

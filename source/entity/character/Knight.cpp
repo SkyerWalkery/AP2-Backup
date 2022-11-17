@@ -24,8 +24,8 @@ bool Knight::testAreaCond(int cond) {
     return (cond & AreaCond) != 0;
 }
 
-void Knight::attack(ActionAttack& action) {
-    Character::attack(action);
+void Knight::attack(ActionAttack& action, const QList<Entity*>& candidate_targets) {
+    Character::attack(action, candidate_targets);
 
     auto* target = action.getAcceptor();
 

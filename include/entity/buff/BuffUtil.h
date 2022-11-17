@@ -15,6 +15,7 @@ class BuffUtil{
     static constexpr const char* ICON_MOVE_SPEED_UP = ":/icons/movement_speed_up.png";
     static constexpr const char* ICON_CORROSION = ":/icons/corrosion.png";
     static constexpr const char* ICON_FROZEN = ":/icons/element_cryo.png";
+    static constexpr const char* ICON_ANEMO = ":/icons/element_anemo.png";
 
 public:
 

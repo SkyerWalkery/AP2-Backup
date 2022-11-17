@@ -6,12 +6,13 @@ const QList<Buff>& BuffUtil::characterBuffs(){
     static QList<Buff> character_buffs = {
             Buff::WOLF_S_GRAVESTONE,
             Buff::CAUSE_CORROSION,
+            Buff::INFUSION_ANEMO,
             /*
             buff::INFUSION_PYRO,
             buff::INFUSION_HYDRO,
             buff::INFUSION_CRYO,
-            buff::INFUSION_ANEMO,
              */
+
             Buff::INFUSION_FROZEN,
     };
     return character_buffs;
@@ -23,6 +24,8 @@ QString BuffUtil::buffToIcon(Buff buff){
             return ICON_DAMAGE_UP;
         case Buff::INFUSION_FROZEN:
             return ICON_FROZEN;
+        case Buff::INFUSION_ANEMO:
+            return ICON_ANEMO;
         case Buff::CAUSE_CORROSION:
             return ICON_CORROSION;
         default:

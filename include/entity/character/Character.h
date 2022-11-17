@@ -47,7 +47,7 @@ public:
 
     static void setCharacterSize(qreal size);
 
-    void attack(ActionAttack& action) override;
+    void attack(ActionAttack& action, const QList<Entity*>& candidate_targets) override;
 
 };
 

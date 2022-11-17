@@ -7,7 +7,7 @@ enum class Element{
     // Basic elements
     PYRO = 1,
     HYDRO,
-    CYRO,
+    CRYO,
     ANEMO,
 
 };
