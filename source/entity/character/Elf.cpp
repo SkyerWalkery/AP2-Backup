@@ -41,12 +41,9 @@ void Elf::attack(ActionAttack& action, const QList<Entity*>& candidate_targets) 
 
     // Set element effect
     auto element = Element::NONE;
-    for(auto buff = buffs_.keyBegin(); buff != buffs_.keyEnd(); ++buff) {
-        if(BuffUtil::isInfusionBuff(*buff)) {
-            element = ElementUtil::infusionToElement(*buff);
-            break; // An entity can have at most one infusion buff at the same time (TODO)
-        }
-    }
+    auto infusion_buff = getElementInfusionBuff();
+    if(infusion_buff != Buff::NONE)
+        element = ElementUtil::infusionToElement(infusion_buff);
     attack_effect->setParticleColor(ElementUtil::ElementToParticleColor(element));
     // If infused with anemo, an explosion animation should be appended
     if (element == Element::ANEMO)

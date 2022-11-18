@@ -175,6 +175,11 @@ public:
      */
      bool hasBuff(Buff buff) const;
 
+     /**
+      * Returns elemental infusion buff if existing, Element::NONE otherwise
+      */
+     Buff getElementInfusionBuff() const;
+
 };
 
 #endif //AP_PROJ_ENTITY_H

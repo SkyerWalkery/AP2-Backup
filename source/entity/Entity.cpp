@@ -254,8 +254,14 @@ void Entity::addBuff(Buff buff, int duration) {
         if(BuffUtil::isDeBuff(*key))
             --num_buff;
     }
-    if(num_buff < 2)
-        buffs_[buff] = duration;
+    if(num_buff >= 2)
+        return;
+
+    // An entity can have at most one infusion buff at the same time
+    if(getElementInfusionBuff() != Buff::NONE && BuffUtil::isInfusionBuff(buff))
+        return;
+
+    buffs_[buff] = duration;
 }
 
 void Entity::removeBuff(Buff buff) {
@@ -265,4 +271,15 @@ void Entity::removeBuff(Buff buff) {
 
 bool Entity::hasBuff(Buff buff) const {
     return buffs_.contains(buff);
+}
+
+Buff Entity::getElementInfusionBuff() const {
+    auto ret = Buff::NONE;
+    for(auto buff = buffs_.keyBegin(); buff != buffs_.keyEnd(); ++buff) {
+        if(BuffUtil::isInfusionBuff(*buff)) {
+            ret = *buff;
+            break; // An entity can have at most one infusion buff at the same time
+        }
+    }
+    return ret;
 }
