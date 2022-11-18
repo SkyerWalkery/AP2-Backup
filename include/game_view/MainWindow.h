@@ -27,6 +27,8 @@ private slots:
 
     void resetGame();
 
+    void pauseOrResumeGame(bool is_pause);
+
     void loadLevel();
 };
 

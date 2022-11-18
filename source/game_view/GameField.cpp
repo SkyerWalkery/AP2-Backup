@@ -368,13 +368,13 @@ bool GameField::pointFloatEqual(const QPointF& p1, const QPointF& p2){
     return qRealEqual(p1.x(), p2.x()) && qRealEqual(p1.y(), p2.y());
 }
 
-qreal GameField::distanceBetween(const QPointF &p1, const QPointF &p2) {
-    return qSqrt(qPow(p1.x() - p2.x(), 2) + qPow(p1.y() - p2.y(), 2));
-}
-
 
 void GameField::startGame() {
     timer_.start();
+}
+
+void GameField::pauseGame() {
+    timer_.stop();
 }
 
 void GameField::checkReachProtectionObjective() {

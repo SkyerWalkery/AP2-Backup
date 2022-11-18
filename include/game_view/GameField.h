@@ -130,10 +130,16 @@ public:
     void setFps(qreal fps);
 
     /**
-     * Start the game
-     * Should be called explicitly
+     * Start the game.
+     * Should be called explicitly.
      */
     void startGame();
+
+    /**
+     * Pause the game.
+     * Should be called explicitly.
+     */
+     void pauseGame();
 
 private:
 
@@ -220,11 +226,6 @@ private:
      * Note: qRealEqual(qreal, qreal) is called in this method
      */
     static bool pointFloatEqual(const QPointF& p1, const QPointF& p2);
-
-    /**
-     * Return distance between p1 and p2
-     */
-    static qreal distanceBetween(const QPointF& p1, const QPointF& p2);
 
     /**
      * Check if any monster has reached the Protection Objective.
