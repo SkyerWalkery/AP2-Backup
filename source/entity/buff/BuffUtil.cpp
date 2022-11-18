@@ -69,3 +69,10 @@ bool BuffUtil::isDeBuff(Buff buff){
     return buff == Buff::CORRODED || buff == Buff::FROZEN;
 }
 
+bool BuffUtil::isInfusionBuff(Buff buff) {
+    return buff == Buff::INFUSION_ANEMO
+        || buff == Buff::INFUSION_CRYO
+        || buff == Buff::INFUSION_HYDRO
+        || buff == Buff::INFUSION_PYRO;
+}
+

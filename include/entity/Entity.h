@@ -7,7 +7,7 @@
 #include <QList>
 #include <QHash>
 #include "BuffUtil.h"
-#include "Element.h"
+#include "ElementUtil.h"
 #include "ActionAttack.h"
 
 /**

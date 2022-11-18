@@ -32,14 +32,24 @@ void Elf::attack(ActionAttack& action, const QList<Entity*>& candidate_targets) 
     auto* target = action.getAcceptor();
 
     // Add tryAttack visual effect
-    auto* attack_effect = new ShootParticle(this);
-    attack_effect->setStartPos(this->boundingRect().center());
-    attack_effect->setEndPos(target->mapToItem(this, target->boundingRect().center()));
+    auto* attack_effect = new ShootParticle();
+    attack_effect->setStartPos(mapToScene(this->boundingRect().center()));
+    attack_effect->setEndPos(target->mapToScene(target->boundingRect().center()));
+    attack_effect->setZValue(target->zValue()); // Display on top of target
+    this->scene()->addItem(attack_effect);
     attack_effect->setSpeed(500);
-    attack_effect->setParticleColor(QColor(252, 253, 151));
+
+    // Set element effect
+    auto element = Element::NONE;
+    for(auto buff = buffs_.keyBegin(); buff != buffs_.keyEnd(); ++buff) {
+        if(BuffUtil::isInfusionBuff(*buff)) {
+            element = ElementUtil::infusionToElement(*buff);
+            break; // An entity can have at most one infusion buff at the same time (TODO)
+        }
+    }
+    attack_effect->setParticleColor(ElementUtil::ElementToParticleColor(element));
     // If infused with anemo, an explosion animation should be appended
-    if(hasBuff(Buff::INFUSION_ANEMO))
-        // TODO: Add color to element
+    if (element == Element::ANEMO)
         attack_effect->setShouldExplode(true);
     attack_effect->startAnimation();
 }

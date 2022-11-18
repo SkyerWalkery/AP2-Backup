@@ -53,9 +53,15 @@ public:
     static QColor buffToColor(Buff buff);
 
     /**
-     * Returns if the specific buff is a de-buff
+     * Returns if the given buff is a de-buff
      */
      static bool isDeBuff(Buff buff);
+
+     /**
+      * Returns if the given buff is an infusion buff.
+      * An infusion buff is one that converts normal attacks to elemental damage
+      */
+      static bool isInfusionBuff(Buff buff);
 };
 
 
