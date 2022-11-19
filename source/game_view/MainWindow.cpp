@@ -6,7 +6,6 @@
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     // Initialize game field
     game_field_ = new GameField();
-    game_field_->loadLevelFromFile(level_data_path_);
     game_view_ = new QGraphicsView();
     game_view_->setScene(game_field_);
     game_view_->setSceneRect(game_field_->sceneRect());
@@ -19,10 +18,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     setCentralWidget(central_widget);
     setWindowTitle("Awesome Demo");
 
+    auto* load_level_act = new QAction(QIcon(":/icons/plus.svg"), "New Level");
+    connect(load_level_act, &QAction::triggered, this, &MainWindow::loadLevelDuringGame);
     auto* reset_game_act = new QAction(QIcon(":/icons/refresh.svg"), "Reset");
     connect(reset_game_act, &QAction::triggered, this, &MainWindow::resetGame);
-    auto* load_level_act = new QAction(QIcon(":/icons/plus.svg"), "New Level");
-    connect(reset_game_act, &QAction::triggered, this, &MainWindow::loadLevel);
     auto* pause_game_act = new QAction(QIcon(":/icons/pause.svg"), "Pause");
     pause_game_act->setCheckable(true);
     connect(pause_game_act, &QAction::toggled, this, &MainWindow::pauseOrResumeGame);
@@ -42,7 +41,24 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     tool_bar->addSeparator();
     tool_bar->addAction(reset_game_act);
     tool_bar->addAction(pause_game_act);
+}
 
+bool MainWindow::openLevelDir(){
+    auto dir = QFileDialog::getExistingDirectory(
+            this, tr("Open a level"),
+            "./",
+            QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    if(dir.isEmpty())
+        return false;
+    level_data_path_ = dir;
+    try {
+        game_field_->loadLevelFromFile(dir);
+        return true;
+    }catch(std::exception& e){
+        qDebug() << "Error happened during loading file\n"
+                << e.what();
+        return false;
+    }
 }
 
 void MainWindow::startGame() {
@@ -72,6 +88,8 @@ void MainWindow::pauseOrResumeGame(bool is_pause) {
     }
 }
 
-void MainWindow::loadLevel() {
-    // TODO: To be implemented
+void MainWindow::loadLevelDuringGame() {
+    if(!openLevelDir())
+        return;
+    resetGame();
 }

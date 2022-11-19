@@ -15,7 +15,7 @@ class MainWindow: public QMainWindow{
     QGraphicsView* game_view_;
 
     // Directory path of level information
-    QString level_data_path_ = "test_level";
+    QString level_data_path_;
 
 public:
 
@@ -23,13 +23,20 @@ public:
 
     void startGame();
 
+    bool openLevelDir();
+
 private slots:
 
     void resetGame();
 
     void pauseOrResumeGame(bool is_pause);
 
-    void loadLevel();
+    /**
+     * Load a new level from a directory during playing.
+     * Should call openLevelDir() and resetGame()
+     */
+    void loadLevelDuringGame();
+
 };
 
 
