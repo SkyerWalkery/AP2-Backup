@@ -290,7 +290,7 @@ void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     auto pos = mouseEvent->scenePos();
     // If pos out of bound of scene, just ignore this event
     // If player wants to click on some UI, don't display character options
-    if(!this->sceneRect().contains(pos) || buff_options_->geometry().contains(pos))
+    if(!this->sceneRect().contains(pos))
         return;
 
     auto area_idx = posToIndex(pos);
