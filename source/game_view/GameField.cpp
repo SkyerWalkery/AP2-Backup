@@ -129,7 +129,7 @@ void GameField::loadCharacterOptionFromFile(const QString& file_path) {
 void GameField::loadMonsterQueueFromFile(const QString& file_path) {
     // There lines in this file
     // Each line is made up of (Monster name, arrival time(ms))
-    // e.g. one line is "Boar 30")
+    // e.g. one line is "Boar 30"
     QFile in_file(file_path);
     if(!in_file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
@@ -175,21 +175,12 @@ void GameField::loadStyleFromFile(){
 }
 
 void GameField::initCharacterOptionUi() {
-
     // Construct place buttons and set as invisible
     auto* place_options_layout = new QGraphicsLinearLayout;
     for(int i = 0; i < character_makers_.size(); ++i){
         auto& maker = character_makers_[i];
         auto file_name = character_textures_[i];
         auto button_pixmap = QPixmap(file_name).scaled(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE);
-        /*
-         * Add a background (not needed when a default background is given by QPushButton)
-        auto mask = button_pixmap.createMaskFromColor(Qt::transparent, Qt::MaskOutColor);
-        auto painter = QPainter(&button_pixmap);
-        painter.setPen(QColor(255, 255, 255, 128));
-        painter.drawPixmap(button_pixmap.rect(), mask, mask.rect());
-        painter.end();
-         */
         auto* button = new QPushButton();
         button->setIcon(button_pixmap);
         button->setIconSize(QSize(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE));
@@ -203,7 +194,6 @@ void GameField::initCharacterOptionUi() {
         place_options_layout->addItem(proxy);
     }
     this->place_options_->setLayout(place_options_layout);
-    addItem(place_options_);
     place_options_->setVisible(false);
     place_options_->setZValue(1);
 
@@ -212,7 +202,6 @@ void GameField::initCharacterOptionUi() {
     QStringList upgrade_options_icons = {ICON_UP, ICON_X};
     for(const auto& icon: upgrade_options_icons){
         auto button_pixmap = QPixmap(icon).scaled(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE);
-
         auto* button = new QPushButton();
         button->setIcon(button_pixmap);
         button->setIconSize(QSize(CHARACTER_OPTION_SIZE, CHARACTER_OPTION_SIZE));
@@ -231,7 +220,6 @@ void GameField::initCharacterOptionUi() {
         upgrade_options_layout->addItem(proxy);
     }
     this->upgrade_options_->setLayout(upgrade_options_layout);
-    addItem(upgrade_options_);
     upgrade_options_->setVisible(false);
     upgrade_options_->setZValue(1);
 }
@@ -260,15 +248,9 @@ void GameField::initBuffOptionUi() {
         buff_options_layout->addItem(proxy);
     }
     this->buff_options_->setLayout(buff_options_layout);
-    addItem(buff_options_);
     // Still don't know why when visibility is true, rect() always returns a rect of 0x0
     // So rect is set by hand (though I know is not a good practice)
     buff_options_->setVisible(false);
-    buff_options_->setGeometry(
-            0, 0,
-        (BUFF_OPTION_SIZE + 3) * static_cast<qreal>(BuffUtil::characterBuffs().size()),
-            BUFF_OPTION_SIZE);
-    buff_options_->setPos(this->width() - buff_options_->rect().width(), 0);
     buff_options_->setZValue(1);
 }
 
@@ -280,29 +262,26 @@ void GameField::setFps(qreal fps) {
 
 void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
-    if(place_options_->isVisible() || upgrade_options_->isVisible()) {
+    // If any UI is visible, or pos is out of bound of scene,
+    // ignore this event and hide all option UIs
+    auto pos = mouseEvent->scenePos();
+    if(place_options_->isVisible() || upgrade_options_->isVisible() || !this->sceneRect().contains(pos)) {
         place_options_->setVisible(false);
         upgrade_options_->setVisible(false);
         buff_options_->setVisible(false);
         return;
     }
 
-    auto pos = mouseEvent->scenePos();
-    // If pos out of bound of scene, just ignore this event
-    // If player wants to click on some UI, don't display character options
-    if(!this->sceneRect().contains(pos))
-        return;
-
     auto area_idx = posToIndex(pos);
     auto* area = areas_[area_idx.x()][area_idx.y()];
-    displayCharacterOptions(
-            area_idx,
-            area->isOccupied() ? upgrade_options_ : place_options_
-    );
-
-    // Update buff_options only when a character is selected
-    if(area->isOccupied())
+    if(area->isOccupied()){
+        displayCharacterOptions(area_idx, upgrade_options_);
         updateBuffOptionChecked(area_idx);
+    }
+    else{
+        displayCharacterOptions(area_idx, place_options_);
+    }
+
 }
 
 
@@ -325,8 +304,6 @@ void GameField::displayCharacterOptions(const AreaIndex& area_idx, QGraphicsWidg
 
 void GameField::updateBuffOptionChecked(const AreaIndex& area_idx){
     auto* area = areas_[area_idx.x()][area_idx.y()];
-    if(!area)
-        throw std::runtime_error("upgrade_options_ has invalid parent");
     // If not has Character as a child, exception will be thrown
     Character* character = getCharacterInArea(area);
     if(!character)
@@ -334,7 +311,7 @@ void GameField::updateBuffOptionChecked(const AreaIndex& area_idx){
 
     for(auto buff: BuffUtil::characterBuffs()){
         auto* buff_button = buff_option_buttons_[buff];
-        // Proxy must have a QPushButton
+        // Proxy must have a QPushButton inside
         auto* button = qobject_cast<QPushButton*>(buff_button->widget());
         if(character->hasBuff(buff))
             button->setChecked(true);
@@ -357,17 +334,6 @@ typename GameField::AreaIndex GameField::posToIndex(QPointF pos) {
     res.rx() = y < 0 ? -1 : qFloor(y + REAL_COMPENSATION) / qRound(AREA_SIZE);
     return res;
 }
-
-
-bool GameField::qRealEqual(qreal r1, qreal r2) {
-    return qAbs(r1 - r2) <= REAL_COMPENSATION;
-}
-
-
-bool GameField::pointFloatEqual(const QPointF& p1, const QPointF& p2){
-    return qRealEqual(p1.x(), p2.x()) && qRealEqual(p1.y(), p2.y());
-}
-
 
 void GameField::startGame() {
     timer_.start();
@@ -480,12 +446,11 @@ void GameField::moveMonsters() {
              * new direction should come from cur_area
              *
              * For more details, refer to code below
-             */
-            /* Note:
+             *
+             * Note:
              * Under normal conditions, next_area would not out of range,
              * so just ignore the condition
              */
-
             auto cur_area = qgraphicsitem_cast<Road*>(areas_[cur_area_idx.x()][cur_area_idx.y()]);
             if(cur_direction == qMakePair(-1, 0)
                || cur_direction == qMakePair(0, -1)){

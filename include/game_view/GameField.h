@@ -218,14 +218,18 @@ private:
      * Return if r1 equals to r2
      * Taking double precision into account
      */
-    static bool qRealEqual(qreal r1, qreal r2);
+    static inline bool qRealEqual(qreal r1, qreal r2) {
+        return qAbs(r1 - r2) <= REAL_COMPENSATION;
+    }
 
     /**
      * Return if pos1 equals to pos2
      * Taking double precision into account
      * Note: qRealEqual(qreal, qreal) is called in this method
      */
-    static bool pointFloatEqual(const QPointF& p1, const QPointF& p2);
+    static inline bool pointFloatEqual(const QPointF& p1, const QPointF& p2){
+        return qRealEqual(p1.x(), p2.x()) && qRealEqual(p1.y(), p2.y());
+    }
 
     /**
      * Check if any monster has reached the Protection Objective.
