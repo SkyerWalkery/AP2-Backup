@@ -33,14 +33,14 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     file_menu->addAction(load_level_act);
     QMenu* game_setting_menu = menu_bar->addMenu("&Game");
     game_setting_menu->addAction(reset_game_act);
+    game_setting_menu->addAction(pause_game_act);
 
     // Set ToolBar
-    // TODO: Add buttons to tool-bar
     auto* tool_bar = new QToolBar();
     addToolBar(tool_bar);
-    tool_bar->addAction(reset_game_act);
     tool_bar->addAction(load_level_act);
     tool_bar->addSeparator();
+    tool_bar->addAction(reset_game_act);
     tool_bar->addAction(pause_game_act);
 
 }
