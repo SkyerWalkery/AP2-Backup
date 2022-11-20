@@ -35,8 +35,10 @@ void GameField::loadLevelFromFile(const QString& dir_path) {
     loadLevelSettingFromFile(QString("%1/level_setting.dat").arg(dir_path));
     // Some UI need to set up after initialization above
     loadStyleFromFile();
+
     initCharacterOptionUi();
     initBuffOptionUi();
+    initStatusBarUi();
 }
 
 void GameField::loadFieldFromFile(const QString &file_path) {
@@ -161,7 +163,7 @@ void GameField::loadLevelSettingFromFile(const QString& file_path) {
     if(!in_file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 
-    this->life_points_ = in_file.readLine().simplified().toInt();
+    this->health_points_ = in_file.readLine().simplified().toInt();
 
     in_file.close();
 }
@@ -252,6 +254,39 @@ void GameField::initBuffOptionUi() {
     // So rect is set by hand (though I know is not a good practice)
     buff_options_->setVisible(false);
     buff_options_->setZValue(1);
+}
+
+void GameField::initStatusBarUi(){
+    // Add a background
+    auto* status_background = new QGraphicsRectItem();
+    QPen bg_pen(QColor(110, 110, 110), 3);
+    QBrush bg_brush(QColor(184, 185, 196));
+    status_background->setPen(bg_pen);
+    status_background->setBrush(bg_brush);
+    status_background->setRect(0, -AREA_SIZE, AREA_SIZE * this->num_cols_, AREA_SIZE);
+    addItem(status_background);
+
+    int separate_space = 6;
+
+    // Add status UI
+    auto health_icon_pix = QPixmap(ICON_HEALTH).scaled(ICON_HEALTH_SIZE, ICON_HEALTH_SIZE);
+    auto* health_icon = new QGraphicsPixmapItem(health_icon_pix, status_background);
+    health_icon->setX((health_icon->boundingRect().width()) / 2);
+    health_icon->setY(status_background->rect().center().y() - health_icon->boundingRect().center().y());
+
+    QFont font(tr("汉仪文黑-85W"), 20);
+    health_point_counter_ = new QGraphicsSimpleTextItem(status_background);
+    health_point_counter_->setFont(font);
+    health_point_counter_->setText(tr("× %1").arg(health_points_));
+    health_point_counter_->setX(health_icon->x() + health_icon->boundingRect().width() + separate_space);
+    health_point_counter_->setY(status_background->rect().center().y() - health_point_counter_->boundingRect().center().y());
+
+    monster_counter_ = new QGraphicsSimpleTextItem(status_background);
+    monster_counter_->setFont(font);
+    monster_counter_->setText(tr("× %1").arg(monster_que_.size()));
+    monster_counter_->setX(status_background->rect().width() - monster_counter_->boundingRect().width() * 1.5);
+    monster_counter_->setY(status_background->rect().center().y() - monster_counter_->boundingRect().center().y());
+
 }
 
 void GameField::setFps(qreal fps) {
@@ -360,14 +395,14 @@ void GameField::checkReachProtectionObjective() {
                     "but hasn't reach protection objective"
                     );
         }
-        life_points_--;
+        health_points_--;
         removeItem(monster);
         it = monsters_.erase(it);
     }
 }
 
 void GameField::checkGameEnd() {
-    if(life_points_ > 0 && (!monsters_.empty() || !monster_que_.empty()))
+    if(health_points_ > 0 && (!monsters_.empty() || !monster_que_.empty()))
         return;
 
     auto* background = new QGraphicsRectItem;
@@ -551,6 +586,10 @@ void GameField::entityInteract() {
     removeDeadEntity();
 }
 
+void GameField::updateStatusBar(){
+    health_point_counter_->setText(tr("× %1").arg(health_points_));
+}
+
 void GameField::removeDeadEntity() {
     auto it_m = monsters_.begin();
     while(it_m != monsters_.end()){
@@ -617,6 +656,7 @@ void GameField::updateField() {
     moveMonsters();
     entityInteract();
     checkReachProtectionObjective();
+    updateStatusBar();
     checkGameEnd();
 }
 

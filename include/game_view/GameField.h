@@ -14,6 +14,7 @@
 #include <QPushButton>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsProxyWidget>
+#include <QGraphicsSimpleTextItem>
 #include <QGraphicsWidget>
 #include <QTransform>
 #include <QQueue>
@@ -41,12 +42,17 @@ class GameField: public QGraphicsScene{
 
     static constexpr const char* ICON_UP = ":/icons/chevrons_up.svg";
     static constexpr const char* ICON_X = ":/icons/x_square.svg";
+    static constexpr const char* ICON_HEALTH = ":/icons/health_point.png";
+    static constexpr const char* ICON_MONSTER = ":/icons/monster_icon.png";
 
     static constexpr const qreal AREA_SIZE = 48; // px
     static constexpr const qreal CHARACTER_OPTION_SIZE = 32; // px
     static constexpr const qreal BUFF_OPTION_SIZE = 32; // px
     static constexpr const qreal CHARACTER_SIZE = 48; // px
     static constexpr const qreal MONSTER_SIZE = 48; // px
+    static constexpr const qreal ICON_HEALTH_SIZE = 28; // px (origin image is 7*7, so...)
+    static constexpr const qreal ICON_MONSTER_SIZE = 32; // px
+
     static constexpr const qreal REAL_COMPENSATION = 0.0000001;
 
     int num_rows_ = 0;
@@ -67,7 +73,7 @@ class GameField: public QGraphicsScene{
     QList<AreaIndex> start_areas_idx_;
     QList<AreaIndex> protect_areas_idx_;
 
-    int life_points_ = 1;
+    int health_points_ = 1;
 
     // Below are components related to character.
     // place_options_ and upgrade_options_ each holds a layout, which may holds more than one options.
@@ -85,6 +91,10 @@ class GameField: public QGraphicsScene{
     QGraphicsWidget* buff_options_ = new QGraphicsWidget;
     // You can use buff to control corresponding button
     QHash<Buff, QGraphicsProxyWidget*> buff_option_buttons_;
+
+    // Used in status bar
+    QGraphicsSimpleTextItem* health_point_counter_;
+    QGraphicsSimpleTextItem* monster_counter_;
 
 public:
     explicit GameField(QObject* parent = nullptr);
@@ -127,6 +137,12 @@ public:
      */
     void initBuffOptionUi();
 
+    /**
+     * Initialize status bar (health point and monster counter)
+     * Must be called explicitly
+     */
+    void initStatusBarUi();
+
     void setFps(qreal fps);
 
     /**
@@ -139,7 +155,7 @@ public:
      * Pause the game.
      * Should be called explicitly.
      */
-     void pauseGame();
+    void pauseGame();
 
 private:
 
@@ -170,6 +186,12 @@ private:
     void entityInteract();
 
     /**
+     * Called by updateField()
+     * Update info in status bar, including health points and monster counter
+     */
+    void updateStatusBar();
+
+    /**
      * Remove dead entities, including characters and monsters
      */
     void removeDeadEntity();
@@ -198,7 +220,8 @@ private:
      * This method should be called by mouseReleaseEvent() only.
      * @param area_idx Index of area that the character is placed in
      */
-     void updateBuffOptionChecked(const AreaIndex& area_idx);
+    void updateBuffOptionChecked(const AreaIndex& area_idx);
+
 
     /**
      * Returns character that in specific area
@@ -233,7 +256,7 @@ private:
 
     /**
      * Check if any monster has reached the Protection Objective.
-     * If so, remove it from the field and minus life_points_ by 1.
+     * If so, remove it from the field and minus health_points_ by 1.
      * If
      */
     void checkReachProtectionObjective();
