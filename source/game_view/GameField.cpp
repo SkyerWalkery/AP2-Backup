@@ -588,6 +588,7 @@ void GameField::entityInteract() {
 
 void GameField::updateStatusBar(){
     health_point_counter_->setText(tr("× %1").arg(health_points_));
+    monster_counter_->setText(tr("× %1").arg(monster_que_.size()));
 }
 
 void GameField::removeDeadEntity() {
