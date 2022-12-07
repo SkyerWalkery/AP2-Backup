@@ -3,7 +3,8 @@ project(AP_Proj)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_PREFIX_PATH "D:\\Tools\\Qt\\6.3.1\\msvc2019_64\\lib\\cmake")
+set(CMAKE_PREFIX_PATH "C:\\MyWorld\\Coder\\.App\\Qt\\6.4.1\\msvc2019_64\\lib\\cmake\\")
+
 
 find_package(Qt6Widgets REQUIRED)
 find_package(Qt6Core REQUIRED)
