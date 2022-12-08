@@ -3,7 +3,6 @@
 #include <QDir>
 
 
-// TODO: init from file should be called by constructor
 GameField::GameField(QObject* parent):
     QGraphicsScene(parent)
 {
@@ -271,7 +270,7 @@ void GameField::initStatusBarUi(){
     // Add status UI
     auto health_icon_pix = QPixmap(ICON_HEALTH).scaled(ICON_HEALTH_SIZE, ICON_HEALTH_SIZE);
     auto* health_icon = new QGraphicsPixmapItem(health_icon_pix, status_background);
-    health_icon->setX((health_icon->boundingRect().width()) / 2);
+    health_icon->setX(health_icon->boundingRect().width() / 2);
     health_icon->setY(status_background->rect().center().y() - health_icon->boundingRect().center().y());
 
     QFont font(tr("汉仪文黑-85W"), 20);
@@ -287,6 +286,10 @@ void GameField::initStatusBarUi(){
     monster_counter_->setX(status_background->rect().width() - monster_counter_->boundingRect().width() * 1.5);
     monster_counter_->setY(status_background->rect().center().y() - monster_counter_->boundingRect().center().y());
 
+    auto monster_icon_pix = QPixmap(ICON_MONSTER).scaled(ICON_MONSTER_SIZE, ICON_MONSTER_SIZE);
+    auto* monster_icon = new QGraphicsPixmapItem(monster_icon_pix, status_background);
+    monster_icon->setX(monster_counter_->x() - monster_icon->boundingRect().width() - separate_space);
+    monster_icon->setY(status_background->rect().center().y() - monster_icon->boundingRect().center().y());
 }
 
 void GameField::setFps(qreal fps) {
