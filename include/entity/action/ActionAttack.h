@@ -16,6 +16,13 @@ class ActionAttack: public Action{
     // damage cause by this attack
     int damage_;
 
+    // times of this attack can be transmitted
+    // When an entity is attacked, entities around get attacked too (range attack),
+    // the former "transmits" damage to entities around,
+    // and during the process this counter should decrease by one.
+    // If counter is 0, do nothing in Entity::attack()
+    int transmit_cnt_ = 1;
+
     // buff that the target will get, and duration (if buff is not NONE)
     Buff buff_to_target_ = Buff::NONE;
     int buff_duration_ = 0;
@@ -39,6 +46,10 @@ public:
     Element getElement() const;
 
     void setElement(Element element);
+
+    int getTransmitCnt() const;
+
+    void setTransmitCnt(int cnt);
 };
 
 #endif //AP_PROJ_ACTIONATTACK_H

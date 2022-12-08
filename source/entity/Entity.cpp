@@ -154,6 +154,12 @@ void Entity::attack(ActionAttack& action, const QList<Entity*>& candidate_target
         else if(this->hasBuff(Buff::INFUSION_PYRO))
             action.setElement(Element::PYRO);
 
+        // TODO: Move set cnt to element reaction
+        if(this->hasBuff(Buff::INFUSION_ANEMO))
+            action.setTransmitCnt(2);
+        else
+            action.setTransmitCnt(1);
+
         target->attacked(action, candidate_targets);
     }
 }
@@ -173,9 +179,10 @@ void Entity::attacked(ActionAttack& action, const QList<Entity*>& candidate_targ
         buff_effect->startAnimation();
     }
 
-    // Consider elements' effects
-    // If infused with anemo, attack is turned into AOE
-    if(action.getElement() == Element::ANEMO){
+    // Consider range attack
+    // If damage transmit counter > 0 (after decrease), attack is turned into AOE
+    action.setTransmitCnt(action.getTransmitCnt() - 1);
+    if(action.getTransmitCnt() > 0){
         // AOE is done below
         // Iterate candidate targets, create new attack to those near self
         for(auto* candidate_target: candidate_targets){
@@ -184,6 +191,7 @@ void Entity::attacked(ActionAttack& action, const QList<Entity*>& candidate_targ
             if(distanceBetween(scenePos(), candidate_target->scenePos()) <= AreaSize){
                 // attacker is the origin one that has attacked self
                 ActionAttack aoe(action.getInitiator(), candidate_target);
+                aoe.setTransmitCnt(1);
                 // Anemo infusion's aoe damage is one-third of origin damage by default
                 aoe.setDamage(action.getDamage() / 3);
                 // No buff and no element

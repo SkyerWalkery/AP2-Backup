@@ -246,7 +246,7 @@ void GameField::initBuffOptionUi() {
         auto* proxy = new QGraphicsProxyWidget;
         proxy->setWidget(button);
         buff_option_buttons_[buff] = proxy;
-        proxy->setVisible(false); // Buff cannot be used at very begin of game
+        //proxy->setVisible(false); // Buff cannot be used at very begin of game
         buff_options_layout->addItem(proxy);
     }
     this->buff_options_->setLayout(buff_options_layout);

@@ -27,3 +27,11 @@ Element ActionAttack::getElement() const {
 void ActionAttack::setElement(Element element) {
     element_infusion_ = element;
 }
+
+int ActionAttack::getTransmitCnt() const {
+    return transmit_cnt_;
+}
+
+void ActionAttack::setTransmitCnt(int cnt) {
+    transmit_cnt_ = cnt;
+}
