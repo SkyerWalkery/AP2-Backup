@@ -246,6 +246,7 @@ void GameField::initBuffOptionUi() {
         auto* proxy = new QGraphicsProxyWidget;
         proxy->setWidget(button);
         buff_option_buttons_[buff] = proxy;
+        proxy->setVisible(false); // Buff cannot be used at very begin of game
         buff_options_layout->addItem(proxy);
     }
     this->buff_options_->setLayout(buff_options_layout);
@@ -253,6 +254,7 @@ void GameField::initBuffOptionUi() {
     // So rect is set by hand (though I know is not a good practice)
     buff_options_->setVisible(false);
     buff_options_->setZValue(1);
+
 }
 
 void GameField::initStatusBarUi(){
@@ -333,7 +335,7 @@ void GameField::displayCharacterOptions(const AreaIndex& area_idx, QGraphicsWidg
     if(old_parent)
         old_parent->setZValue(0);
     options->setParentItem(area);
-    //Set old parent's z value, so that its child, options cannot be covered
+    // Set old parent's z value, so that its child, options cannot be covered
     area->setZValue(1);
     options->setPos(area->boundingRect().center() - options->rect().center());
     options->setY(area->boundingRect().height());
@@ -358,9 +360,10 @@ void GameField::updateBuffOptionChecked(const AreaIndex& area_idx){
     }
 
     buff_options_->setParentItem(area);
-    buff_options_->setPos(area->boundingRect().center() - buff_options_->rect().center());
+    buff_options_->setPos(area->boundingRect().center() - buff_options_->geometry().center());
     buff_options_->setY(-buff_options_->geometry().height());
     buff_options_->setVisible(true);
+
 }
 
 
@@ -604,6 +607,7 @@ void GameField::removeDeadEntity() {
         else{
             it_m = monsters_.erase(it_m);
             this->removeItem(monster);
+            getNewBuff(); // get new buff(s) when killing a monster
         }
     }
 
@@ -720,4 +724,17 @@ void GameField::manageCharacterBuffFromUI(Buff buff) {
         character->removeBuff(buff);
     else
         character->addBuff(buff, 100 * 1000); // default duration is 100s
+}
+
+void GameField::getNewBuff(){
+    // A simple implementation: get all buffs at first blood
+    for(auto it = buff_option_buttons_.begin(); it != buff_option_buttons_.end(); ++it){
+        it.value()->setVisible(true);
+    }
+    // Visibility should be reset to display ui properly,
+    // otherwise buff_options_->rect() will not be updated automatically
+    // i.e. the first time you click on a character, ui isn't at its place
+    // Still don't know why
+    buff_options_->setVisible(true);
+    buff_options_->setVisible(false);
 }

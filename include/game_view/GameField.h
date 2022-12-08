@@ -222,6 +222,12 @@ private:
      */
     void updateBuffOptionChecked(const AreaIndex& area_idx);
 
+    /**
+     * Unlock one or more buff option buttons,
+     * i.e. set member(s) of this->buff_option_buttons_ as visible.
+     * If all buttons is visible, do nothing.
+     */
+    void getNewBuff();
 
     /**
      * Returns character that in specific area
