@@ -14,7 +14,11 @@ Monster::Monster(QGraphicsItem *parent) : Entity(parent) {
     //updateHealthBar();
 
     element_aura_icon_ = new QGraphicsPixmapItem(this);
-    // TODO:Position, init icon
+    QPixmap empty_pix(32, 32);
+    element_aura_icon_->setPixmap(empty_pix);
+    element_aura_icon_->setX(MonsterSize / 2 - element_aura_icon_->boundingRect().center().x());
+    element_aura_icon_->setY(MonsterSize * 2 / 3);
+    element_aura_icon_->setVisible(false);
 }
 
 QColor Monster::getHealthBarColor() const {
@@ -56,8 +60,8 @@ void Monster::updateElementAuraIcon(){
         return;
     }
     element_aura_icon_->setVisible(true);
-    texture_pixmap_ = QPixmap(ElementUtil::elementToIcon(element_aura_)).scaled(32, 32);
-    element_aura_icon_->setPixmap(texture_pixmap_);
+    auto icon = QPixmap(ElementUtil::elementToIcon(element_aura_)).scaled(32, 32);
+    element_aura_icon_->setPixmap(icon);
 }
 
 qreal Monster::getSpeed() const {
