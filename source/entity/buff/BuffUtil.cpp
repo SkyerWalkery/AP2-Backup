@@ -6,14 +6,11 @@ const QList<Buff>& BuffUtil::characterBuffs(){
     static QList<Buff> character_buffs = {
             Buff::WOLF_S_GRAVESTONE,
             Buff::CAUSE_CORROSION,
-            Buff::INFUSION_ANEMO,
-            /*
-            buff::INFUSION_PYRO,
-            buff::INFUSION_HYDRO,
-            buff::INFUSION_CRYO,
-             */
-
             Buff::INFUSION_FROZEN,
+            Buff::INFUSION_ANEMO,
+            Buff::INFUSION_PYRO,
+            Buff::INFUSION_HYDRO,
+            Buff::INFUSION_CRYO,
     };
     return character_buffs;
 }
@@ -22,12 +19,18 @@ QString BuffUtil::buffToIcon(Buff buff){
     switch (buff) {
         case Buff::WOLF_S_GRAVESTONE:
             return ICON_DAMAGE_UP;
+        case Buff::CAUSE_CORROSION:
+            return ICON_CORROSION;
         case Buff::INFUSION_FROZEN:
             return ICON_FROZEN;
         case Buff::INFUSION_ANEMO:
             return ICON_ANEMO;
-        case Buff::CAUSE_CORROSION:
-            return ICON_CORROSION;
+        case Buff::INFUSION_PYRO:
+            return ICON_PYRO;
+        case Buff::INFUSION_HYDRO:
+            return ICON_HYDRO;
+        case Buff::INFUSION_CRYO:
+            return ICON_CRYO;
         default:
             throw std::invalid_argument("No icon for buff");
     }

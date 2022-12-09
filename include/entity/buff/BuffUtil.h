@@ -16,6 +16,9 @@ class BuffUtil{
     static constexpr const char* ICON_CORROSION = ":/icons/corrosion.png";
     static constexpr const char* ICON_FROZEN = ":/icons/element_cryo.png";
     static constexpr const char* ICON_ANEMO = ":/icons/element_anemo.png";
+    static constexpr const char* ICON_PYRO = ":/icons/element_pyro.png";
+    static constexpr const char* ICON_HYDRO = ":/icons/element_hydro.png";
+    static constexpr const char* ICON_CRYO = ":/icons/element_cryo.png";
 
 public:
 
