@@ -32,3 +32,63 @@ Element ElementUtil::infusionToElement(Buff buff) {
             throw std::invalid_argument("No matching element for infusion buff");
     }
 }
+
+void ElementUtil::makeElementReaction(Element aura, ActionAttack &action) {
+    // Not enough elements (at least one)
+    if(aura == Element::NONE || action.getElement() == Element::NONE || aura == action.getElement())
+        return;
+
+    switch(aura){
+        case Element::PYRO:{
+            switch(action.getElement()){
+                case Element::HYDRO:{
+                    action.setDamage(action.getDamage() * 2);
+
+                } break; // Vaporize (2× DMG)
+                case Element::CRYO:{
+
+                } break; // Reverse Melt (1.5× DMG)
+                case Element::ANEMO:{
+
+                } break; // Swirl
+                default:
+                    break;
+            }
+        }
+
+        case Element::HYDRO:{
+            switch(action.getElement()){
+                case Element::PYRO:{
+
+                } break; // Reverse Vaporize (1.5× DMG)
+                case Element::CRYO:{
+
+                } break; // Frozen
+                case Element::ANEMO:{
+
+                } break; // Swirl
+                default:
+                    break;
+            }
+        }
+
+        case Element::CRYO:{
+            switch(action.getElement()){
+                case Element::PYRO:{
+
+                } break; // Melt (2× DMG)
+                case Element::HYDRO:{
+
+                } break; // Frozen
+                case Element::ANEMO:{
+
+                } break; // Swirl
+                default:
+                    break;
+            }
+        }
+
+        default:
+            break;
+    }
+}
