@@ -1,5 +1,7 @@
 #include "ElementUtil.h"
+#include "BuffUtil.h"
 #include <stdexcept>
+#include <QString>
 
 QColor ElementUtil::ElementToParticleColor(Element element) {
     switch (element) {
@@ -43,14 +45,17 @@ void ElementUtil::makeElementReaction(Element aura, ActionAttack &action) {
             switch(action.getElement()){
                 case Element::HYDRO:{
                     action.setDamage(action.getDamage() * 2);
-
+                    action.setTextEffect("Vaporize", QColor(246, 208, 112));
                 } break; // Vaporize (2× DMG)
                 case Element::CRYO:{
-
+                    action.setDamage(action.getDamage() * 3 / 2);
+                    action.setTextEffect("Melt", QColor(246, 208, 112));
                 } break; // Reverse Melt (1.5× DMG)
                 case Element::ANEMO:{
-
-                } break; // Swirl
+                    action.setTransmitCnt(2);
+                    action.setElement(aura);
+                    action.setTextEffect("Swirl", ElementToParticleColor(Element::ANEMO));
+                } break; // Swirl (range damage and elemental absorption)
                 default:
                     break;
             }
@@ -59,13 +64,17 @@ void ElementUtil::makeElementReaction(Element aura, ActionAttack &action) {
         case Element::HYDRO:{
             switch(action.getElement()){
                 case Element::PYRO:{
-
+                    action.setDamage(action.getDamage() * 3 / 2);
+                    action.setTextEffect("Vaporize", QColor(246, 208, 112));
                 } break; // Reverse Vaporize (1.5× DMG)
                 case Element::CRYO:{
-
+                    action.setBuff(Buff::FROZEN, static_cast<int>(0.5 * 1000));
+                    action.setTextEffect("Frozen", BuffUtil::buffToColor(Buff::FROZEN));
                 } break; // Frozen
                 case Element::ANEMO:{
-
+                    action.setTransmitCnt(2);
+                    action.setElement(aura);
+                    action.setTextEffect("Swirl", ElementToParticleColor(Element::ANEMO));
                 } break; // Swirl
                 default:
                     break;
@@ -75,13 +84,17 @@ void ElementUtil::makeElementReaction(Element aura, ActionAttack &action) {
         case Element::CRYO:{
             switch(action.getElement()){
                 case Element::PYRO:{
-
+                    action.setDamage(action.getDamage() * 2);
+                    action.setTextEffect("Melt", QColor(246, 208, 112));
                 } break; // Melt (2× DMG)
                 case Element::HYDRO:{
-
+                    action.setBuff(Buff::FROZEN, static_cast<int>(0.5 * 1000));
+                    action.setTextEffect("Frozen", BuffUtil::buffToColor(Buff::FROZEN));
                 } break; // Frozen
                 case Element::ANEMO:{
-
+                    action.setTransmitCnt(2);
+                    action.setElement(aura);
+                    action.setTextEffect("Swirl", ElementToParticleColor(Element::ANEMO));
                 } break; // Swirl
                 default:
                     break;
@@ -91,4 +104,5 @@ void ElementUtil::makeElementReaction(Element aura, ActionAttack &action) {
         default:
             break;
     }
+
 }
