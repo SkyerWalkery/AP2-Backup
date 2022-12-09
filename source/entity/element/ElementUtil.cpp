@@ -36,10 +36,10 @@ Element ElementUtil::infusionToElement(Buff buff) {
     }
 }
 
-void ElementUtil::makeElementReaction(Element aura, ActionAttack &action) {
+bool ElementUtil::makeElementReaction(Element aura, ActionAttack &action) {
     // Not enough elements (at least one)
     if(aura == Element::NONE || action.getElement() == Element::NONE || aura == action.getElement())
-        return;
+        return false;
 
     switch(aura){
         case Element::PYRO:{
@@ -60,7 +60,7 @@ void ElementUtil::makeElementReaction(Element aura, ActionAttack &action) {
                 default:
                     break;
             }
-        }
+        } break;
 
         case Element::HYDRO:{
             switch(action.getElement()){
@@ -80,7 +80,7 @@ void ElementUtil::makeElementReaction(Element aura, ActionAttack &action) {
                 default:
                     break;
             }
-        }
+        } break;
 
         case Element::CRYO:{
             switch(action.getElement()){
@@ -100,10 +100,14 @@ void ElementUtil::makeElementReaction(Element aura, ActionAttack &action) {
                 default:
                     break;
             }
-        }
+        } break;
 
         default:
             break;
     }
+    return true;
+}
 
+bool ElementUtil::canApplyAura(Element element) {
+    return element != Element::NONE && element != Element::ANEMO;
 }

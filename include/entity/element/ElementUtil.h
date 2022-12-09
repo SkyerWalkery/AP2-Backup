@@ -45,8 +45,14 @@ public:
      *
      * @param aura element carried by the target
      * @param action attack action made by attacker, serving as both parameter and part of returned value
+     * @return if an reaction happens
      */
-    static void makeElementReaction(Element aura, ActionAttack& action);
+    static bool makeElementReaction(Element aura, ActionAttack& action);
+
+    /**
+     * Returns if an element can apply an aura, i.e., attached to entity
+     */
+    static bool canApplyAura(Element element);
 
 };
 

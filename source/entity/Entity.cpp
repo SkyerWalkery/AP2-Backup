@@ -169,6 +169,16 @@ void Entity::attacked(ActionAttack& action, const QList<Entity*>& candidate_targ
     int damage = action.getDamage();
     setHealth(getHealth() - damage);
 
+    // Element reaction
+    if(element_aura_ == Element::NONE && ElementUtil::canApplyAura(action.getElement())){
+        element_aura_ = action.getElement();
+    }
+    else if(action.getElement() != Element::NONE /* and element_aura_ is not Element::NONE */){
+        bool has_react = ElementUtil::makeElementReaction(element_aura_, action);
+        if(has_react)
+            element_aura_ = Element::NONE;
+    }
+
     // Attack may carry a buff
     auto [buff, duration] = action.getBuff();
     if(buff != Buff::NONE) {
@@ -198,10 +208,11 @@ void Entity::attacked(ActionAttack& action, const QList<Entity*>& candidate_targ
             if(distanceBetween(scenePos(), candidate_target->scenePos()) <= AreaSize){
                 // attacker is the origin one that has attacked self
                 ActionAttack aoe(action.getInitiator(), candidate_target);
-                aoe.setTransmitCnt(1);
-                // Anemo infusion's aoe damage is one-third of origin damage by default
+                aoe.setTransmitCnt(action.getTransmitCnt() - 1);
+                //  aoe damage is one-third of origin damage by default
                 aoe.setDamage(action.getDamage() / 3);
-                // No buff and no element
+                aoe.setElement(action.getElement());
+                // No buff
                 candidate_target->attacked(aoe, candidate_targets);
             }
         }

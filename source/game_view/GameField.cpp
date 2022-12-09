@@ -246,7 +246,7 @@ void GameField::initBuffOptionUi() {
         auto* proxy = new QGraphicsProxyWidget;
         proxy->setWidget(button);
         buff_option_buttons_[buff] = proxy;
-        //proxy->setVisible(false); // Buff cannot be used at very begin of game
+        // proxy->setVisible(false); // Buff cannot be used at very begin of game
         buff_options_layout->addItem(proxy);
     }
     this->buff_options_->setLayout(buff_options_layout);
@@ -360,8 +360,8 @@ void GameField::updateBuffOptionChecked(const AreaIndex& area_idx){
     }
 
     buff_options_->setParentItem(area);
-    buff_options_->setPos(area->boundingRect().center() - buff_options_->geometry().center());
-    buff_options_->setY(-buff_options_->geometry().height());
+    buff_options_->setPos(area->boundingRect().center() - buff_options_->boundingRect().center());
+    buff_options_->setY(-buff_options_->boundingRect().height());
     buff_options_->setVisible(true);
 
 }
@@ -712,7 +712,7 @@ void GameField::removeCharacterFromUi() {
 
 void GameField::manageCharacterBuffFromUI(Buff buff) {
     // No character is selected
-    if(!upgrade_options_->isVisible())
+    if(!buff_options_->isVisible())
         return;
 
     auto* area = dynamic_cast<Area*>(upgrade_options_->parentItem());
