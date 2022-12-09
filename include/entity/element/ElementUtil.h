@@ -1,10 +1,12 @@
 #ifndef AP_PROJ_ELEMENTUTIL_H
 #define AP_PROJ_ELEMENTUTIL_H
 
+#include <QColor>
+#include <QString>
 #include "Element.h"
 #include "Buff.h"
-#include "ActionAttack.h"
-#include <QColor>
+// #include "ActionAttack.h"
+class ActionAttack;
 
 /**
  * Utility for element system

@@ -1,7 +1,8 @@
 #include "ElementUtil.h"
 #include "BuffUtil.h"
+#include "ActionAttack.h"
 #include <stdexcept>
-#include <QString>
+
 
 QColor ElementUtil::ElementToParticleColor(Element element) {
     switch (element) {
