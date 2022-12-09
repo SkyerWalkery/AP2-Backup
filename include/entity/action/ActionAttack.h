@@ -31,6 +31,11 @@ class ActionAttack: public Action{
     // may not be added to target, such as Anemo
     Element element_infusion_ = Element::NONE;
 
+    // Attributes of text effect: { text displayed, text color }
+    // Used in element reactions
+    QPair<QString, QColor> text_effect_;
+    bool has_effect_ = false;
+
 
 public:
     using Action::Action;
@@ -50,6 +55,12 @@ public:
     int getTransmitCnt() const;
 
     void setTransmitCnt(int cnt);
+
+    void setTextEffect(const QString& text, QColor color);
+
+    bool hasTextEffect() const;
+
+    const QPair<QString, QColor>& getTextEffect() const;
 };
 
 #endif //AP_PROJ_ACTIONATTACK_H

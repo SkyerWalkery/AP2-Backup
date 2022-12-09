@@ -35,3 +35,16 @@ int ActionAttack::getTransmitCnt() const {
 void ActionAttack::setTransmitCnt(int cnt) {
     transmit_cnt_ = cnt;
 }
+
+void ActionAttack::setTextEffect(const QString &text, QColor color) {
+    text_effect_ = qMakePair(text, color);
+    has_effect_ = true;
+}
+
+bool ActionAttack::hasTextEffect() const {
+    return has_effect_;
+}
+
+const QPair<QString, QColor> &ActionAttack::getTextEffect() const {
+    return this->text_effect_;
+}

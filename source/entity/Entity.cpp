@@ -169,7 +169,7 @@ void Entity::attacked(ActionAttack& action, const QList<Entity*>& candidate_targ
     int damage = action.getDamage();
     setHealth(getHealth() - damage);
 
-    // attack may carry a buff
+    // Attack may carry a buff
     auto [buff, duration] = action.getBuff();
     if(buff != Buff::NONE) {
         this->addBuff(buff, duration);
@@ -177,6 +177,13 @@ void Entity::attacked(ActionAttack& action, const QList<Entity*>& candidate_targ
         auto *buff_effect = new SimpleTextParticle(BuffUtil::buffToString(buff), this);
         buff_effect->setTextColor(BuffUtil::buffToColor(buff));
         buff_effect->startAnimation();
+    }
+
+    // Attack may carry text effect
+    if(action.hasTextEffect()){
+        auto *text_effect = new SimpleTextParticle(action.getTextEffect().first, this);
+        text_effect->setTextColor(action.getTextEffect().second);
+        text_effect->startAnimation();
     }
 
     // Consider range attack
