@@ -12,12 +12,23 @@ class ActionAttack;
  * Utility for element system
  */
 class ElementUtil{
+
+    static constexpr const char* ICON_ANEMO = ":/icons/element_anemo.png";
+    static constexpr const char* ICON_PYRO = ":/icons/element_pyro.png";
+    static constexpr const char* ICON_HYDRO = ":/icons/element_hydro.png";
+    static constexpr const char* ICON_CRYO = ":/icons/element_cryo.png";
+
 public:
 
     /**
      * Returns particle color when infused with given color
      */
     static QColor ElementToParticleColor(Element element);
+
+    /**
+     * Returns file name of icon of element
+     */
+    static QString elementToIcon(Element element);
 
     /**
      * Returns element that infusion buff will attach to attack

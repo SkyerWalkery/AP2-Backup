@@ -21,6 +21,21 @@ QColor ElementUtil::ElementToParticleColor(Element element) {
     }
 }
 
+QString ElementUtil::elementToIcon(Element element) {
+    switch (element) {
+        case Element::ANEMO:
+            return ICON_ANEMO;
+        case Element::PYRO:
+            return ICON_PYRO;
+        case Element::HYDRO:
+            return ICON_HYDRO;
+        case Element::CRYO:
+            return ICON_CRYO;
+        default:
+            throw std::invalid_argument("No icon for element");
+    }
+}
+
 Element ElementUtil::infusionToElement(Buff buff) {
     switch (buff) {
         case Buff::INFUSION_ANEMO:

@@ -17,6 +17,7 @@ protected:
     qreal speed_ = 10.0; // num of px per second to move
 
     QGraphicsRectItem* health_bar_;
+    QGraphicsPixmapItem* element_aura_icon_;
 
     static qreal MonsterSize; // Must be set before construct
 
@@ -30,6 +31,8 @@ protected:
     QColor getHealthBarColor() const;
 
     void updateHealthBar();
+
+    void updateElementAuraIcon();
 
     void rechargeSkill();
 
