@@ -49,6 +49,8 @@ public:
 
     void attack(ActionAttack& action, const QList<Entity*>& candidate_targets) override;
 
+    virtual QString getRandomVoice() const = 0;
+
 };
 
 

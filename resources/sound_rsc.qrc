@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>sounds/GallantChallenge.m4a</file>
+        <file>sounds/HuTao_1.mp3</file>
+        <file>sounds/HuTao_2.mp3</file>
+        <file>sounds/HuTao_3.mp3</file>
+        <file>sounds/HuTao_4.mp3</file>
+        <file>sounds/HuTao_5.mp3</file>
+        <file>sounds/Tartaglia_1.mp3</file>
+        <file>sounds/Tartaglia_2.mp3</file>
+        <file>sounds/Tartaglia_3.mp3</file>
+        <file>sounds/Tartaglia_4.mp3</file>
+        <file>sounds/Tartaglia_5.mp3</file>
+    </qresource>
+</RCC>

@@ -1,6 +1,8 @@
 #include "GameField.h"
 #include <QFile>
 #include <QDir>
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 
 GameField::GameField(QObject* parent):
@@ -38,6 +40,7 @@ void GameField::loadLevelFromFile(const QString& dir_path) {
     initCharacterOptionUi();
     initBuffOptionUi();
     initStatusBarUi();
+    initMedia();
 }
 
 void GameField::loadFieldFromFile(const QString &file_path) {
@@ -292,6 +295,16 @@ void GameField::initStatusBarUi(){
     auto* monster_icon = new QGraphicsPixmapItem(monster_icon_pix, status_background);
     monster_icon->setX(monster_counter_->x() - monster_icon->boundingRect().width() - separate_space);
     monster_icon->setY(status_background->rect().center().y() - monster_icon->boundingRect().center().y());
+}
+
+void GameField::initMedia(){
+    auto* player = new QMediaPlayer(this); // Parent should be set for auto deletion
+    auto* audioOutput = new QAudioOutput;
+    player->setAudioOutput(audioOutput);
+    player->setSource(QUrl(BGM));
+    player->setLoops(QMediaPlayer::Infinite);
+    audioOutput->setVolume(52);
+    player->play();
 }
 
 void GameField::setFps(qreal fps) {
@@ -724,6 +737,15 @@ void GameField::manageCharacterBuffFromUI(Buff buff) {
         character->removeBuff(buff);
     else
         character->addBuff(buff, 100 * 1000); // default duration is 100s
+
+    // Play voice
+    auto* player = new QMediaPlayer(this); // Parent should be set for auto deletion
+    auto* audioOutput = new QAudioOutput;
+    player->setAudioOutput(audioOutput);
+    player->setSource(QUrl(character->getRandomVoice()));
+    player->setLoops(QMediaPlayer::Once);
+    audioOutput->setVolume(100);
+    player->play();
 }
 
 void GameField::getNewBuff(){

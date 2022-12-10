@@ -45,6 +45,8 @@ class GameField: public QGraphicsScene{
     static constexpr const char* ICON_HEALTH = ":/icons/health_point.png";
     static constexpr const char* ICON_MONSTER = ":/icons/monster_icon.png";
 
+    static constexpr const char* BGM = "qrc:/sounds/GallantChallenge.m4a";
+
     static constexpr const qreal AREA_SIZE = 48; // px
     static constexpr const qreal CHARACTER_OPTION_SIZE = 32; // px
     static constexpr const qreal BUFF_OPTION_SIZE = 32; // px
@@ -96,6 +98,7 @@ class GameField: public QGraphicsScene{
     QGraphicsSimpleTextItem* health_point_counter_;
     QGraphicsSimpleTextItem* monster_counter_;
 
+
 public:
     explicit GameField(QObject* parent = nullptr);
 
@@ -136,6 +139,12 @@ public:
      * Must be called explicitly
      */
     void initBuffOptionUi();
+
+    /**
+     * Initialize media player
+     * Must be called explicitly
+     */
+    void initMedia();
 
     /**
      * Initialize status bar (health point and monster counter)

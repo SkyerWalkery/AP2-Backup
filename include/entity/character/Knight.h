@@ -8,6 +8,14 @@ class Knight: public Character{
 
 public:
 
+    static constexpr const char* VOICES[] = {
+            "qrc:/sounds/Tartaglia_1.mp3",
+            "qrc:/sounds/Tartaglia_2.mp3",
+            "qrc:/sounds/Tartaglia_3.mp3",
+            "qrc:/sounds/Tartaglia_4.mp3",
+            "qrc:/sounds/Tartaglia_5.mp3",
+    };
+
     static constexpr const char* TEXTURE = ":/images/knight.png";
 
     static constexpr const int AreaCond = Character::ON_GRASS | Character::ON_ROAD;
@@ -24,6 +32,7 @@ public:
 
     void attack(ActionAttack& action, const QList<Entity*>& candidate_targets) override;
 
+    QString getRandomVoice() const override;
 };
 
 

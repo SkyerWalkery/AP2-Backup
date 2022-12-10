@@ -5,10 +5,10 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_PREFIX_PATH "C:\\MyWorld\\Coder\\.App\\Qt\\6.4.1\\msvc2019_64\\lib\\cmake\\")
 
-
-find_package(Qt6Widgets REQUIRED)
-find_package(Qt6Core REQUIRED)
-find_package(Qt6Gui REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Gui)
+find_package(Qt6 REQUIRED COMPONENTS Multimedia)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -56,4 +56,5 @@ target_link_libraries(
         Qt6::Widgets
         Qt6::Core
         Qt6::Gui
+        Qt6::Multimedia
 )

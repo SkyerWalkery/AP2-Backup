@@ -9,6 +9,14 @@ class Elf: public Character{
 
 public:
 
+    static constexpr const char* VOICES[] = {
+            "qrc:/sounds/HuTao_1.mp3",
+            "qrc:/sounds/HuTao_2.mp3",
+            "qrc:/sounds/HuTao_3.mp3",
+            "qrc:/sounds/HuTao_4.mp3",
+            "qrc:/sounds/HuTao_5.mp3",
+    };
+
     static constexpr const char* TEXTURE = ":/images/elf.png";
 
     static constexpr const int AreaCond = Character::ON_GRASS;
@@ -25,6 +33,7 @@ public:
 
     void attack(ActionAttack& action, const QList<Entity*>& candidate_targets) override;
 
+    QString getRandomVoice() const override;
 };
 
 

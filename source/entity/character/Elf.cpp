@@ -2,6 +2,7 @@
 #include <QGraphicsScene>
 #include <QColor>
 #include <QPen>
+#include <QRandomGenerator>
 
 
 Elf::Elf(QGraphicsItem *parent) :Character(parent){
@@ -49,4 +50,8 @@ void Elf::attack(ActionAttack& action, const QList<Entity*>& candidate_targets) 
     if (element == Element::ANEMO)
         attack_effect->setShouldExplode(true);
     attack_effect->startAnimation();
+}
+
+QString Elf::getRandomVoice() const {
+    return VOICES[QRandomGenerator::global()->bounded(5)];
 }

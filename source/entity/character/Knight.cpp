@@ -1,6 +1,7 @@
 #include "Knight.h"
 #include "MeleePrickParticle.h"
 #include <QPen>
+#include <QRandomGenerator>
 
 Knight::Knight(QGraphicsItem *parent) :Character(parent){
     int sz = static_cast<int>(CharacterSize);
@@ -39,4 +40,8 @@ void Knight::attack(ActionAttack& action, const QList<Entity*>& candidate_target
     attack_effect->setPen(pen);
     attack_effect->setSpeed(300);
     attack_effect->startAnimation();
+}
+
+QString Knight::getRandomVoice() const {
+    return VOICES[QRandomGenerator::global()->bounded(5)];
 }
