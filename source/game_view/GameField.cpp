@@ -318,7 +318,11 @@ void GameField::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     // If any UI is visible, or pos is out of bound of scene,
     // ignore this event and hide all option UIs
     auto pos = mouseEvent->scenePos();
-    if(place_options_->isVisible() || upgrade_options_->isVisible() || !this->sceneRect().contains(pos)) {
+    if(place_options_->isVisible() || upgrade_options_->isVisible() // if a character is selected
+        || !this->sceneRect().contains(pos) // if out of scene
+        || pos.y() <= 0 // if pos in status bar (bar's pos.y() is negative)
+        )
+    {
         place_options_->setVisible(false);
         upgrade_options_->setVisible(false);
         buff_options_->setVisible(false);
