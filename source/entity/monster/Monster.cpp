@@ -37,7 +37,7 @@ Monster::Monster(QGraphicsItem *parent) : Entity(parent) {
         buff_icons_layout->addItem(proxy);
     }
     buff_icons_->setLayout(buff_icons_layout);
-    buff_icons_->setY(-BUFF_ICON_SIZE);
+    buff_icons_->setY(-BUFF_ICON_SIZE - 4);
 }
 
 QColor Monster::getHealthBarColor() const {

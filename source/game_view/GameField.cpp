@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QMediaPlayer>
 #include <QAudioOutput>
+#include <QGraphicsSimpleTextItem>
 
 
 GameField::GameField(QObject* parent):
@@ -249,7 +250,7 @@ void GameField::initBuffOptionUi() {
         auto* proxy = new QGraphicsProxyWidget;
         proxy->setWidget(button);
         buff_option_buttons_[buff] = proxy;
-        // proxy->setVisible(false); // Buff cannot be used at very begin of game
+        proxy->setVisible(false); // Buff cannot be used at very begin of game
         buff_options_layout->addItem(proxy);
     }
     this->buff_options_->setLayout(buff_options_layout);
@@ -432,12 +433,27 @@ void GameField::checkGameEnd() {
     background->setPen(Qt::NoPen);
     background->setBrush(QBrush(
             (monsters_.empty() && monster_que_.empty()) ?
-            QColor(0, 255, 0, 128) : // Win
+            QColor(0, 0, 0, 128) : // Win
             QColor(255, 0, 0, 128) // Lose
     ));
     background->setRect(this->sceneRect());
     background->setZValue(3); // Above all other
     addItem(background);
+
+    auto* text_hint = new QGraphicsSimpleTextItem;
+    QFont font(tr("汉仪文黑-85W"), 30);
+    text_hint->setFont(font);
+    text_hint->setText(
+            (monsters_.empty() && monster_que_.empty()) ?
+            "Challenge Completed" : // Win
+            "Game Over" // Lose
+            );
+    text_hint->setPen(Qt::NoPen);
+    text_hint->setBrush(QBrush(Qt::white));
+    addItem(text_hint);
+    text_hint->setPos(this->sceneRect().center() - text_hint->boundingRect().center());
+    text_hint->setZValue(4);
+
     timer_.stop();
 }
 
@@ -753,10 +769,18 @@ void GameField::manageCharacterBuffFromUI(Buff buff) {
 }
 
 void GameField::getNewBuff(){
+    int new_buff_num = 2; // You can set this as any you like
     // A simple implementation: get all buffs at first blood
+    buff_options_->setVisible(true); // Without this, isVisible() is always false (?)
     for(auto it = buff_option_buttons_.begin(); it != buff_option_buttons_.end(); ++it){
-        it.value()->setVisible(true);
+        if(!it.value()->isVisible()) {
+            --new_buff_num;
+            it.value()->setVisible(true);
+        }
+        if(new_buff_num <= 0)
+            break;
     }
+
     // Visibility should be reset to display ui properly,
     // otherwise buff_options_->rect() will not be updated automatically
     // i.e. the first time you click on a character, ui isn't at its place
