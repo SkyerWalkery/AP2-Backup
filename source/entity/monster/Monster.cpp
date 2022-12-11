@@ -1,5 +1,7 @@
 #include "Monster.h"
+#include <QGraphicsLinearLayout>
 #include <QPen>
+#include <QLabel>
 
 qreal Monster::MonsterSize = 0;
 
@@ -19,6 +21,23 @@ Monster::Monster(QGraphicsItem *parent) : Entity(parent) {
     element_aura_icon_->setX(MonsterSize / 2 - element_aura_icon_->boundingRect().center().x());
     element_aura_icon_->setY(MonsterSize * 2 / 3);
     element_aura_icon_->setVisible(false);
+
+    auto* buff_icons_layout = new QGraphicsLinearLayout;
+    for(auto buff: BuffUtil::monsterBuffs()){
+        auto icon_name = BuffUtil::buffToIcon(buff);
+        auto icon_pixmap = QPixmap(icon_name).scaled(BUFF_ICON_SIZE, BUFF_ICON_SIZE);
+
+        auto* icon = new QLabel();
+        icon->setStyleSheet("background-color: rgba(0,0,0,0%)");
+        icon->setPixmap(icon_pixmap);
+        auto* proxy = new QGraphicsProxyWidget;
+        proxy->setWidget(icon);
+        buff_to_icon_[buff] = proxy;
+        proxy->setVisible(false); // Buff cannot be used at very begin of game
+        buff_icons_layout->addItem(proxy);
+    }
+    buff_icons_->setLayout(buff_icons_layout);
+    buff_icons_->setY(-BUFF_ICON_SIZE);
 }
 
 QColor Monster::getHealthBarColor() const {
@@ -52,6 +71,23 @@ void Monster::updateHealthBar() {
     // Set length of bar
     qreal bar_len = MonsterSize * getHealth() / getMaxHealth();
     health_bar_->setRect(0, 0, bar_len, 4);
+}
+
+void Monster::updateBuffIcon() {
+    bool should_change_pos = false;
+    for(auto buff: BuffUtil::monsterBuffs()){
+        auto* buff_icon = buff_to_icon_[buff];
+        auto* icon = qobject_cast<QLabel*>(buff_icon->widget());
+        if(bool has_buff = hasBuff(buff); has_buff != icon->isVisible()) {
+            icon->setVisible(has_buff);
+            should_change_pos = true;
+        }
+    }
+    if(should_change_pos) {
+        buff_icons_->setVisible(false);
+        buff_icons_->setVisible(true); // Redraw layout
+        buff_icons_->setX(this->boundingRect().center().x() - buff_icons_->boundingRect().center().x());
+    }
 }
 
 void Monster::updateElementAuraIcon(){
@@ -100,6 +136,7 @@ void Monster::setMonsterSize(qreal size) {
 void Monster::updateStatus() {
     Entity::updateStatus();
     updateHealthBar();
+    updateBuffIcon();
     updateElementAuraIcon();
     rechargeSkill();
 }

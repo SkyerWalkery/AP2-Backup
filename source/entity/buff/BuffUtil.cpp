@@ -15,13 +15,29 @@ const QList<Buff>& BuffUtil::characterBuffs(){
     return character_buffs;
 }
 
+const QList<Buff>& BuffUtil::monsterBuffs() {
+    static QList<Buff> monster_buffs = {
+            Buff::CORRODED,
+            Buff::FROZEN,
+            Buff::WINDFALL,
+            Buff::EVER_CHANGING,
+    };
+    return monster_buffs;
+}
+
 QString BuffUtil::buffToIcon(Buff buff){
     switch (buff) {
         case Buff::WOLF_S_GRAVESTONE:
             return ICON_DAMAGE_UP;
         case Buff::CAUSE_CORROSION:
+        case Buff::CORRODED:
             return ICON_CORROSION;
+        case Buff::WINDFALL:
+            return ICON_MOVE_SPEED_UP;
+        case Buff::EVER_CHANGING:
+            return ICON_MOVE_SPEED_DOWN;
         case Buff::INFUSION_FROZEN:
+        case Buff::FROZEN:
             return ICON_FROZEN;
         case Buff::INFUSION_ANEMO:
             return ICON_ANEMO;

@@ -3,6 +3,8 @@
 
 #include <QGraphicsPixmapItem>
 #include <QGraphicsRectItem>
+#include <QGraphicsWidget>
+#include <QGraphicsProxyWidget>
 #include <QPair>
 #include "Entity.h"
 
@@ -10,6 +12,8 @@
 class Monster: public Entity{
 
     using Direction = QPair<int, int>;
+
+    static constexpr const qreal BUFF_ICON_SIZE = 16; // px
 
 protected:
 
@@ -28,11 +32,18 @@ protected:
     // Should be updated in rechargeSkill() and when using a skill
     int skill_recharged_ = 0;
 
+    // buff_icons_ holds a layout, which contains multiple buffs(QLable) attached to monster.
+    QGraphicsWidget* buff_icons_ = new QGraphicsWidget(this);
+    // You can use buff to control corresponding icon
+    QHash<Buff, QGraphicsProxyWidget*> buff_to_icon_;
+
     QColor getHealthBarColor() const;
 
     void updateHealthBar();
 
     void updateElementAuraIcon();
+
+    void updateBuffIcon();
 
     void rechargeSkill();
 
