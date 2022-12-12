@@ -37,6 +37,8 @@ private slots:
      */
     void loadLevelDuringGame();
 
+    void setFps(int fps);
+
 };
 
 

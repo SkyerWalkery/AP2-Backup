@@ -25,6 +25,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     auto* pause_game_act = new QAction(QIcon(":/icons/pause.svg"), "Pause");
     pause_game_act->setCheckable(true);
     connect(pause_game_act, &QAction::toggled, this, &MainWindow::pauseOrResumeGame);
+    auto* set_fps_60 = new QAction( "60");
+    auto* set_fps_30 = new QAction( "30");
+    connect(set_fps_60, &QAction::triggered, [this](){this->setFps(60);});
+    connect(set_fps_30, &QAction::triggered, [this](){this->setFps(30);});
 
     // Set MenuBar
     auto* menu_bar = menuBar();
@@ -33,6 +37,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) {
     QMenu* game_setting_menu = menu_bar->addMenu("&Game");
     game_setting_menu->addAction(reset_game_act);
     game_setting_menu->addAction(pause_game_act);
+    auto* fps_menu = game_setting_menu->addMenu("FPS");
+    fps_menu->addAction(set_fps_60);
+    fps_menu->addAction(set_fps_30);
 
     // Set ToolBar
     auto* tool_bar = new QToolBar();
@@ -92,4 +99,14 @@ void MainWindow::loadLevelDuringGame() {
     if(!openLevelDir())
         return;
     resetGame();
+}
+
+void MainWindow::setFps(int fps) {
+    delete game_field_;
+    game_field_ = new GameField();
+    game_field_->loadLevelFromFile(level_data_path_);
+    game_field_->setFps(fps);
+    game_view_->setScene(game_field_);
+
+    startGame();
 }
